@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Schwarm – Auto-Downloader</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&amp;family=Geist+Mono:wght@400;500&amp;display=swap">
+<style>
+body{margin:0}
+a{color:inherit}
+.t{--bg:#ffffff;--fg:#0a0a0a;--muted:#f5f5f5;--mfg:#737373;--border:#e5e5e5;--input:#e5e5e5;--inbg:transparent;--primary:#171717;--pfg:#fafafa;--sidebar:#fafafa;--destr:#dc2626;--ok:#16a34a;--ring:#a1a1a1;--shadow:0 1px 2px rgba(0,0,0,.05);--inset:0 1px 3px rgba(0,0,0,.08)}
+.t.dark{--bg:#0a0a0a;--fg:#fafafa;--muted:#262626;--mfg:#a1a1a1;--border:rgba(255,255,255,.1);--input:rgba(255,255,255,.15);--inbg:rgba(255,255,255,.045);--primary:#e5e5e5;--pfg:#171717;--sidebar:#171717;--destr:#ff6467;--ok:#4ade80;--ring:#737373;--shadow:none;--inset:none}
+.t{font-family:'Geist',system-ui,sans-serif;font-size:14px;line-height:1.43;color:var(--fg)}
+.ic{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.m{color:var(--mfg)}
+.mono{font-family:'Geist Mono',ui-monospace,monospace;font-size:13px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:32px;padding:0 12px;border-radius:8px;border:1px solid transparent;font:500 14px 'Geist',sans-serif;white-space:nowrap;cursor:pointer;color:var(--fg);background:none;text-decoration:none}
+.pri{background:var(--primary);color:var(--pfg)}
+.out{background:var(--inbg);border-color:var(--input);box-shadow:var(--shadow)}
+.icb{width:32px;padding:0}
+.mb{display:flex;align-items:center;gap:8px;height:32px;padding:0 8px;border-radius:6px;color:var(--fg);text-decoration:none;width:100%;box-sizing:border-box;border:0;background:none;font:14px 'Geist',sans-serif;text-align:left}
+.mb:hover{background:var(--muted)}
+.mb.act{background:var(--muted);font-weight:500}
+.gl{display:flex;align-items:center;height:32px;padding:0 8px;font-size:12px;font-weight:500;color:var(--mfg)}
+.tl{display:inline-flex;padding:3px;border-radius:10px;background:var(--muted);height:36px;box-sizing:border-box}
+.tt{padding:0 12px;border:1px solid transparent;border-radius:7px;color:var(--mfg);font:500 14px 'Geist',sans-serif;text-decoration:none;display:inline-flex;align-items:center}
+.tt.on{background:var(--bg);color:var(--fg);box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.dark .tt.on{background:var(--inbg);border-color:var(--input)}
+.lbl{font-weight:500;line-height:1}
+.inp{display:flex;align-items:center;gap:8px;height:36px;box-sizing:border-box;padding:0 12px;border:1px solid var(--input);border-radius:8px;background:var(--inbg);box-shadow:var(--shadow)}
+.desc{font-size:13px;color:var(--mfg)}
+.cb{width:16px;height:16px;box-sizing:border-box;border-radius:4px;border:1px solid var(--input);display:inline-grid;place-items:center;background:var(--inbg);flex:none}
+.cb.on{background:var(--primary);border-color:var(--primary);color:var(--pfg)}
+.sw{width:32px;height:18px;box-sizing:border-box;border-radius:99px;position:relative;flex:none;background:var(--input)}
+.sw span{position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:99px;background:var(--bg)}
+.dark .sw span{background:var(--fg)}
+.sw.on{background:var(--primary)}
+.sw.on span{left:auto;right:2px}
+.dark .sw.on span{background:var(--pfg)}
+.badge{display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 8px;border-radius:6px;border:1px solid var(--border);font:500 12px 'Geist',sans-serif}
+.rule{display:flex;align-items:center;gap:12px;padding:10px 12px;border-bottom:1px solid var(--border)}
+mark{background:color-mix(in srgb,var(--fg) 15%,transparent);color:inherit;border-radius:3px;padding:0 2px}
+</style>
+</helmet>
+<div class="t {{theme}}" style="min-height: 900px; background: var(--sidebar); display: flex; flex-wrap: wrap">
+  <aside style="flex: 0 0 256px; box-sizing: border-box; padding: 8px 16px 8px 8px; display: flex; flex-direction: column; gap: 4px">
+    <div class="mb" style="height: 48px; padding: 8px">
+      <span style="width: 32px; height: 32px; border-radius: 8px; background: var(--primary); color: var(--pfg); display: grid; place-items: center"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg></span>
+      <span style="display: flex; flex-direction: column; line-height: 1.25"><span style="font-weight: 600">Schwarm</span><span class="m" style="font-size: 12px">qBittorrent 5.3.0</span></span>
+    </div>
+    <nav aria-label="Navigation" style="display: flex; flex-direction: column; padding-top: 8px">
+      <div class="gl">Torrents</div>
+      <a class="mb" href="Main.dc.html"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12h.01"></path><path d="M3 18h.01"></path><path d="M3 6h.01"></path><path d="M8 12h13"></path><path d="M8 18h13"></path><path d="M8 6h13"></path></svg>Alle</a>
+      <div class="gl" style="margin-top: 8px">Bereiche</div>
+      <a class="mb" href="Suche.dc.html"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>Suche</a>
+      <a class="mb act" href="RSS.dc.html" aria-current="page"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg>RSS</a>
+      <a class="mb" href="#"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3v16a2 2 0 0 0 2 2h16"></path><path d="M18 17V9"></path><path d="M13 17V5"></path><path d="M8 17v-3"></path></svg>Statistik</a>
+      <a class="mb" href="Einstellungen.dc.html"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 7h-9"></path><path d="M14 17H5"></path><circle cx="17" cy="17" r="3"></circle><circle cx="7" cy="7" r="3"></circle></svg>Einstellungen</a>
+    </nav>
+  </aside>
+
+  <div style="flex: 999 1 640px; min-width: 0; margin: 8px; margin-left: 0; background: var(--bg); border-radius: 12px; box-shadow: var(--inset); display: flex; flex-direction: column">
+    <header style="display: flex; align-items: center; gap: 8px; height: 52px; padding: 0 16px; border-bottom: 1px solid var(--border)">
+      <button class="btn icb" aria-label="Seitenleiste umschalten" style="margin-left: -4px"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"></rect><path d="M9 3v18"></path></svg></button>
+      <span style="width: 1px; height: 16px; background: var(--border); margin: 0 4px"></span>
+      <span class="m">RSS</span>
+      <svg class="ic m" viewBox="0 0 24 24" style="width: 14px; height: 14px" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg>
+      <span>Auto-Downloader</span>
+      <span style="margin-left: auto; display: flex; gap: 8px"><button class="btn out">Importieren</button><button class="btn out">Exportieren</button></span>
+    </header>
+
+    <div style="padding: 16px 24px 0">
+      <div class="tl" role="tablist">
+        <a class="tt" role="tab" href="RSS.dc.html">Feeds</a>
+        <a class="tt on" role="tab" aria-selected="true" href="Regeln.dc.html">Auto-Downloader</a>
+      </div>
+    </div>
+
+    <div style="flex: 1; display: flex; flex-wrap: wrap; gap: 24px; padding: 16px 24px 24px; align-items: flex-start">
+      <div style="flex: 0 0 260px; display: flex; flex-direction: column; gap: 8px">
+        <div style="border: 1px solid var(--border); border-radius: 10px; overflow: hidden">
+          <div class="rule" style="background: var(--muted)"><span style="flex: 1; display: flex; flex-direction: column"><span style="font-weight: 500">Ubuntu LTS</span><span class="m" style="font-size: 13px">zuletzt heute</span></span><span class="sw on" role="switch" aria-checked="true" aria-label="Ubuntu LTS aktiv"><span></span></span></div>
+          <div class="rule"><span style="flex: 1; display: flex; flex-direction: column"><span style="font-weight: 500">Blender Open Movies</span><span class="m" style="font-size: 13px">zuletzt vor 3 Wochen</span></span><span class="sw on" role="switch" aria-checked="true" aria-label="Blender aktiv"><span></span></span></div>
+          <div class="rule" style="border-bottom: 0"><span style="flex: 1; display: flex; flex-direction: column"><span class="m" style="font-weight: 500">Fedora Workstation</span><span class="m" style="font-size: 13px">aus</span></span><span class="sw" role="switch" aria-checked="false" aria-label="Fedora aktiv"><span></span></span></div>
+        </div>
+        <button class="btn out"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg>Neue Regel</button>
+      </div>
+
+      <form style="flex: 999 1 400px; min-width: 0; max-width: 620px; display: flex; flex-direction: column; gap: 20px">
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px">
+          <div style="display: flex; flex-direction: column; gap: 4px"><h1 style="margin: 0; font-size: 18px; font-weight: 600">Ubuntu LTS</h1><span class="desc">Lädt neue Ubuntu-LTS-Desktop-Images, sobald sie im Feed auftauchen.</span></div>
+          <span style="display: flex; gap: 8px"><button type="button" class="btn out">Klonen</button><button type="button" class="btn out icb" aria-label="Regel löschen"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path></svg></button></span>
+        </div>
+        <div style="height: 1px; background: var(--border)"></div>
+        <label style="display: flex; flex-direction: column; gap: 8px"><span class="lbl">Titel enthält</span><span class="inp mono" style="border-color: var(--ring); box-shadow: 0 0 0 3px color-mix(in srgb, var(--ring) 50%, transparent)">ubuntu 26.04 desktop amd64</span><span class="desc">Alle Wörter müssen vorkommen. <span class="mono">|</span> heißt „oder“, <span class="mono">*</span> ist ein Platzhalter.</span></label>
+        <label style="display: flex; flex-direction: column; gap: 8px"><span class="lbl">Titel enthält nicht</span><span class="inp mono">beta | daily | arm64</span></label>
+        <div style="display: flex; gap: 20px; flex-wrap: wrap">
+          <label style="display: flex; align-items: center; gap: 8px"><span class="cb"></span>Regulärer Ausdruck</label>
+          <label style="display: flex; align-items: center; gap: 8px"><span class="cb"></span>Nur bestimmte Folgen</label>
+          <label style="display: flex; align-items: center; gap: 8px"><span class="cb on"><svg class="ic" viewBox="0 0 24 24" style="width: 12px; height: 12px; stroke-width: 3" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg></span>Jede Folge nur einmal</label>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 8px">
+          <span class="lbl">In diesen Feeds</span>
+          <div style="display: flex; gap: 6px; flex-wrap: wrap">
+            <span class="badge" style="background: var(--primary); color: var(--pfg); border-color: transparent"><svg class="ic" viewBox="0 0 24 24" style="width: 12px; height: 12px" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>Ubuntu Releases</span>
+            <span class="badge" style="background: var(--primary); color: var(--pfg); border-color: transparent"><svg class="ic" viewBox="0 0 24 24" style="width: 12px; height: 12px" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>Linuxtracker – Neu</span>
+            <span class="badge">Blender Open Movies</span>
+            <span class="badge">Archive.org – Neu</span>
+          </div>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px">
+          <label style="display: flex; flex-direction: column; gap: 8px"><span class="lbl">Kategorie</span><span class="inp" style="justify-content: space-between">Linux<svg class="ic m" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg></span></label>
+          <label style="display: flex; flex-direction: column; gap: 8px"><span class="lbl">Speichern in</span><span class="inp mono">/downloads/linux</span></label>
+          <label style="display: flex; flex-direction: column; gap: 8px"><span class="lbl">Tags</span><span class="inp"><span class="badge" style="background: var(--muted); border-color: transparent">behalten</span></span></label>
+          <label style="display: flex; flex-direction: column; gap: 8px"><span class="lbl">Danach pausieren</span><span class="inp" style="justify-content: space-between">7 Tage<svg class="ic m" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg></span></label>
+        </div>
+        <div style="display: flex; gap: 8px"><button type="button" class="btn pri">Speichern</button><button type="button" class="btn out">Verwerfen</button></div>
+      </form>
+
+      <aside aria-label="Vorschau" style="flex: 1 1 300px; max-width: 380px; border: 1px solid var(--border); border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 12px; box-shadow: var(--shadow)">
+        <div style="display: flex; flex-direction: column; gap: 4px"><span style="font-weight: 600; line-height: 1">Vorschau</span><span class="desc">Letzte Artikel der gewählten Feeds</span></div>
+        <div style="display: flex; flex-direction: column; gap: 10px">
+          <div style="display: flex; gap: 10px"><svg class="ic" viewBox="0 0 24 24" style="color: var(--ok); margin-top: 2px" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="m9 12 2 2 4-4"></path></svg><span style="display: flex; flex-direction: column"><span>Ubuntu 26.04.1 LTS <mark>Desktop</mark> (<mark>amd64</mark>)</span><span class="desc">Ubuntu Releases · heute · geladen</span></span></div>
+          <div style="display: flex; gap: 10px"><svg class="ic" viewBox="0 0 24 24" style="color: var(--ok); margin-top: 2px" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="m9 12 2 2 4-4"></path></svg><span style="display: flex; flex-direction: column"><span>Ubuntu 26.04 LTS <mark>Desktop</mark> (<mark>amd64</mark>)</span><span class="desc">Linuxtracker · vor 3 Wochen · geladen</span></span></div>
+          <div style="height: 1px; background: var(--border)"></div>
+          <div style="display: flex; gap: 10px"><svg class="ic m" viewBox="0 0 24 24" style="margin-top: 2px" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="m15 9-6 6"></path><path d="m9 9 6 6"></path></svg><span style="display: flex; flex-direction: column"><span class="m">Ubuntu 26.04.1 LTS Server (amd64)</span><span class="desc">fehlt: „desktop“</span></span></div>
+          <div style="display: flex; gap: 10px"><svg class="ic m" viewBox="0 0 24 24" style="margin-top: 2px" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="m15 9-6 6"></path><path d="m9 9 6 6"></path></svg><span style="display: flex; flex-direction: column"><span class="m">Ubuntu 26.04 Desktop (arm64)</span><span class="desc">ausgeschlossen: „arm64“</span></span></div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":true},"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    var dark = this.props.dark ?? true;
+    return { theme: dark ? 'dark' : '' };
+  }
+}
+</script>
+</body>
+</html>

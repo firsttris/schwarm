@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Schwarm – Details Dateien</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&amp;family=Geist+Mono:wght@400;500&amp;display=swap">
+<style>
+body{margin:0}
+.t{--bg:#ffffff;--fg:#0a0a0a;--pop:#ffffff;--muted:#f5f5f5;--mfg:#737373;--border:#e5e5e5;--input:#e5e5e5;--inbg:transparent;--primary:#171717;--pfg:#fafafa;--shadow:0 1px 2px rgba(0,0,0,.05)}
+.t.dark{--bg:#0a0a0a;--fg:#fafafa;--pop:#171717;--muted:#262626;--mfg:#a1a1a1;--border:rgba(255,255,255,.1);--input:rgba(255,255,255,.15);--inbg:rgba(255,255,255,.045);--primary:#e5e5e5;--pfg:#171717;--shadow:none}
+.t{font-family:'Geist',system-ui,sans-serif;font-size:14px;line-height:1.43;color:var(--fg)}
+.ic{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.m{color:var(--mfg)}
+.num{font-variant-numeric:tabular-nums}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:32px;padding:0 12px;border-radius:8px;border:1px solid transparent;font:500 14px 'Geist',sans-serif;white-space:nowrap;color:var(--fg);background:none}
+.out{background:var(--inbg);border-color:var(--input);box-shadow:var(--shadow)}
+.icb{width:32px;padding:0}
+.tl{display:flex;padding:3px;border-radius:10px;background:var(--muted);height:36px;box-sizing:border-box}
+.tt{flex:1;border:1px solid transparent;border-radius:7px;background:none;color:var(--mfg);font:500 14px 'Geist',sans-serif}
+.tt.on{background:var(--bg);color:var(--fg);box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.dark .tt.on{background:var(--inbg);border-color:var(--input)}
+.inp{display:flex;align-items:center;gap:8px;height:32px;box-sizing:border-box;padding:0 10px;border:1px solid var(--input);border-radius:8px;background:var(--inbg);box-shadow:var(--shadow);color:var(--mfg)}
+.cb{width:16px;height:16px;box-sizing:border-box;border-radius:4px;border:1px solid var(--input);display:inline-grid;place-items:center;background:var(--inbg);flex:none}
+.cb.on{background:var(--primary);border-color:var(--primary);color:var(--pfg)}
+.f{display:grid;grid-template-columns:16px minmax(0,1fr) 64px 92px;align-items:center;gap:12px;min-height:44px;padding:0 8px;border-bottom:1px solid var(--border)}
+.prio{justify-self:end;height:28px;padding:0 8px;font-size:13px}
+.prog{height:4px;border-radius:99px;background:color-mix(in srgb,var(--primary) 20%,transparent);overflow:hidden}
+.prog span{display:block;height:100%;background:var(--primary)}
+.mi{display:flex;align-items:center;gap:8px;height:32px;padding:0 8px;border-radius:4px;font-size:14px}
+</style>
+</helmet>
+<div class="t {{theme}}" style="width: 480px; height: 900px; box-sizing: border-box; background: var(--bg); border-left: 1px solid var(--border); display: flex; flex-direction: column; position: relative; overflow: hidden">
+  <button class="btn icb" aria-label="Schließen" style="position: absolute; top: 12px; right: 12px; opacity: .7"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></button>
+  <div style="padding: 16px 48px 0 16px; display: flex; flex-direction: column; gap: 6px">
+    <h2 style="margin: 0; font-size: 16px; font-weight: 600">Sintel (2010) 4K Open Movie</h2>
+    <p class="m" style="margin: 0">Filme · lädt · 41 %</p>
+  </div>
+
+  <div style="flex: 1; padding: 16px; display: flex; flex-direction: column; gap: 16px">
+    <div class="tl" role="tablist">
+      <button class="tt" role="tab">Übersicht</button>
+      <button class="tt on" role="tab" aria-selected="true">Dateien</button>
+      <button class="tt" role="tab">Peers</button>
+      <button class="tt" role="tab">Tracker</button>
+    </div>
+
+    <div style="display: flex; gap: 8px">
+      <label class="inp" style="flex: 1"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg><input placeholder="Dateien filtern …" aria-label="Dateien filtern" style="flex: 1; min-width: 0; border: 0; outline: none; background: none; color: var(--fg); font: 14px 'Geist', sans-serif"></label>
+      <button class="btn out">Umbenennen …</button>
+    </div>
+
+    <div style="border: 1px solid var(--border); border-radius: 10px; overflow: hidden">
+      <div class="f" style="min-height: 40px; font-weight: 500">
+        <span class="cb on" role="checkbox" aria-checked="mixed" aria-label="Alle"><span style="width: 8px; height: 2px; background: var(--pfg)"></span></span>
+        <span>Name</span><span style="text-align: right">Größe</span><span style="text-align: right">Priorität</span>
+      </div>
+      <sc-for list="{{files}}" as="f" hint-placeholder-count="9">
+        <div class="f" style="{{f.rowStyle}}">
+          <span class="cb {{f.cbCls}}" role="checkbox" aria-checked="{{f.on}}"><sc-if value="{{f.on}}" hint-placeholder-val="{{true}}"><svg class="ic" viewBox="0 0 24 24" style="width: 12px; height: 12px; stroke-width: 3" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg></sc-if></span>
+          <span style="min-width: 0; display: flex; align-items: center; gap: 6px; padding-left: {{f.indent}}px">
+            <sc-if value="{{f.dir}}" hint-placeholder-val="{{false}}"><svg class="ic m" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg></sc-if>
+            <span style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px">
+              <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; {{f.nameStyle}}">{{f.name}}</span>
+              <sc-if value="{{f.showBar}}" hint-placeholder-val="{{true}}"><span class="prog"><span style="width: {{f.pct}}%"></span></span></sc-if>
+            </span>
+          </span>
+          <span class="m num" style="text-align: right; font-size: 13px">{{f.size}}</span>
+          <sc-if value="{{f.dir}}" hint-placeholder-val="{{false}}"><span></span></sc-if>
+          <sc-if value="{{f.isFile}}" hint-placeholder-val="{{true}}"><button class="btn out prio">{{f.prio}}<svg class="ic m" viewBox="0 0 24 24" style="width: 14px; height: 14px" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg></button></sc-if>
+        </div>
+      </sc-for>
+    </div>
+
+    <div class="num" style="display: flex; align-items: center; justify-content: space-between">
+      <span class="m">5 von 7 Dateien · 14,0 GB</span>
+      <button class="btn" style="padding: 0 8px">Alle laden</button>
+    </div>
+  </div>
+
+  <div role="menu" aria-label="Priorität" style="position: absolute; right: 24px; top: 388px; width: 176px; padding: 4px; border-radius: 8px; border: 1px solid var(--border); background: var(--pop); box-shadow: 0 4px 6px -1px rgba(0,0,0,.1), 0 2px 4px -2px rgba(0,0,0,.1)">
+    <div class="mi m" style="font-size: 13px; font-weight: 500; height: 28px">Priorität</div>
+    <div style="height: 1px; background: var(--border); margin: 4px -4px"></div>
+    <div class="mi" role="menuitemradio" aria-checked="false"><span style="width: 16px"></span>Nicht laden</div>
+    <div class="mi" role="menuitemradio" aria-checked="false"><span style="width: 16px"></span>Normal</div>
+    <div class="mi" role="menuitemradio" aria-checked="true" style="background: var(--muted)"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>Hoch</div>
+    <div class="mi" role="menuitemradio" aria-checked="false"><span style="width: 16px"></span>Maximal</div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":true},"$preview":{"width":480,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    var dark = this.props.dark ?? true;
+    var raw = [
+      ['Sintel (2010) 4K', '14,8 GB', 0, 1, 1, 41, ''],
+      ['Sintel.2010.4K.mkv', '13,9 GB', 1, 0, 1, 39, 'Normal'],
+      ['Untertitel', '180 KB', 1, 1, 1, 100, ''],
+      ['Sintel.de.srt', '62 KB', 2, 0, 1, 100, 'Hoch', 1],
+      ['Sintel.en.srt', '58 KB', 2, 0, 1, 100, 'Normal'],
+      ['Sintel.fr.srt', '60 KB', 2, 0, 0, 0, 'Nicht laden'],
+      ['Extras', '840 MB', 1, 1, 1, 12, ''],
+      ['Making-of.mkv', '820 MB', 2, 0, 0, 0, 'Nicht laden'],
+      ['Poster.jpg', '4,1 MB', 2, 0, 1, 100, 'Maximal']
+    ];
+    return {
+      theme: dark ? 'dark' : '',
+      files: raw.map(function (r, i) {
+        var on = !!r[4];
+        return {
+          name: r[0], size: r[1], indent: r[2] * 16, dir: !!r[3], isFile: !r[3], on: on, pct: r[5], prio: r[6],
+          showBar: on && !r[3], cbCls: on ? 'on' : '',
+          nameStyle: r[3] ? 'font-weight:500' : (on ? '' : 'color:var(--mfg);text-decoration:line-through'),
+          rowStyle: (r[7] ? 'background:var(--muted);' : '') + (i === raw.length - 1 ? 'border-bottom:0' : '')
+        };
+      })
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Schwarm – Details</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&amp;family=Geist+Mono:wght@400;500&amp;display=swap">
+<style>
+body{margin:0}
+.t{--bg:#ffffff;--fg:#0a0a0a;--muted:#f5f5f5;--mfg:#737373;--border:#e5e5e5;--input:#e5e5e5;--inbg:transparent;--primary:#171717;--pfg:#fafafa;--destr:#dc2626;--c1:#2563eb;--c2:#0d9488;--shadow:0 1px 2px rgba(0,0,0,.05)}
+.t.dark{--bg:#0a0a0a;--fg:#fafafa;--muted:#262626;--mfg:#a1a1a1;--border:rgba(255,255,255,.1);--input:rgba(255,255,255,.15);--inbg:rgba(255,255,255,.045);--primary:#e5e5e5;--pfg:#171717;--destr:#ff6467;--c1:#3b82f6;--c2:#2dd4bf;--shadow:none}
+.t{font-family:'Geist',system-ui,sans-serif;font-size:14px;line-height:1.43;color:var(--fg)}
+.ic{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.num{font-variant-numeric:tabular-nums}
+.mono{font-family:'Geist Mono',ui-monospace,monospace;font-size:13px}
+.m{color:var(--mfg)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:32px;padding:0 12px;border-radius:8px;border:1px solid transparent;font:500 14px 'Geist',sans-serif;white-space:nowrap;cursor:pointer;color:var(--fg);background:none}
+.out{background:var(--inbg);border-color:var(--input);box-shadow:var(--shadow)}
+.icb{width:32px;padding:0}
+.badge{display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 8px;border-radius:6px;border:1px solid transparent;font:500 12px 'Geist',sans-serif}
+.prog{height:8px;border-radius:99px;background:color-mix(in srgb,var(--primary) 20%,transparent);overflow:hidden}
+.prog span{display:block;height:100%;background:var(--primary)}
+.tl{display:flex;padding:3px;border-radius:10px;background:var(--muted);height:36px;box-sizing:border-box}
+.tt{flex:1;border:1px solid transparent;border-radius:7px;background:none;color:var(--mfg);font:500 14px 'Geist',sans-serif;cursor:pointer}
+.tt.on{background:var(--bg);color:var(--fg);box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.dark .tt.on{background:var(--inbg);border-color:var(--input)}
+.card{border:1px solid var(--border);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:12px;box-shadow:var(--shadow)}
+dt{color:var(--mfg)}
+dd{margin:0;font-weight:500}
+</style>
+</helmet>
+<div class="t {{theme}}" style="width: 480px; height: 900px; box-sizing: border-box; background: var(--bg); border-left: 1px solid var(--border); display: flex; flex-direction: column; position: relative; overflow: hidden">
+  <button class="btn icb" aria-label="Schließen" style="position: absolute; top: 12px; right: 12px; opacity: .7"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></button>
+
+  <div style="padding: 16px 48px 0 16px; display: flex; flex-direction: column; gap: 6px">
+    <h2 style="margin: 0; font-size: 16px; font-weight: 600; word-break: break-all">ubuntu-26.04-desktop-amd64.iso</h2>
+    <p class="m" style="margin: 0">Linux · hinzugefügt heute, 20:58</p>
+  </div>
+
+  <div style="flex: 1; padding: 16px; display: flex; flex-direction: column; gap: 16px">
+    <div style="display: flex; flex-direction: column; gap: 8px">
+      <div style="display: flex; align-items: center; justify-content: space-between">
+        <span class="badge" style="background: var(--muted)"><svg class="ic" viewBox="0 0 24 24" style="width: 12px; height: 12px" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="M12 8v8"></path><path d="m8 12 4 4 4-4"></path></svg>Lädt</span>
+        <span class="m num">noch 1 Min</span>
+      </div>
+      <div class="prog"><span style="width: 73%"></span></div>
+      <div class="num" style="display: flex; justify-content: space-between; font-size: 13px"><span class="m">4,45 von 6,1 GB</span><span style="font-weight: 500">73 %</span></div>
+    </div>
+
+    <div style="display: flex; gap: 8px">
+      <button class="btn out"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><line x1="10" x2="10" y1="15" y2="9"></line><line x1="14" x2="14" y1="15" y2="9"></line></svg>Stoppen</button>
+      <button class="btn out"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"></path></svg>Speicherort</button>
+      <button class="btn out icb" aria-label="Weitere Aktionen"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg></button>
+      <button class="btn out icb" aria-label="Entfernen" style="margin-left: auto; color: var(--destr)"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path></svg></button>
+    </div>
+
+    <div class="tl" role="tablist">
+      <button class="tt on" role="tab" aria-selected="true">Übersicht</button>
+      <button class="tt" role="tab">Dateien</button>
+      <button class="tt" role="tab">Peers</button>
+      <button class="tt" role="tab">Tracker</button>
+    </div>
+
+    <section class="card" aria-labelledby="tempo">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start">
+        <div style="display: flex; flex-direction: column; gap: 4px">
+          <h3 id="tempo" style="margin: 0; font-size: 14px; font-weight: 600; line-height: 1">Tempo</h3>
+          <span class="m" style="font-size: 13px">Letzte 5 Minuten</span>
+        </div>
+        <div class="num" style="display: flex; gap: 14px; font-size: 13px">
+          <span style="display: flex; align-items: center; gap: 6px"><span style="width: 8px; height: 8px; border-radius: 2px; background: var(--c1)"></span>18,4 MB/s</span>
+          <span style="display: flex; align-items: center; gap: 6px"><span style="width: 8px; height: 8px; border-radius: 2px; background: var(--c2)"></span>1,2 MB/s</span>
+        </div>
+      </div>
+      <svg viewBox="0 0 440 110" preserveAspectRatio="none" style="width: 100%; height: 110px" role="img" aria-label="Download steigt in den letzten 5 Minuten auf etwa 18 MB/s, Upload bleibt bei etwa 1 MB/s">
+        <line x1="0" y1="37" x2="440" y2="37" stroke="var(--border)" stroke-dasharray="3 3"></line>
+        <line x1="0" y1="74" x2="440" y2="74" stroke="var(--border)" stroke-dasharray="3 3"></line>
+        <polygon points="{{dlArea}}" fill="var(--c1)" opacity="0.25"></polygon>
+        <polyline points="{{dlPts}}" fill="none" stroke="var(--c1)" stroke-width="2" vector-effect="non-scaling-stroke"></polyline>
+        <polygon points="{{upArea}}" fill="var(--c2)" opacity="0.25"></polygon>
+        <polyline points="{{upPts}}" fill="none" stroke="var(--c2)" stroke-width="2" vector-effect="non-scaling-stroke"></polyline>
+      </svg>
+    </section>
+
+    <dl class="num" style="margin: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 16px">
+      <sc-for list="{{stats}}" as="s" hint-placeholder-count="8">
+        <div style="display: flex; flex-direction: column; gap: 2px"><dt>{{s.k}}</dt><dd>{{s.v}}</dd></div>
+      </sc-for>
+    </dl>
+
+    <div style="height: 1px; background: var(--border)"></div>
+
+    <div style="display: flex; flex-direction: column; gap: 10px">
+      <div style="display: flex; align-items: center; gap: 8px">
+        <span style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px"><span class="m">Speicherort</span><span class="mono">/downloads/linux</span></span>
+        <button class="btn icb" aria-label="Pfad kopieren"><svg class="ic m" viewBox="0 0 24 24" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg></button>
+      </div>
+      <div style="display: flex; align-items: center; gap: 8px">
+        <span style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px"><span class="m">Info-Hash v1</span><span class="mono" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap">3b245504cf5f11bbdbe1201cea6a6bf45aee1bc0</span></span>
+        <button class="btn icb" aria-label="Hash kopieren"><svg class="ic m" viewBox="0 0 24 24" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg></button>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":true},"$preview":{"width":480,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    var dark = this.props.dark ?? true;
+    var dl = [2, 3, 5, 4, 7, 9, 8, 11, 12, 10, 13, 15, 14, 16, 15, 17, 18, 17, 19, 18.4];
+    var up = [0.4, 0.5, 0.6, 0.6, 0.8, 0.9, 0.8, 1.0, 1.1, 1.0, 1.1, 1.2, 1.1, 1.3, 1.2, 1.2, 1.3, 1.2, 1.2, 1.2];
+    function pts(a) { return a.map(function (v, i) { return (i * 440 / (a.length - 1)).toFixed(1) + ',' + (106 - v * 5).toFixed(1); }).join(' '); }
+    var d = pts(dl), u = pts(up);
+    return {
+      theme: dark ? 'dark' : '',
+      dlPts: d, dlArea: '0,110 ' + d + ' 440,110', upPts: u, upArea: '0,110 ' + u + ' 440,110',
+      stats: [
+        { k: 'Hochgeladen', v: '540 MB' }, { k: 'Ratio', v: '0,12' },
+        { k: 'Seeds', v: '412 von 1.204' }, { k: 'Peers', v: '38 von 96' },
+        { k: 'Verfügbarkeit', v: '186,4' }, { k: 'Zeit aktiv', v: '7 Min' },
+        { k: 'Stückchen', v: '1.562 × 4 MB' }, { k: 'Verschwendet', v: '0 B' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

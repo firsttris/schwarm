@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Schwarm – Handy Details</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&amp;display=swap">
+<style>
+body{margin:0}
+a{color:inherit}
+.t{--bg:#ffffff;--fg:#0a0a0a;--muted:#f5f5f5;--mfg:#737373;--border:#e5e5e5;--input:#e5e5e5;--inbg:transparent;--primary:#171717;--pfg:#fafafa;--destr:#dc2626;--shadow:0 1px 2px rgba(0,0,0,.05)}
+.t.dark{--bg:#0a0a0a;--fg:#fafafa;--muted:#262626;--mfg:#a1a1a1;--border:rgba(255,255,255,.1);--input:rgba(255,255,255,.15);--inbg:rgba(255,255,255,.045);--primary:#e5e5e5;--pfg:#171717;--destr:#ff6467;--shadow:none}
+.t{font-family:'Geist',system-ui,sans-serif;font-size:14px;line-height:1.43;color:var(--fg)}
+.ic{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.m{color:var(--mfg)}
+.num{font-variant-numeric:tabular-nums}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:40px;padding:0 14px;border-radius:8px;border:1px solid transparent;font:500 14px 'Geist',sans-serif;color:var(--fg);background:none;text-decoration:none}
+.out{background:var(--inbg);border-color:var(--input);box-shadow:var(--shadow)}
+.tl{display:flex;padding:3px;border-radius:10px;background:var(--muted);height:36px;box-sizing:border-box}
+.tt{flex:1;border:1px solid transparent;border-radius:7px;background:none;color:var(--mfg);font:500 13px 'Geist',sans-serif}
+.tt.on{background:var(--bg);color:var(--fg);box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.dark .tt.on{background:var(--inbg);border-color:var(--input)}
+.prog{height:8px;border-radius:99px;background:color-mix(in srgb,var(--primary) 20%,transparent);overflow:hidden}
+.prog span{display:block;height:100%;background:var(--primary)}
+.tb{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;height:56px;color:var(--mfg);font:500 11px 'Geist',sans-serif;text-decoration:none}
+dt{color:var(--mfg)}
+dd{margin:0;font-weight:500}
+</style>
+</helmet>
+<div class="t {{theme}}" style="width: 390px; height: 844px; box-sizing: border-box; background: var(--bg); display: flex; flex-direction: column; overflow: hidden">
+  <header style="display: flex; align-items: center; gap: 4px; padding: 12px 8px 4px">
+    <a class="btn" href="PhoneListe.dc.html" aria-label="Zurück" style="width: 44px; padding: 0"><svg class="ic" viewBox="0 0 24 24" style="width: 20px; height: 20px" aria-hidden="true"><path d="m15 18-6-6 6-6"></path></svg></a>
+    <span style="flex: 1; font-weight: 500">Details</span>
+    <button class="btn" aria-label="Weitere Aktionen" style="width: 44px; padding: 0"><svg class="ic" viewBox="0 0 24 24" style="width: 20px; height: 20px" aria-hidden="true"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg></button>
+  </header>
+
+  <div style="flex: 1; padding: 8px 16px 16px; display: flex; flex-direction: column; gap: 20px; overflow: hidden">
+    <div style="display: flex; flex-direction: column; gap: 6px">
+      <h1 style="margin: 0; font-size: 20px; font-weight: 600; letter-spacing: -0.01em; word-break: break-all">ubuntu-26.04-desktop-amd64.iso</h1>
+      <span class="m">Linux · hinzugefügt heute, 20:58</span>
+    </div>
+
+    <div class="num" style="display: flex; flex-direction: column; gap: 10px">
+      <div style="display: flex; align-items: baseline; justify-content: space-between">
+        <span style="font-size: 32px; font-weight: 600; letter-spacing: -0.03em">73 %</span>
+        <span class="m">noch 1 Min</span>
+      </div>
+      <div class="prog"><span style="width: 73%"></span></div>
+      <div style="display: flex; justify-content: space-between; font-size: 13px"><span class="m">4,45 von 6,1 GB</span><span>↓ 18,4 MB/s · ↑ 1,2 MB/s</span></div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr 44px; gap: 8px">
+      <button class="btn out"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><line x1="10" x2="10" y1="15" y2="9"></line><line x1="14" x2="14" y1="15" y2="9"></line></svg>Stoppen</button>
+      <button class="btn out"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"></path></svg>Kategorie</button>
+      <button class="btn out" aria-label="Entfernen" style="padding: 0; color: var(--destr)"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path></svg></button>
+    </div>
+
+    <div class="tl" role="tablist">
+      <button class="tt on" role="tab" aria-selected="true">Übersicht</button>
+      <button class="tt" role="tab">Dateien</button>
+      <button class="tt" role="tab">Peers</button>
+      <button class="tt" role="tab">Tracker</button>
+    </div>
+
+    <dl class="num" style="margin: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px">
+      <div><dt>Hochgeladen</dt><dd>540 MB</dd></div>
+      <div><dt>Ratio</dt><dd>0,12</dd></div>
+      <div><dt>Seeds</dt><dd>412 von 1.204</dd></div>
+      <div><dt>Peers</dt><dd>38 von 96</dd></div>
+      <div><dt>Speicherort</dt><dd>/downloads/linux</dd></div>
+      <div><dt>Zeit aktiv</dt><dd>7 Min</dd></div>
+    </dl>
+  </div>
+
+  <nav aria-label="Hauptmenü" style="display: flex; border-top: 1px solid var(--border); padding: 0 8px 12px">
+    <a class="tb" href="PhoneListe.dc.html" style="color: var(--fg)"><svg class="ic" viewBox="0 0 24 24" style="width: 20px; height: 20px" aria-hidden="true"><path d="M3 12h.01"></path><path d="M3 18h.01"></path><path d="M3 6h.01"></path><path d="M8 12h13"></path><path d="M8 18h13"></path><path d="M8 6h13"></path></svg>Torrents</a>
+    <a class="tb" href="#"><svg class="ic" viewBox="0 0 24 24" style="width: 20px; height: 20px" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>Suche</a>
+    <a class="tb" href="#"><svg class="ic" viewBox="0 0 24 24" style="width: 20px; height: 20px" aria-hidden="true"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg>RSS</a>
+    <a class="tb" href="Einstellungen.dc.html"><svg class="ic" viewBox="0 0 24 24" style="width: 20px; height: 20px" aria-hidden="true"><path d="M20 7h-9"></path><path d="M14 17H5"></path><circle cx="17" cy="17" r="3"></circle><circle cx="7" cy="7" r="3"></circle></svg>Einstellungen</a>
+  </nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":true},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    var dark = this.props.dark ?? true;
+    return { theme: dark ? 'dark' : '' };
+  }
+}
+</script>
+</body>
+</html>

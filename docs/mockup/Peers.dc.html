@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Schwarm – Details Peers</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&amp;family=Geist+Mono:wght@400;500&amp;display=swap">
+<style>
+body{margin:0}
+.t{--bg:#ffffff;--fg:#0a0a0a;--muted:#f5f5f5;--mfg:#737373;--border:#e5e5e5;--input:#e5e5e5;--inbg:transparent;--primary:#171717;--pfg:#fafafa;--destr:#dc2626;--shadow:0 1px 2px rgba(0,0,0,.05)}
+.t.dark{--bg:#0a0a0a;--fg:#fafafa;--muted:#262626;--mfg:#a1a1a1;--border:rgba(255,255,255,.1);--input:rgba(255,255,255,.15);--inbg:rgba(255,255,255,.045);--primary:#e5e5e5;--pfg:#171717;--destr:#ff6467;--shadow:none}
+.t{font-family:'Geist',system-ui,sans-serif;font-size:14px;line-height:1.43;color:var(--fg)}
+.ic{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.m{color:var(--mfg)}
+.num{font-variant-numeric:tabular-nums}
+.mono{font-family:'Geist Mono',ui-monospace,monospace;font-size:12px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:32px;padding:0 12px;border-radius:8px;border:1px solid transparent;font:500 14px 'Geist',sans-serif;white-space:nowrap;color:var(--fg);background:none}
+.out{background:var(--inbg);border-color:var(--input);box-shadow:var(--shadow)}
+.icb{width:32px;padding:0}
+.tl{display:flex;padding:3px;border-radius:10px;background:var(--muted);height:36px;box-sizing:border-box}
+.tt{flex:1;border:1px solid transparent;border-radius:7px;background:none;color:var(--mfg);font:500 14px 'Geist',sans-serif}
+.tt.on{background:var(--bg);color:var(--fg);box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.dark .tt.on{background:var(--inbg);border-color:var(--input)}
+.badge{display:inline-flex;align-items:center;height:20px;padding:0 6px;border-radius:6px;border:1px solid var(--border);font:500 11px 'Geist Mono',monospace}
+.card{border:1px solid var(--border);border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:2px;box-shadow:var(--shadow)}
+.p{display:grid;grid-template-columns:28px minmax(0,1fr) auto;gap:12px;align-items:center;padding:10px 8px;border-bottom:1px solid var(--border)}
+.prog{flex:1;height:4px;border-radius:99px;background:color-mix(in srgb,var(--primary) 20%,transparent);overflow:hidden}
+.prog span{display:block;height:100%;background:var(--primary)}
+</style>
+</helmet>
+<div class="t {{theme}}" style="width: 480px; height: 900px; box-sizing: border-box; background: var(--bg); border-left: 1px solid var(--border); display: flex; flex-direction: column; position: relative; overflow: hidden">
+  <button class="btn icb" aria-label="Schließen" style="position: absolute; top: 12px; right: 12px; opacity: .7"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></button>
+  <div style="padding: 16px 48px 0 16px; display: flex; flex-direction: column; gap: 6px">
+    <h2 style="margin: 0; font-size: 16px; font-weight: 600">Sintel (2010) 4K Open Movie</h2>
+    <p class="m" style="margin: 0">Filme · lädt · 41 %</p>
+  </div>
+
+  <div style="flex: 1; padding: 16px; display: flex; flex-direction: column; gap: 16px; min-height: 0">
+    <div class="tl" role="tablist">
+      <button class="tt" role="tab">Übersicht</button>
+      <button class="tt" role="tab">Dateien</button>
+      <button class="tt on" role="tab" aria-selected="true">Peers</button>
+      <button class="tt" role="tab">Tracker</button>
+    </div>
+
+    <div class="num" style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px">
+      <div class="card"><span class="m" style="font-size: 13px">Verbunden</span><span style="font-size: 18px; font-weight: 600">21</span></div>
+      <div class="card"><span class="m" style="font-size: 13px">Davon Seeds</span><span style="font-size: 18px; font-weight: 600">14</span></div>
+      <div class="card"><span class="m" style="font-size: 13px">Eingehend</span><span style="font-size: 18px; font-weight: 600">9</span></div>
+    </div>
+
+    <div style="display: flex; align-items: center; justify-content: space-between">
+      <span class="m" style="font-size: 13px">Sortiert nach Tempo</span>
+      <button class="btn out"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg>Peer hinzufügen</button>
+    </div>
+
+    <div style="border-top: 1px solid var(--border); flex: 1; overflow: hidden">
+      <sc-for list="{{peers}}" as="p" hint-placeholder-count="8">
+        <div class="p" style="{{p.rowStyle}}">
+          <span class="badge" style="justify-content: center">{{p.cc}}</span>
+          <span style="min-width: 0; display: flex; flex-direction: column; gap: 6px">
+            <span style="display: flex; align-items: center; gap: 8px; min-width: 0">
+              <span style="font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{p.client}}</span>
+              <span class="mono m">{{p.flags}}</span>
+            </span>
+            <span style="display: flex; align-items: center; gap: 8px">
+              <span class="mono m">{{p.ip}}</span>
+              <span class="prog"><span style="width: {{p.pct}}%"></span></span>
+              <span class="m num" style="font-size: 12px; width: 34px; text-align: right">{{p.pct}} %</span>
+            </span>
+          </span>
+          <span class="num" style="display: flex; flex-direction: column; align-items: flex-end; gap: 2px; font-size: 13px">
+            <span>{{p.down}}</span>
+            <span class="m">{{p.up}}</span>
+          </span>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 8px; padding: 8px 8px 8px 12px; border: 1px solid var(--border); border-radius: 10px">
+      <span style="flex: 1; min-width: 0"><span class="m">Ausgewählt:</span> <span class="mono">203.0.113.42:51413</span></span>
+      <button class="btn out">Kopieren</button>
+      <button class="btn out" style="color: var(--destr)">Sperren</button>
+    </div>
+    <p class="m" style="margin: 0; font-size: 13px">Flags: D lädt von dir, U lädt zu dir, E verschlüsselt, I eingehend, P µTP.</p>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":true},"$preview":{"width":480,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    var dark = this.props.dark ?? true;
+    var raw = [
+      ['DE', 'qBittorrent 5.1.2', 'D E I', '203.0.113.42', 100, '1,9 MB/s', '0 B/s', 1],
+      ['NL', 'Transmission 4.0.6', 'D E P', '198.51.100.7', 100, '1,4 MB/s', '0 B/s'],
+      ['SE', 'Deluge 2.1.1', 'D U E', '192.0.2.88', 64, '820 KB/s', '210 KB/s'],
+      ['FR', 'libtorrent 2.0.11', 'D E', '203.0.113.150', 100, '610 KB/s', '0 B/s'],
+      ['US', 'qBittorrent 5.3.0', 'U E I', '198.51.100.201', 12, '0 B/s', '340 KB/s'],
+      ['CH', 'rqbit 8.1', 'D P', '192.0.2.14', 100, '290 KB/s', '0 B/s'],
+      ['PL', 'BiglyBT 3.8', 'D U', '203.0.113.9', 87, '140 KB/s', '45 KB/s']
+    ];
+    return {
+      theme: dark ? 'dark' : '',
+      peers: raw.map(function (r) { return { cc: r[0], client: r[1], flags: r[2], ip: r[3], pct: r[4], down: '↓ ' + r[5], up: '↑ ' + r[6], rowStyle: r[7] ? 'background:var(--muted)' : '' }; })
+    };
+  }
+}
+</script>
+</body>
+</html>

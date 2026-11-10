@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Schwarm – Kontextmenü</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&amp;display=swap">
+<style>
+body{margin:0}
+a{color:inherit}
+.t{--bg:#ffffff;--fg:#0a0a0a;--pop:#ffffff;--muted:#f5f5f5;--mfg:#737373;--border:#e5e5e5;--input:#e5e5e5;--inbg:transparent;--primary:#171717;--pfg:#fafafa;--sidebar:#fafafa;--destr:#dc2626;--shadow:0 1px 2px rgba(0,0,0,.05);--inset:0 1px 3px rgba(0,0,0,.08)}
+.t.dark{--bg:#0a0a0a;--fg:#fafafa;--pop:#171717;--muted:#262626;--mfg:#a1a1a1;--border:rgba(255,255,255,.1);--input:rgba(255,255,255,.15);--inbg:rgba(255,255,255,.045);--primary:#e5e5e5;--pfg:#171717;--sidebar:#171717;--destr:#ff6467;--shadow:none;--inset:none}
+.t{font-family:'Geist',system-ui,sans-serif;font-size:14px;line-height:1.43;color:var(--fg)}
+.ic{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.m{color:var(--mfg)}
+.num{font-variant-numeric:tabular-nums}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:32px;padding:0 12px;border-radius:8px;border:1px solid transparent;font:500 14px 'Geist',sans-serif;white-space:nowrap;color:var(--fg);background:none;text-decoration:none}
+.pri{background:var(--primary);color:var(--pfg)}
+.out{background:var(--inbg);border-color:var(--input);box-shadow:var(--shadow)}
+.icb{width:32px;padding:0}
+.mb{display:flex;align-items:center;gap:8px;height:32px;padding:0 8px;border-radius:6px;color:var(--fg);text-decoration:none}
+.mb.act{background:var(--muted);font-weight:500}
+.gl{display:flex;align-items:center;height:32px;padding:0 8px;font-size:12px;font-weight:500;color:var(--mfg)}
+.badge{display:inline-flex;align-items:center;height:22px;padding:0 8px;border-radius:6px;border:1px solid var(--border);font:500 12px 'Geist',sans-serif}
+.cb{width:16px;height:16px;box-sizing:border-box;border-radius:4px;border:1px solid var(--input);display:inline-grid;place-items:center;background:var(--inbg);vertical-align:middle}
+.cb.on{background:var(--primary);border-color:var(--primary);color:var(--pfg)}
+.prog{flex:1;height:6px;border-radius:99px;background:color-mix(in srgb,var(--primary) 20%,transparent);overflow:hidden}
+.prog span{display:block;height:100%;background:var(--primary)}
+.tbl{width:100%;border-collapse:collapse}
+.tbl th{height:40px;padding:0 8px;text-align:left;font-weight:500;border-bottom:1px solid var(--border)}
+.tbl td{height:52px;padding:0 8px;border-bottom:1px solid var(--border);white-space:nowrap}
+.tbl tr.sel td{background:var(--muted)}
+.menu{position:absolute;z-index:3;padding:4px;border-radius:8px;border:1px solid var(--border);background:var(--pop);box-shadow:0 4px 6px -1px rgba(0,0,0,.1),0 2px 4px -2px rgba(0,0,0,.1)}
+.mi{display:flex;align-items:center;gap:8px;height:32px;padding:0 8px;border-radius:4px;white-space:nowrap}
+.mi.hi{background:var(--muted)}
+.ks{margin-left:auto;padding-left:16px;font-size:12px;letter-spacing:.08em;color:var(--mfg)}
+.sep{height:1px;background:var(--border);margin:4px -4px}
+.lab{height:30px;display:flex;align-items:center;padding:0 8px;font-weight:500}
+.sw{width:32px;height:18px;box-sizing:border-box;border-radius:99px;position:relative;flex:none;background:var(--primary)}
+.sw span{position:absolute;top:2px;right:2px;width:14px;height:14px;border-radius:99px;background:var(--pfg)}
+</style>
+</helmet>
+<div class="t {{theme}}" style="min-height: 900px; background: var(--sidebar); display: flex; flex-wrap: wrap">
+  <aside style="flex: 0 0 256px; box-sizing: border-box; padding: 8px 16px 8px 8px; display: flex; flex-direction: column; gap: 4px">
+    <div class="mb" style="height: 48px; padding: 8px">
+      <span style="width: 32px; height: 32px; border-radius: 8px; background: var(--primary); color: var(--pfg); display: grid; place-items: center"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg></span>
+      <span style="display: flex; flex-direction: column; line-height: 1.25"><span style="font-weight: 600">Schwarm</span><span class="m" style="font-size: 12px">qBittorrent 5.3.0</span></span>
+    </div>
+    <nav aria-label="Navigation" style="display: flex; flex-direction: column; padding-top: 8px">
+      <div class="gl">Torrents</div>
+      <a class="mb act" href="Main.dc.html" aria-current="page"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12h.01"></path><path d="M3 18h.01"></path><path d="M3 6h.01"></path><path d="M8 12h13"></path><path d="M8 18h13"></path><path d="M8 6h13"></path></svg>Alle</a>
+      <div class="gl" style="margin-top: 8px">Tags</div>
+      <div style="display: flex; flex-wrap: wrap; gap: 6px; padding: 0 8px">
+        <span class="badge">4K</span><span class="badge" style="background: var(--primary); color: var(--pfg); border-color: transparent">behalten</span><span class="badge">Archiv</span>
+      </div>
+      <div class="gl" style="margin-top: 8px">Tracker</div>
+      <a class="mb" href="#">torrent.ubuntu.com<span class="m" style="margin-left: auto; font-size: 12px">2</span></a>
+      <a class="mb" href="#">linuxtracker.org<span class="m" style="margin-left: auto; font-size: 12px">4</span></a>
+      <a class="mb" href="#" style="color: var(--destr)">Mit Fehler<span style="margin-left: auto; font-size: 12px">1</span></a>
+    </nav>
+  </aside>
+
+  <div style="flex: 999 1 640px; min-width: 0; margin: 8px; margin-left: 0; background: var(--bg); border-radius: 12px; box-shadow: var(--inset); display: flex; flex-direction: column; position: relative">
+    <header style="display: flex; align-items: center; gap: 8px; height: 52px; padding: 0 16px; border-bottom: 1px solid var(--border)">
+      <button class="btn icb" aria-label="Seitenleiste umschalten" style="margin-left: -4px"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"></rect><path d="M9 3v18"></path></svg></button>
+      <span style="width: 1px; height: 16px; background: var(--border); margin: 0 4px"></span>
+      <span class="m">Torrents</span>
+      <svg class="ic m" viewBox="0 0 24 24" style="width: 14px; height: 14px" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg>
+      <span>Alle</span>
+      <span style="margin-left: auto; display: flex; gap: 8px">
+        <button class="btn out num" aria-expanded="true" style="gap: 10px"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 14 4-4"></path><path d="M3.34 19a10 10 0 1 1 17.32 0"></path></svg>Langsam · 10 / 2 MB/s<svg class="ic m" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg></button>
+        <a class="btn pri" href="Hinzufuegen.dc.html"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg>Hinzufügen</a>
+      </span>
+    </header>
+
+    <div class="menu" role="menu" aria-label="Tempo" style="right: 128px; top: 50px; width: 280px">
+      <div class="lab">Tempo</div>
+      <div class="sep"></div>
+      <div class="mi" style="height: auto; padding: 8px; gap: 12px"><span style="flex: 1; display: flex; flex-direction: column"><span style="font-weight: 500">Langsamer Modus</span><span class="m" style="font-size: 13px">Andere Limits, z. B. tagsüber</span></span><span class="sw" role="switch" aria-checked="true"><span></span></span></div>
+      <div class="sep"></div>
+      <div class="mi num">Normal<span class="ks" style="letter-spacing: 0">unbegrenzt / 5 MB/s</span></div>
+      <div class="mi num">Langsam<span class="ks" style="letter-spacing: 0">10 / 2 MB/s</span></div>
+      <div class="mi">Zeitplan<span class="ks" style="letter-spacing: 0">Mo–Fr 8–18 Uhr</span></div>
+      <div class="sep"></div>
+      <div class="mi">Limits bearbeiten …</div>
+    </div>
+
+    <main style="padding: 20px 24px; display: flex; flex-direction: column; gap: 16px">
+      <div style="border: 1px solid var(--border); border-radius: 10px; overflow: hidden">
+        <table class="tbl num">
+          <thead><tr><th style="width: 32px; padding-left: 12px"><span class="cb" role="checkbox" aria-checked="mixed"><span style="width: 8px; height: 2px; background: var(--fg)"></span></span></th><th>Name</th><th>Status</th><th style="width: 180px">Fortschritt</th><th style="text-align: right">Tempo</th></tr></thead>
+          <tbody>
+            <sc-for list="{{rows}}" as="r" hint-placeholder-count="6">
+              <tr class="{{r.cls}}">
+                <td style="padding-left: 12px"><span class="cb {{r.cbCls}}"><sc-if value="{{r.sel}}" hint-placeholder-val="{{false}}"><svg class="ic" viewBox="0 0 24 24" style="width: 12px; height: 12px; stroke-width: 3" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg></sc-if></span></td>
+                <td><span style="display: flex; align-items: center; gap: 8px"><span class="badge">{{r.cat}}</span><span style="font-weight: 500">{{r.name}}</span></span></td>
+                <td>{{r.status}}</td>
+                <td><span style="display: flex; align-items: center; gap: 10px"><span class="prog"><span style="width: {{r.pct}}%"></span></span><span style="width: 36px; text-align: right; font-size: 13px">{{r.pct}} %</span></span></td>
+                <td style="text-align: right">{{r.speed}}</td>
+              </tr>
+            </sc-for>
+          </tbody>
+        </table>
+      </div>
+      <span class="m" style="font-size: 13px">Rechtsklick auf die Auswahl öffnet das Kontextmenü. Dieselben Aktionen gibt es über „…“ am Zeilenende und am Handy per langem Druck.</span>
+    </main>
+
+    <div class="menu" role="menu" aria-label="Aktionen für 2 Torrents" style="left: 300px; top: 150px; width: 248px">
+      <div class="lab m" style="font-weight: 500; font-size: 13px">2 Torrents</div>
+      <div class="mi">Starten<span class="ks">␣</span></div>
+      <div class="mi">Stoppen</div>
+      <div class="mi">Zwangsstart</div>
+      <div class="sep"></div>
+      <div class="mi">Kategorie<svg class="ic m" viewBox="0 0 24 24" style="margin-left: auto" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg></div>
+      <div class="mi">Tags<svg class="ic m" viewBox="0 0 24 24" style="margin-left: auto" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg></div>
+      <div class="mi">Speicherort ändern …</div>
+      <div class="mi">Umbenennen …<span class="ks">F2</span></div>
+      <div class="sep"></div>
+      <div class="mi">Warteschlange<svg class="ic m" viewBox="0 0 24 24" style="margin-left: auto" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg></div>
+      <div class="mi">Limits …</div>
+      <div class="mi hi">Erweitert<svg class="ic m" viewBox="0 0 24 24" style="margin-left: auto" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg></div>
+      <div class="sep"></div>
+      <div class="mi">Neu prüfen</div>
+      <div class="mi">Neu ankündigen</div>
+      <div class="sep"></div>
+      <div class="mi">Kopieren<svg class="ic m" viewBox="0 0 24 24" style="margin-left: auto" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg></div>
+      <div class="mi">.torrent exportieren</div>
+      <div class="sep"></div>
+      <div class="mi" style="color: var(--destr)">Entfernen …<span class="ks">Entf</span></div>
+    </div>
+    <div class="menu" role="menu" aria-label="Erweitert" style="left: 552px; top: 482px; width: 264px">
+      <div class="mi"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>Automatische Verwaltung</div>
+      <div class="mi"><span style="width: 16px"></span>Der Reihe nach laden</div>
+      <div class="mi"><span style="width: 16px"></span>Erste und letzte Teile zuerst</div>
+      <div class="mi"><span style="width: 16px"></span>Super-Seeding</div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":true},"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    var dark = this.props.dark ?? true;
+    var raw = [
+      ['ubuntu-26.04-desktop-amd64.iso', 'Linux', 'Lädt', 73, '6,1 MB/s'],
+      ['Sintel (2010) 4K Open Movie', 'Filme', 'Lädt', 41, '2,4 MB/s', 1],
+      ['Fedora-Workstation-Live-x86_64-44', 'Linux', 'Lädt', 96, '1,5 MB/s', 1],
+      ['debian-13.2.0-amd64-DVD-1.iso', 'Linux', 'Seedet', 100, '820 KB/s'],
+      ['Big Buck Bunny 60fps 4K', 'Filme', 'Seedet', 100, '1,1 MB/s'],
+      ['archlinux-2026.11.01-x86_64.iso', 'Linux', 'Seedet', 100, '96 KB/s']
+    ];
+    return {
+      theme: dark ? 'dark' : '',
+      rows: raw.map(function (r) { var s = !!r[5]; return { name: r[0], cat: r[1], status: r[2], pct: r[3], speed: r[4], sel: s, cls: s ? 'sel' : '', cbCls: s ? 'on' : '' }; })
+    };
+  }
+}
+</script>
+</body>
+</html>
