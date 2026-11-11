@@ -1,0 +1,52 @@
+#!/usr/bin/with-contenv bash
+# shellcheck shell=bash
+
+# Schwarm as qBittorrent's alternative WebUI (docker/README.md). Runs after the image's own init
+# (init-qbittorrent-config has written the config) and before qBittorrent starts.
+#
+# qBittorrent 5 keeps the setting in [WebUI] as AlternativeUIEnabled and RootFolder; older
+# configs have WebUI\AlternativeUIEnabled under [Preferences], which qBittorrent would migrate
+# over the new keys on its next start (src/app/upgrade.cpp, migrateSettingKeys), so those go.
+
+CONF=/config/qBittorrent/qBittorrent.conf
+ROOT=/schwarm
+
+echo "**** Schwarm $(cat "${ROOT}/version.txt" 2>/dev/null) in ${ROOT} ****"
+
+if [[ "${SCHWARM_WEBUI:-true}" != "true" ]]; then
+    echo "**** SCHWARM_WEBUI=${SCHWARM_WEBUI}: leaving the WebUI setting as it is ****"
+    exit 0
+fi
+
+if [[ ! -f "${CONF}" ]]; then
+    echo "**** ${CONF} not found: set the alternative WebUI to ${ROOT} by hand ****"
+    exit 0
+fi
+
+awk -v root="${ROOT}" '
+    function keys() { print "AlternativeUIEnabled=true"; print "RootFolder=" root; done = 1 }
+    /^\[/ {
+        if (inside && !done) keys()
+        inside = ($0 == "[WebUI]")
+        print
+        next
+    }
+    /^WebUI\\(AlternativeUIEnabled|RootFolder)=/ { next }
+    inside && /^(AlternativeUIEnabled|RootFolder)=/ { next }
+    { print }
+    END {
+        if (!done) {
+            if (!inside) print "\n[WebUI]"
+            keys()
+        }
+    }
+' "${CONF}" > "${CONF}.schwarm"
+
+if cmp -s "${CONF}" "${CONF}.schwarm"; then
+    rm "${CONF}.schwarm"
+else
+    # keep owner and mode of the file
+    cat "${CONF}.schwarm" > "${CONF}"
+    rm "${CONF}.schwarm"
+    echo "**** Alternative WebUI set to ${ROOT} ****"
+fi

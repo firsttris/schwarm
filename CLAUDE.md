@@ -79,6 +79,9 @@ bun run e2e
   `app/preferences` (type, section, label, unit, options); its test compares it with
   `dev/qbt-preference-keys.json` (taken from `appcontroller.cpp`). A new qBittorrent version: update
   that list, then the table and the mock's `dev/preferences-fixture.ts`.
+- Docker mod (`docker/`, `docker/README.md` is the Docker Hub page): `FROM scratch` with Schwarm in
+  `/schwarm` and an s6 init script for `linuxserver/qbittorrent`; `docker/test-mod.sh` starts it on
+  the real image (CI job `docker-mod`). In this sandbox the build needs the proxy CA; CI does not.
 - Paraglide loads its message-format plugin from `node_modules` (`project.inlang/settings.json`),
   not from a CDN, so builds need no network. Messages with numbers use plural variants.
 - Versions kept back on purpose: `@tanstack/react-table` 8 (9 changed the API and is three months

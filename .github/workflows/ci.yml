@@ -42,6 +42,21 @@ jobs:
           path: release/*.zip
           if-no-files-found: error
 
+  docker-mod:
+    # The Docker mod for linuxserver/qbittorrent (docker/README.md), started on the real image
+    if: ${{ !github.event.pull_request.draft }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      packages: write # build cache in ghcr.io, shared with the release (docker-build action)
+    steps:
+      - uses: actions/checkout@v7
+      - uses: firsttris/workflows/actions/docker-build@v1
+        with:
+          tags: schwarm:ci
+      - run: docker/test-mod.sh schwarm:ci
+
   image:
     if: ${{ !github.event.pull_request.draft }}
     runs-on: ubuntu-latest
