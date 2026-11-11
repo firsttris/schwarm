@@ -374,7 +374,7 @@ export function AddTorrentDialog() {
               <Button
                 type="button"
                 variant="link"
-                className="h-auto self-start p-0 text-muted-foreground hover:no-underline"
+                className="h-auto self-start p-0 text-muted-foreground hover:no-underline has-[>svg]:px-0"
               >
                 <ChevronRightIcon className="transition-transform group-data-[state=open]/more:rotate-90" />
                 {m.add_more_options()}

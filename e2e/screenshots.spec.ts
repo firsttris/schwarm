@@ -170,6 +170,33 @@ for (const scheme of ["light", "dark"] as const) {
     });
   });
 
+  test.describe(`desktop ${scheme} milestone 6`, () => {
+    test.use({ ...desktop, colorScheme: scheme });
+
+    test(`statistics ${scheme}`, async ({ page }) => {
+      await page.goto("./#/statistics");
+      await expect(page.getByTestId("statistics")).toContainText("2,81 TB");
+      // a few seconds of speed history for the chart
+      await page.waitForTimeout(4000);
+      await shot(page, `desktop-statistics-${scheme}`);
+    });
+
+    test(`log ${scheme}`, async ({ page }) => {
+      await page.goto("./#/settings?section=log");
+      await expect(page.getByTestId("log-list").locator("li")).toHaveCount(18);
+      await shot(page, `desktop-log-${scheme}`);
+    });
+
+    test(`creator ${scheme}`, async ({ page }) => {
+      await page.goto("./#/settings?section=system");
+      await page.getByRole("button", { name: "Erstellen …" }).click();
+      const dialog = page.getByTestId("creator-dialog");
+      await dialog.getByLabel("Datei oder Ordner auf dem Server").fill("/downloads/urlaub");
+      await dialog.getByLabel("Tracker").fill("udp://tracker.example.org:1337/announce");
+      await shot(page, `desktop-creator-${scheme}`);
+    });
+  });
+
   test.describe(`phone ${scheme}`, () => {
     test.use({ ...phone, colorScheme: scheme });
 

@@ -3,8 +3,7 @@
 Everything the stock WebUI of qBittorrent 5.3.0 can do (from `src/webui/www/private` and
 `src/webui/api`), and where it goes in Schwarm. "Milestone" refers to [`spec.md`](spec.md).
 
-Done: milestones 1–5. Areas of later milestones (Statistik) keep their place in the
-navigation with a "Kommt bald" page.
+Done: milestones 1–6, every feature of the stock WebUI has its place.
 
 ## Torrent list
 
@@ -59,11 +58,11 @@ navigation with a "Kommt bald" page.
 | Create, edit, delete categories and tags, remove unused | Dialog "Kategorien und Tags" from the sidebar group buttons and the app menu | 2 |
 | Global speed limits and alternative limits (turtle), schedule | Header: speed button with a menu ("Langsamer Modus"), "Limits bearbeiten …" dialog with the schedule | 2 |
 | Connection status, external IP, DHT nodes, free disk space | Sidebar card; badge on the phone | 1 |
-| Log (execution log, banned peers) | Settings → "System" → "Log" | 6 |
-| Statistics | Page "Statistik" | 6 |
-| Torrent creator | Menu behind the app name → "Torrent erstellen" | 6 |
-| Cookies for downloads | Settings → "Erweitert" | 6 |
-| About, logout, shut down qBittorrent | Menu behind the app name | 6 |
+| Log (execution log, banned peers) | Settings → "Protokoll": messages (`log/main`, only what is new per poll) filtered by kind and text, newest first; tab "Gesperrte Peers" (`log/peers`) | 6 |
+| Statistics | Page "Statistik": overall speed of the last minutes, all-time and session figures, disk cache and queue, tracker announces (`server_state` of `sync/maindata`), running time (`app/processInfo`) | 6 |
+| Torrent creator | Dialog "Torrent erstellen" from the app menu and Settings → "System": source path, trackers with tiers, private, start seeding; piece size, format (libtorrent 2) or alignment (1.2), web seeds, comment, source, save path; task list with progress, download of the .torrent, delete (`torrentcreator/*`) | 6 |
+| Cookies for downloads | Settings → "Cookies" (`app/cookies`, `app/setCookies`); without a date a cookie lasts the session | 6 |
+| About, logout, shut down qBittorrent | Settings → "System" (versions from `app/version`, `app/webapiVersion`, `app/buildInfo`); app menu: "Über Schwarm", "Abmelden", "qBittorrent beenden …" with a confirmation, then a page that says qBittorrent has quit | 6 |
 
 ## Settings (249 fields in 8 tabs in qBittorrent)
 

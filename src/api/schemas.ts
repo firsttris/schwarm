@@ -129,6 +129,9 @@ export type Category = z.infer<typeof categorySchema>;
 
 export const connectionStatuses = ["connected", "firewalled", "disconnected"] as const;
 
+/** A number qBittorrent sends as text for some fields; "-" (no ratio yet) stays text. */
+const numText = z.union([z.number(), z.string()]);
+
 export const serverStateSchema = z.partial(
   z.looseObject({
     connection_status: z.string(),
@@ -150,6 +153,17 @@ export const serverStateSchema = z.partial(
     alltime_dl: num,
     alltime_ul: num,
     total_peer_connections: num,
+    // statistics (synccontroller.cpp, getTransferInfo): some are sent as text ("1.41", "-")
+    global_ratio: numText,
+    total_wasted_session: num,
+    read_cache_hits: numText,
+    read_cache_overload: numText,
+    write_cache_overload: numText,
+    total_buffers_size: num,
+    queued_io_jobs: num,
+    average_time_queue: num,
+    total_queued_size: num,
+    queued_tracker_announces: num,
   }),
 );
 export type ServerState = z.infer<typeof serverStateSchema>;
@@ -442,3 +456,56 @@ export const rssRuleSchema = z.looseObject({
 export type RssRule = z.infer<typeof rssRuleSchema>;
 export const rssRulesSchema = z.record(str, rssRuleSchema);
 export const matchingArticlesSchema = z.record(str, z.array(str));
+
+/** log/main (logcontroller.cpp): type is a bit: 1 normal, 2 info, 4 warning, 8 critical. */
+export const logMessagesSchema = z.array(z.looseObject({ id: num, timestamp: num, type: num, message: str }));
+export type LogMessage = z.infer<typeof logMessagesSchema>[number];
+
+/** log/peers: blocked or banned peers with the reason. */
+export const logPeersSchema = z.array(
+  z.looseObject({ id: num, timestamp: num, ip: str, blocked: z.boolean(), reason: str }),
+);
+export type LogPeer = z.infer<typeof logPeersSchema>[number];
+
+/** app/cookies (appcontroller.cpp, cookiesAction). expirationDate in seconds; none: a session cookie. */
+export const cookiesSchema = z.array(
+  z.looseObject({ name: str, domain: str, path: str, value: str, expirationDate: z.optional(num) }),
+);
+export type Cookie = z.infer<typeof cookiesSchema>[number];
+
+/** app/buildInfo */
+export const buildInfoSchema = z.partial(
+  z.looseObject({
+    qt: str,
+    libtorrent: str,
+    boost: str,
+    openssl: str,
+    zlib: str,
+    bitness: num,
+    platform: str,
+  }),
+);
+export type BuildInfo = z.infer<typeof buildInfoSchema>;
+
+/** torrentcreator/status (torrentcreatorcontroller.cpp, statusAction). */
+export const creatorTasksSchema = z.array(
+  z.looseObject({
+    taskID: str,
+    sourcePath: str,
+    pieceSize: num,
+    private: z.boolean(),
+    timeAdded: num,
+    status: z.enum(["Queued", "Running", "Finished", "Failed"]),
+    format: z.optional(str),
+    comment: z.optional(str),
+    torrentFilePath: z.optional(str),
+    source: z.optional(str),
+    trackers: z.optional(z.array(str)),
+    urlSeeds: z.optional(z.array(str)),
+    timeStarted: z.optional(num),
+    timeFinished: z.optional(num),
+    progress: z.optional(num),
+    errorMessage: z.optional(str),
+  }),
+);
+export type CreatorTask = z.infer<typeof creatorTasksSchema>[number];

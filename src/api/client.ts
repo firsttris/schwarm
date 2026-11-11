@@ -1,6 +1,12 @@
 import * as z from "zod/mini";
 import {
+  buildInfoSchema,
+  type Cookie,
+  cookiesSchema,
+  creatorTasksSchema,
   filesSchema,
+  logMessagesSchema,
+  logPeersSchema,
   maindataResponseSchema,
   matchingArticlesSchema,
   pieceStatesSchema,
@@ -81,6 +87,26 @@ async function post(path: string, params: Params | FormData = {}): Promise<strin
 }
 
 const hashes = (list: string[]) => list.join("|");
+
+export interface CreateTorrentOptions {
+  sourcePath: string;
+  /** Bytes; 0 lets qBittorrent choose. */
+  pieceSize?: number;
+  private?: boolean;
+  /** libtorrent 2: "v1", "v2" or "hybrid". */
+  format?: "v1" | "v2" | "hybrid";
+  /** libtorrent 1.2 only. */
+  optimizeAlignment?: boolean;
+  paddedFileSizeLimit?: number;
+  ignoreDotfiles?: boolean;
+  startSeeding?: boolean;
+  /** Where the .torrent goes on the server; empty keeps it only for download. */
+  torrentFilePath?: string;
+  trackers?: string[];
+  urlSeeds?: string[];
+  comment?: string;
+  source?: string;
+}
 
 export type ContentLayout = "Original" | "Subfolder" | "NoSubfolder";
 export type StopCondition = "None" | "MetadataReceived" | "FilesChecked";
@@ -267,6 +293,31 @@ export const api = {
   networkInterfaces: () =>
     get("app/networkInterfaceList", z.array(z.looseObject({ name: z.string(), value: z.string() }))),
   networkAddresses: (iface: string) => get("app/networkInterfaceAddressList", z.array(z.string()), { iface }),
+
+  buildInfo: () => get("app/buildInfo", buildInfoSchema),
+  processInfo: () => get("app/processInfo", z.looseObject({ launch_time: z.number() })),
+  /** qBittorrent answers, then quits 100 ms later (shutdownAction). */
+  shutdown: () => post("app/shutdown"),
+  cookies: () => get("app/cookies", cookiesSchema),
+  /** Replaces all cookies (setCookiesAction); without expirationDate a cookie ends with the session. */
+  setCookies: (cookies: Cookie[]) => post("app/setCookies", { cookies: JSON.stringify(cookies) }),
+
+  // log (logcontroller.cpp): only messages after last_known_id
+  logMain: (lastKnownId: number) => get("log/main", logMessagesSchema, { last_known_id: lastKnownId }),
+  logPeers: (lastKnownId: number) => get("log/peers", logPeersSchema, { last_known_id: lastKnownId }),
+
+  // torrent creator (torrentcreatorcontroller.cpp)
+  createTorrent: async (options: CreateTorrentOptions) => {
+    const { trackers, urlSeeds, ...rest } = options;
+    // one URL per line, empty lines start a new tracker tier; joined with "|" (createtorrent.html)
+    const urls = (list?: string[]) => list?.map(encodeURIComponent).join("|");
+    const body = toSearch({ ...rest, trackers: urls(trackers), urlSeeds: urls(urlSeeds) });
+    const res = await request("torrentcreator/addTask", { method: "POST", body });
+    return z.looseObject({ taskID: z.string() }).parse(await res.json()).taskID;
+  },
+  creatorTasks: () => get("torrentcreator/status", creatorTasksSchema),
+  creatorFileUrl: (taskID: string) => `${base}torrentcreator/torrentFile?${toSearch({ taskID })}`,
+  deleteCreatorTask: (taskID: string) => post("torrentcreator/deleteTask", { taskID }),
 
   add: (options: AddTorrentOptions) => {
     const form = new FormData();

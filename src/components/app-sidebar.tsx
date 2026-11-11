@@ -9,7 +9,9 @@ import {
   CircleArrowUpIcon,
   CirclePauseIcon,
   CirclePlayIcon,
+  FilePlus2Icon,
   FolderIcon,
+  InfoIcon,
   ListIcon,
   LogOutIcon,
   type LucideIcon,
@@ -17,6 +19,7 @@ import {
   MoonIcon,
   PauseIcon,
   PlayIcon,
+  PowerIcon,
   RssIcon,
   SearchIcon,
   Settings2Icon,
@@ -26,7 +29,7 @@ import {
 } from "lucide-react";
 import { useMemo } from "react";
 import { api } from "@/api/client";
-import { authState, resetMaindata, useMaindata, useRunAction, useVersion } from "@/api/queries";
+import { useMaindata, useRunAction, useVersion } from "@/api/queries";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import {
   DropdownMenu,
@@ -57,6 +60,7 @@ import {
 } from "@/components/ui/sidebar";
 import { statusLabel } from "@/lib/labels";
 import { openManage } from "@/lib/manage";
+import { logout, openCreator, openShutdown } from "@/lib/system";
 import { type Theme, useTheme } from "@/lib/theme";
 import {
   categoryTree,
@@ -95,12 +99,6 @@ function AppMenu() {
   const run = useRunAction();
   const { data } = useMaindata();
   const paused = data?.serverState.session_state ?? false;
-  const logout = async () => {
-    await api.logout().catch(() => undefined);
-    resetMaindata();
-    queryClient.clear();
-    authState.set(true);
-  };
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -132,6 +130,9 @@ function AppMenu() {
         <DropdownMenuItem onSelect={() => openManage("categories")}>
           <TagsIcon /> {m.manage_menu()}
         </DropdownMenuItem>
+        <DropdownMenuItem onSelect={openCreator}>
+          <FilePlus2Icon /> {m.creator_menu()}
+        </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuLabel className="text-muted-foreground text-xs">{m.appearance()}</DropdownMenuLabel>
         <DropdownMenuRadioGroup value={theme} onValueChange={(v) => setTheme(v as Theme)}>
@@ -151,8 +152,16 @@ function AppMenu() {
             <SlidersHorizontalIcon /> {m.nav_settings()}
           </Link>
         </DropdownMenuItem>
-        <DropdownMenuItem onSelect={logout}>
+        <DropdownMenuItem asChild>
+          <Link to="/settings" search={{ section: "system" }}>
+            <InfoIcon /> {m.about_menu()}
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem onSelect={() => void logout(queryClient)}>
           <LogOutIcon /> {m.logout()}
+        </DropdownMenuItem>
+        <DropdownMenuItem variant="destructive" onSelect={openShutdown}>
+          <PowerIcon /> {m.shutdown_menu()}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
