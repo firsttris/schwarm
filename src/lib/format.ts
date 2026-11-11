@@ -101,3 +101,31 @@ export function trackerHost(url: string): string {
     return url;
   }
 }
+
+/** "vor 3 Wochen", "in 2 Tagen" */
+export function formatRelative(unixSeconds: number, now = Date.now(), locale = getLocale()): string {
+  if (!unixSeconds || unixSeconds < 0) return "–";
+  const diff = unixSeconds - now / 1000;
+  const abs = Math.abs(diff);
+  const rtf = new Intl.RelativeTimeFormat(locale, { numeric: "auto" });
+  const steps: [number, Intl.RelativeTimeFormatUnit][] = [
+    [60, "second"],
+    [3600, "minute"],
+    [86400, "hour"],
+    [7 * 86400, "day"],
+    [30 * 86400, "week"],
+    [365 * 86400, "month"],
+    [Number.POSITIVE_INFINITY, "year"],
+  ];
+  const sizes: Record<string, number> = {
+    second: 1,
+    minute: 60,
+    hour: 3600,
+    day: 86400,
+    week: 7 * 86400,
+    month: 30 * 86400,
+    year: 365 * 86400,
+  };
+  const unit = steps.find(([limit]) => abs < limit)![1];
+  return rtf.format(Math.round(diff / sizes[unit]!), unit);
+}

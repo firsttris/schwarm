@@ -1,4 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SettingsPage } from "@/components/settings-page";
 
-export const Route = createFileRoute("/settings")({ component: SettingsPage });
+export const settingsSections = ["ui", "search"] as const;
+export type SettingsSection = (typeof settingsSections)[number];
+
+export const Route = createFileRoute("/settings")({
+  validateSearch: (search: Record<string, unknown>): { section?: SettingsSection } => ({
+    section: settingsSections.includes(search.section as SettingsSection)
+      ? (search.section as SettingsSection)
+      : undefined,
+  }),
+  component: SettingsPage,
+});

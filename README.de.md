@@ -110,7 +110,13 @@ qBittorrent und merkt sich nur seine Anzeige-Einstellungen (Design, Sprache, Spa
 - **Hell, dunkel oder wie das System**, Deutsch und Englisch (folgt dem Browser).
 - **Anmeldung** nur, wenn qBittorrent danach fragt (nicht in freigegebenen Netzen).
 
-Suche, RSS, Statistik und die Einstellungen von qBittorrent folgen in den nächsten Versionen.
+### 🔍 Suche
+
+- **Suchen über die Such-Plugins von qBittorrent**: ein Feld, Kategorie, Ergebnisse nach Seeds
+  sortiert, Filter für Quelle, Seeds und Größe, und „Laden“ öffnet den Hinzufügen-Dialog.
+- **Plugins** in den Einstellungen: einschalten, aktualisieren, per Adresse hinzufügen, entfernen.
+
+RSS, Statistik und die Einstellungen von qBittorrent folgen in den nächsten Versionen.
 
 ## 📸 Bilder
 

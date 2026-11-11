@@ -1,4 +1,5 @@
 import { fixtureCategories, fixtureTags, type MockTorrent, makeFixtures, units } from "./fixtures";
+import { type MockPlugin, type MockResult, makePlugins, searchCorpus } from "./search-fixtures";
 
 /**
  * A small stand-in for qBittorrent's WebUI API v2, for development and the E2E tests.
@@ -17,6 +18,8 @@ export interface MockOptions {
   frozen?: boolean;
   /** "Now" in unix seconds, for repeatable dates. */
   now?: number;
+  /** Behave like a qBittorrent without Python: search/start answers 409. */
+  noPython?: boolean;
 }
 
 type Json = Record<string, unknown>;
@@ -38,12 +41,16 @@ export function createMockApi(initial: MockOptions = {}) {
   let sessionPaused: boolean;
   let prefs: Record<string, number | boolean>;
   let metadataRequests: Map<string, number>;
+  let plugins: MockPlugin[];
+  let searches: Map<number, { pattern: string; results: MockResult[]; polls: number; stopped: boolean }>;
+  let searchCounter: number;
 
   function reset(next: MockOptions = {}) {
     options = {
       auth: next.auth ?? initial.auth ?? false,
       frozen: next.frozen ?? initial.frozen ?? false,
       now: next.now ?? initial.now ?? Math.floor(Date.now() / 1000),
+      noPython: next.noPython ?? initial.noPython ?? false,
     };
     torrents = makeFixtures();
     categories = structuredClone(fixtureCategories);
@@ -68,6 +75,9 @@ export function createMockApi(initial: MockOptions = {}) {
       scheduler_days: 1,
     };
     metadataRequests = new Map();
+    plugins = makePlugins();
+    searches = new Map();
+    searchCounter = 0;
   }
   reset();
 
@@ -771,6 +781,109 @@ export function createMockApi(initial: MockOptions = {}) {
       }
       case "torrents/parseMetadata":
         return json((p.files ?? []).map((f) => metadataInfo(f.name, f.name.replace(/\.torrent$/, ""))));
+      case "search/plugins":
+        return json(
+          plugins.map((pl) => ({
+            name: pl.name,
+            fullName: pl.fullName,
+            version: pl.version,
+            url: pl.url,
+            enabled: pl.enabled,
+            supportedCategories: [
+              { id: "all", name: "All categories" },
+              ...pl.categories.map((c) => ({ id: c, name: c[0]!.toUpperCase() + c.slice(1) })),
+            ],
+          })),
+        );
+      case "search/start": {
+        if (options.noPython) return text("Python must be installed to use the Search Engine.", 409);
+        const wantedPlugins = (p.get("plugins") ?? "enabled").split("|");
+        const engines =
+          wantedPlugins[0] === "all"
+            ? plugins.map((pl) => pl.name)
+            : wantedPlugins[0] === "enabled"
+              ? plugins.filter((pl) => pl.enabled).map((pl) => pl.name)
+              : wantedPlugins;
+        searchCounter++;
+        searches.set(searchCounter, {
+          pattern: p.get("pattern") ?? "",
+          results: searchCorpus(p.get("pattern") ?? "", p.get("category") ?? "all", engines),
+          polls: 0,
+          stopped: false,
+        });
+        return json({ id: searchCounter });
+      }
+      case "search/stop":
+      case "search/delete": {
+        const job = searches.get(Number(p.get("id")));
+        if (!job) return text("Not Found", 404);
+        if (endpoint === "search/delete") searches.delete(Number(p.get("id")));
+        else job.stopped = true;
+        return ok();
+      }
+      case "search/results": {
+        // Results arrive in steps of four, one step per request, like plugins that answer one by one
+        const job = searches.get(Number(p.get("id")));
+        if (!job) return text("Not Found", 404);
+        if (!job.stopped) job.polls++;
+        const available = job.stopped ? job.results.length : Math.min(job.results.length, job.polls * 4);
+        if (available >= job.results.length) job.stopped = true;
+        const offset = Number(p.get("offset") ?? 0);
+        return json({
+          status: job.stopped ? "Stopped" : "Running",
+          total: available,
+          results: job.results.slice(offset, available).map((r) => {
+            const plugin = plugins.find((pl) => pl.name === r.engine);
+            const hash = r.fileName
+              .split("")
+              .reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 7)
+              .toString(16)
+              .padStart(8, "0");
+            return {
+              fileName: r.fileName,
+              fileUrl: `magnet:?xt=urn:btih:${hash.repeat(5)}&dn=${encodeURIComponent(r.fileName)}`,
+              fileSize: r.fileSize,
+              nbSeeders: r.nbSeeders,
+              nbLeechers: r.nbLeechers,
+              engineName: plugin?.fullName ?? r.engine,
+              siteUrl: plugin?.url ?? "",
+              descrLink: `${plugin?.url ?? "https://example.org"}/details/${encodeURIComponent(r.fileName)}`,
+              pubDate: options.now - r.age,
+            };
+          }),
+        });
+      }
+      case "search/enablePlugin": {
+        const names = (p.get("names") ?? "").split("|");
+        for (const pl of plugins) if (names.includes(pl.name)) pl.enabled = p.get("enable") === "true";
+        return ok();
+      }
+      case "search/uninstallPlugin": {
+        const names = (p.get("names") ?? "").split("|");
+        plugins = plugins.filter((pl) => !names.includes(pl.name));
+        return ok();
+      }
+      case "search/installPlugin": {
+        for (const source of (p.get("sources") ?? "").split("|").filter(Boolean)) {
+          const name = (source.split("/").pop() ?? source)
+            .replace(/\.py$/, "")
+            .toLowerCase()
+            .replace(/[^a-z0-9]/g, "");
+          if (name && !plugins.some((pl) => pl.name === name)) {
+            plugins.push({
+              name,
+              fullName: name,
+              version: "1.0",
+              url: source,
+              enabled: true,
+              categories: ["software"],
+            });
+          }
+        }
+        return ok();
+      }
+      case "search/updatePlugins":
+        return ok();
       case "transfer/toggleSpeedLimitsMode":
         altSpeed = !altSpeed;
         return ok();
