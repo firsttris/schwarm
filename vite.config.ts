@@ -17,7 +17,7 @@ export default defineConfig({
       outdir: "./src/paraglide",
       strategy: ["localStorage", "preferredLanguage", "baseLocale"],
     }),
-    tanstackRouter({ target: "react", autoCodeSplitting: false }),
+    tanstackRouter({ target: "react", autoCodeSplitting: true }),
     react(),
     tailwindcss(),
   ],
@@ -29,7 +29,22 @@ export default defineConfig({
     outDir: "dist/public",
     emptyOutDir: true,
     assetsInlineLimit: 0,
-    chunkSizeWarningLimit: 900,
+    chunkSizeWarningLimit: 500,
+    rolldownOptions: {
+      output: {
+        // Libraries change less often than the app: own files, so an update of Schwarm
+        // keeps them in the browser cache (qBittorrent caches JS for 12 h, names are hashed)
+        codeSplitting: {
+          groups: [
+            { name: "react", test: /node_modules[\\/](react|react-dom|scheduler)[\\/]/ },
+            { name: "tanstack", test: /node_modules[\\/]@tanstack[\\/]/ },
+            { name: "radix", test: /node_modules[\\/](@radix-ui|radix-ui|@floating-ui)[\\/]/ },
+            // uPlot stays with the details, which load on demand
+            { name: "vendor", test: /node_modules[\\/](?!uplot[\\/])/ },
+          ],
+        },
+      },
+    },
   },
   server: {
     proxy: { "/api": `http://localhost:${mockPort}` },

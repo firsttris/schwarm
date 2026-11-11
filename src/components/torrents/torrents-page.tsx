@@ -17,6 +17,7 @@ import { useSidebar } from "@/components/ui/sidebar";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { kindLabel, statusLabel } from "@/lib/labels";
+import { lazyNamed, WhenUsed } from "@/lib/lazy";
 import { preferencesStore, usePreferences } from "@/lib/preferences";
 import {
   countBy,
@@ -33,7 +34,6 @@ import {
 } from "@/lib/torrents";
 import { m } from "@/paraglide/messages.js";
 import { Route, type TorrentsSearch } from "@/routes/torrents";
-import { TorrentDetails } from "../details/torrent-details";
 import { PageHeader } from "../page-header";
 import { torrentColumns } from "./columns";
 import { PhoneList } from "./phone-list";
@@ -70,6 +70,9 @@ function summary(torrents: Torrent[]): string {
     .join(", ");
   return text ? `${text}.` : m.summary_count({ n: torrents.length });
 }
+
+// The details (with uPlot) load when a torrent is opened for the first time
+const TorrentDetails = lazyNamed(() => import("../details/torrent-details"), "TorrentDetails");
 
 export function TorrentsPage() {
   const search = useSearch({ from: Route.id });
@@ -266,7 +269,9 @@ export function TorrentsPage() {
           <TableFooter table={table} />
         </main>
       )}
-      <TorrentDetails hash={search.torrent} />
+      <WhenUsed active={!!search.torrent}>
+        <TorrentDetails hash={search.torrent} />
+      </WhenUsed>
       <TorrentDialogs
         onRemoved={(hashes) => {
           if (search.torrent && hashes.includes(search.torrent))

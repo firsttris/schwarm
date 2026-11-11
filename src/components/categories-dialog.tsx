@@ -7,17 +7,10 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { createMemoryStore } from "@/lib/store";
+import { manageStore } from "@/lib/manage";
 import { categoryTree, countBy, matchesCategory, matchesTag } from "@/lib/torrents";
 import { cn } from "@/lib/utils";
 import { m } from "@/paraglide/messages.js";
-
-/** Opened from the sidebar ("Kategorien" / "Tags") and the app menu. */
-export const manageStore = createMemoryStore<{ open: boolean; tab: "categories" | "tags" }>({
-  open: false,
-  tab: "categories",
-});
-export const openManage = (tab: "categories" | "tags") => manageStore.set({ open: true, tab });
 
 /** The row being edited: an existing category, a new one (with an optional parent) or none. */
 type Editing = { kind: "edit"; name: string } | { kind: "new"; parent?: string } | null;
