@@ -23,7 +23,7 @@ test("phone: bottom navigation and touch targets @phone", async ({ page }) => {
     expect(box?.height).toBeGreaterThanOrEqual(44);
   }
   await nav.getByRole("link", { name: "Einstellungen" }).click();
-  await expect(page.getByRole("heading", { name: "Oberfläche" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Downloads" })).toBeVisible();
 });
 
 test("phone: long press opens the actions @phone", async ({ page }) => {

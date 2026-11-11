@@ -3,7 +3,7 @@
 Everything the stock WebUI of qBittorrent 5.3.0 can do (from `src/webui/www/private` and
 `src/webui/api`), and where it goes in Schwarm. "Milestone" refers to [`spec.md`](spec.md).
 
-Done: milestones 1–4. Areas of later milestones (Statistik) keep their place in the
+Done: milestones 1–5. Areas of later milestones (Statistik) keep their place in the
 navigation with a "Kommt bald" page.
 
 ## Torrent list
@@ -69,7 +69,7 @@ navigation with a "Kommt bald" page.
 
 | qBittorrent | Place in Schwarm | Milestone |
 |---|---|---|
-| Behaviour, downloads, connection, speed, BitTorrent, RSS, WebUI, advanced | Simple sections with plain texts for the common options | 5 |
-| Every option | "Alle Optionen": searchable list generated from a table covering every field of `app/preferences` | 5 |
-| Network interface, listening port | Shown read-only with a note when managed from outside (e.g. by a VPN container) | 5 |
+| Behaviour, downloads, connection, speed, BitTorrent, RSS, WebUI, advanced | Simple sections with plain texts for the common options: "Downloads" (folders, folder per category, incomplete folder, .torrent files), "Tempo" (limits, alternative limits, scheduler), "Seeding" (ratio/time limits, queue), "Verbindung", "Suche & RSS"; changes collect in a save bar and go out in one `app/setPreferences` | 5 |
+| Every option | "Alle Optionen": searchable (German, English, key) list from `src/lib/preferences/fields.ts`, a table covering all 240 keys of `app/preferences` / `app/setPreferences` in 5.3.0 (checked against `dev/qbt-preference-keys.json`) | 5 |
+| Network interface, listening port | Locked with a note when the interface looks like a VPN (`tun`, `wg`, …), "Trotzdem ändern" unlocks; interfaces and addresses from `app/networkInterfaceList` / `app/networkInterfaceAddressList` | 5 |
 | Schwarm's own: light/dark/system, language, list density, columns | Settings → "Oberfläche" (stored in the browser) | 1 |

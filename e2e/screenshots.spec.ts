@@ -145,6 +145,31 @@ for (const scheme of ["light", "dark"] as const) {
     });
   });
 
+  test.describe(`desktop ${scheme} milestone 5`, () => {
+    test.use({ ...desktop, colorScheme: scheme });
+
+    test(`settings downloads ${scheme}`, async ({ page }) => {
+      await page.goto("./#/settings?section=downloads");
+      await expect(page.getByLabel("Standardordner")).toHaveValue("/downloads");
+      await shot(page, `desktop-settings-${scheme}`);
+    });
+
+    test(`settings connection ${scheme}`, async ({ page }) => {
+      await page.goto("./#/settings?section=connection");
+      await expect(page.getByTestId("vpn-note")).toBeVisible();
+      await page.getByLabel("Verbindungen insgesamt höchstens").fill("300");
+      await expect(page.getByTestId("save-bar")).toBeVisible();
+      await shot(page, `desktop-settings-connection-${scheme}`);
+    });
+
+    test(`settings all ${scheme}`, async ({ page }) => {
+      await page.goto("./#/settings?section=all");
+      await page.getByTestId("prefs-search").fill("port");
+      await expect(page.locator('[data-pref="listen_port"]')).toBeVisible();
+      await shot(page, `desktop-settings-all-${scheme}`);
+    });
+  });
+
   test.describe(`phone ${scheme}`, () => {
     test.use({ ...phone, colorScheme: scheme });
 

@@ -125,7 +125,17 @@ qBittorrent und merkt sich nur seine Anzeige-Einstellungen (Design, Sprache, Spa
   Kategorie, Ordner, Tags, Pause danach; klonen, importieren und exportieren.
 - **„Regel daraus machen“** an jedem Artikel schlägt eine Regel aus dem Titel vor.
 
-Statistik und die Einstellungen von qBittorrent folgen in den nächsten Versionen.
+### ⚙️ Einstellungen
+
+- **Das Übliche in einfachen Worten**: Ordner (auch je Kategorie), Tempo-Limits in MB/s mit den
+  zweiten Limits und ihrem Zeitplan, Seeding-Grenzen und Warteschlange, Verbindung, RSS.
+- **Alle 240 Optionen** von qBittorrent in einer durchsuchbaren Liste, nach deutschem oder
+  englischem Namen oder Schlüssel.
+- **Änderungen werden gesammelt** und zusammen gespeichert oder verworfen.
+- **Denkt an das VPN**: Läuft qBittorrent über ein VPN-Netzwerk (z. B. `tun0` in einem
+  VPN-Container), sind Netzwerk und Port gesperrt, damit man sie nicht aus Versehen ändert.
+
+Statistik, Protokoll und das Erstellen von Torrents folgen in der nächsten Version.
 
 ## 📸 Bilder
 
@@ -137,6 +147,10 @@ Statistik und die Einstellungen von qBittorrent folgen in den nächsten Versione
   <tr>
     <td><img src="docs/screenshots/desktop-files-light.png" alt="Dateibaum eines Torrents mit Prioritäten"></td>
     <td><img src="docs/screenshots/desktop-add-dark.png" alt="Dialog „Torrent hinzufügen“ mit Magnet-Link, Kategorie und Ordner"></td>
+  </tr>
+  <tr>
+    <td><img src="docs/screenshots/desktop-settings-connection-light.png" alt="Verbindungs-Einstellungen mit VPN-Hinweis und Speicherleiste"></td>
+    <td><img src="docs/screenshots/desktop-settings-all-dark.png" alt="Alle Optionen von qBittorrent, gesucht nach Port"></td>
   </tr>
   <tr>
     <td><img src="docs/screenshots/phone-list-dark.png" alt="Torrent-Liste auf dem Handy mit Status-Reitern und Leiste unten" width="320"></td>

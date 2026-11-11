@@ -75,6 +75,10 @@ bun run e2e
   (`vite.config.ts`). Zod is used as `zod/mini`.
 - `bun run dev` starts Vite and the mock API; E2E tests build and serve `dist/public` from the mock
   like qBittorrent does (no SPA fallback). `MOCK_AUTH=1` asks for a login (admin / adminadmin).
+- qBittorrent's settings: `src/lib/preferences/fields.ts` is one table of every key of
+  `app/preferences` (type, section, label, unit, options); its test compares it with
+  `dev/qbt-preference-keys.json` (taken from `appcontroller.cpp`). A new qBittorrent version: update
+  that list, then the table and the mock's `dev/preferences-fixture.ts`.
 - Paraglide loads its message-format plugin from `node_modules` (`project.inlang/settings.json`),
   not from a CDN, so builds need no network. Messages with numbers use plural variants.
 - Versions kept back on purpose: `@tanstack/react-table` 8 (9 changed the API and is three months

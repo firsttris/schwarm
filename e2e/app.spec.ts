@@ -33,6 +33,8 @@ test("switches between light, dark and system", async ({ page }) => {
 test("settings keep density and columns in the browser", async ({ page }) => {
   await openTorrents(page);
   await page.locator("[data-sidebar=sidebar]").getByRole("link", { name: "Einstellungen" }).click();
+  await expect(page.getByRole("heading", { name: "Downloads" })).toBeVisible();
+  await page.getByRole("link", { name: "Oberfläche" }).click();
   await expect(page.getByRole("heading", { name: "Oberfläche" })).toBeVisible();
   await page.getByLabel("Kompakt").check();
   await page.getByLabel("Ratio").uncheck();

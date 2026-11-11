@@ -120,7 +120,16 @@ only its display settings (theme, language, columns) in your browser.
   category, folder, tags, pause afterwards; clone, import and export.
 - **"Make a rule from it"** on any article suggests a rule from its title.
 
-Statistics and qBittorrent's settings follow in the next versions.
+### ⚙️ Settings
+
+- **The common options in plain words**: folders (also per category), speed limits in MB/s with the
+  alternative limits and their schedule, seeding limits and queue, connection, RSS.
+- **All 240 options** of qBittorrent in one searchable list, by German or English name or key.
+- **Changes are collected** and saved together, or discarded.
+- **VPN aware**: if qBittorrent runs behind a VPN interface (e.g. `tun0` in a VPN container), the
+  network and port are locked so they are not changed by accident.
+
+Statistics, the log and the torrent creator follow in the next version.
 
 ## 📸 Screenshots
 
@@ -132,6 +141,10 @@ Statistics and qBittorrent's settings follow in the next versions.
   <tr>
     <td><img src="docs/screenshots/desktop-files-light.png" alt="File tree of a torrent with download priorities"></td>
     <td><img src="docs/screenshots/desktop-add-dark.png" alt="Add torrent dialog with magnet link, category and folder"></td>
+  </tr>
+  <tr>
+    <td><img src="docs/screenshots/desktop-settings-connection-light.png" alt="Connection settings with the VPN note and the save bar"></td>
+    <td><img src="docs/screenshots/desktop-settings-all-dark.png" alt="All options of qBittorrent, searched for port"></td>
   </tr>
   <tr>
     <td><img src="docs/screenshots/phone-list-dark.png" alt="Torrent list on a phone with status tabs and bottom navigation" width="320"></td>
