@@ -1,6 +1,6 @@
 {
   "name": "schwarm",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A calm, modern web UI for qBittorrent, served as its alternative WebUI",
   "private": true,
   "type": "module",
