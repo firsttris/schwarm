@@ -1,0 +1,20 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+jobs:
+  # The release ZIP is built by the CI (artifact "dist"), so the CI always runs here
+  checks:
+    uses: ./.github/workflows/ci.yml
+
+  release:
+    needs: checks
+    if: startsWith(github.ref, 'refs/tags/v') # run by hand on a branch: only the checks
+    uses: firsttris/workflows/.github/workflows/github-release.yml@v1
+    with:
+      release-artifact: dist
+    permissions:
+      contents: write

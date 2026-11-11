@@ -1,0 +1,75 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+    paths-ignore: ["**.md", "docs/**", "LICENSE"]
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths-ignore: ["**.md", "docs/**", "LICENSE"]
+  workflow_call: # release.yml runs the same checks before publishing
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# A new push to a pull request cancels its outdated run; runs on main and tags finish
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  check:
+    # Draft pull requests do not build; "Ready for review" starts the run
+    if: ${{ !github.event.pull_request.draft }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version-file: package.json
+      - run: bun install --frozen-lockfile
+      - run: bun run typecheck
+      - run: bun run lint
+      - run: bun run test
+      - run: bun run build
+      - name: Release ZIP
+        run: bun run package
+      - uses: actions/upload-artifact@v7
+        with:
+          name: dist
+          path: release/*.zip
+          if-no-files-found: error
+
+  image:
+    if: ${{ !github.event.pull_request.draft }}
+    runs-on: ubuntu-latest
+    outputs:
+      image: ${{ steps.playwright.outputs.image }}
+    steps:
+      - id: playwright
+        uses: firsttris/workflows/actions/playwright-image@v1
+        with:
+          lockfile: bun.lock
+
+  e2e:
+    needs: image
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    container:
+      image: ${{ needs.image.outputs.image }}
+    env:
+      HOME: /root
+    steps:
+      - uses: actions/checkout@v7
+      # The Playwright image has Node but no unzip, so no setup-bun (firsttris/workflows, tech-stack.md)
+      - run: npm install --global "bun@$(node -p "require('./package.json').packageManager.split('@')[1]")"
+      - run: bun install --frozen-lockfile
+      - run: bun run e2e
+      - uses: actions/upload-artifact@v7
+        if: failure()
+        with:
+          name: playwright-results
+          path: test-results/
+          retention-days: 7

@@ -1,0 +1,15 @@
+Schwarm – a web UI for qBittorrent
+Copyright (C) 2026 Tristan Teufel and contributors
+
+This program is free software: you can redistribute it and/or modify it under the terms of
+the GNU Affero General Public License version 3 as published by the Free Software
+Foundation (see LICENSE).
+
+Additional term under section 7(b) of the GNU AGPL: modified versions must keep the notice
+"Schwarm by Tristan Teufel" with a link to https://github.com/firsttris/schwarm in the legal
+notices they show.
+
+A commercial license without the obligations of the AGPL is available via
+https://teufel-it.de.
+
+qBittorrent is a project of its own; Schwarm is not affiliated with it.

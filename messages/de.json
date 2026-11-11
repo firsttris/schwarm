@@ -1,0 +1,487 @@
+{
+  "$schema": "https://inlang.com/schema/inlang-message-format",
+  "action_export": ".torrent exportieren",
+  "action_force_start": "Zwangsstart",
+  "action_location": "Speicherort ändern …",
+  "action_reannounce": "Neu ankündigen",
+  "action_recheck": "Neu prüfen",
+  "action_remove": "Entfernen …",
+  "action_rename": "Umbenennen …",
+  "action_start": "Starten",
+  "action_stop": "Stoppen",
+  "actions": "Aktionen",
+  "actions_for": "Aktionen für {name}",
+  "add": "Hinzufügen",
+  "add_default": "Wie eingestellt",
+  "add_description": "Magnet-Link einfügen oder eine .torrent-Datei wählen.",
+  "add_dl_limit": "↓ Limit",
+  "add_files_choose": ".torrent-Dateien wählen",
+  "add_files_hint": "Oder hierher ziehen, gern mehrere.",
+  "add_incomplete_path": "Unfertige Dateien woanders ablegen",
+  "add_layout": "Ordner anlegen",
+  "add_layout_nosubfolder": "Keinen Unterordner",
+  "add_layout_original": "Wie im Torrent",
+  "add_layout_subfolder": "Immer einen Unterordner",
+  "add_links_hint": "Mehrere Links: einer pro Zeile.",
+  "add_links_label": "Magnet-Link oder URL",
+  "add_magnet_unnamed": "Magnet-Link ohne Namen",
+  "add_management": "Verwaltung",
+  "add_management_auto": "Automatisch nach Kategorie",
+  "add_management_hint": "Automatisch: Kategorie bestimmt den Speicherort (Automatic Torrent Management).",
+  "add_management_manual": "Von Hand",
+  "add_more_options": "Weitere Optionen",
+  "add_rename": "Anderer Name",
+  "add_save_in": "Speichern in",
+  "add_sequential_hint": "zum Streamen",
+  "add_skip_check": "Prüfung überspringen",
+  "add_skip_check_hint": "nur wenn die Dateien schon da sind",
+  "add_start": "Sofort starten",
+  "add_stop_checked": "die Dateien geprüft sind",
+  "add_stop_condition": "Anhalten, wenn",
+  "add_stop_metadata": "die Infos da sind",
+  "add_stop_none": "Nie",
+  "add_tab_file": "Datei",
+  "add_tab_link": "Link",
+  "add_tags_placeholder": "durch Komma getrennt",
+  "add_top_of_queue": "Oben in die Warteschlange",
+  "add_torrent": "Torrent hinzufügen",
+  "add_up_limit": "↑ Limit",
+  "added_on": "hinzugefügt {date}",
+  "adv_auto_tmm": "Automatische Verwaltung",
+  "adv_first_last": "Erste und letzte Teile zuerst",
+  "adv_sequential": "Der Reihe nach laden",
+  "adv_super_seeding": "Super-Seeding",
+  "advanced": "Erweitert",
+  "all_details": "Alle Angaben",
+  "appearance": "Darstellung",
+  "areas": "Bereiche",
+  "back": "Zurück",
+  "cancel": "Abbrechen",
+  "categories": "Kategorien",
+  "category": "Kategorie",
+  "category_none": "Keine",
+  "clear_filters": "Filter löschen",
+  "close": "Schließen",
+  "col_added_on": "Hinzugefügt",
+  "col_availability": "Verfügbarkeit",
+  "col_category": "Kategorie",
+  "col_completed": "Geladen",
+  "col_completion_on": "Fertig am",
+  "col_dl_limit": "Download-Limit",
+  "col_dlspeed": "Download",
+  "col_downloaded": "Heruntergeladen",
+  "col_eta": "Restzeit",
+  "col_last_activity": "Zuletzt aktiv",
+  "col_name": "Name",
+  "col_peers": "Peers",
+  "col_progress": "Fortschritt",
+  "col_queue": "Warteschlange",
+  "col_ratio": "Ratio",
+  "col_save_path": "Speicherort",
+  "col_seeds": "Seeds",
+  "col_size": "Größe",
+  "col_speed": "Tempo",
+  "col_status": "Status",
+  "col_tags": "Tags",
+  "col_time_active": "Zeit aktiv",
+  "col_tracker": "Tracker",
+  "col_up_limit": "Upload-Limit",
+  "col_uploaded": "Hochgeladen",
+  "col_upspeed": "Upload",
+  "collapse": "Zuklappen",
+  "columns": "Spalten",
+  "columns_hint": "Welche Spalten die Torrent-Liste am Computer zeigt. Dasselbe geht in der Liste über „Ansicht“.",
+  "columns_reset": "Standardspalten wiederherstellen",
+  "coming_soon_text": "Dieser Bereich folgt in einer der nächsten Versionen. Bis dahin hilft die Weboberfläche von qBittorrent.",
+  "coming_soon_title": "Kommt bald",
+  "connection_connected": "Verbunden",
+  "connection_details": "DHT: {nodes} Knoten · {free} frei",
+  "connection_disconnected": "Keine Verbindung",
+  "connection_firewalled": "Hinter einer Firewall",
+  "connection_short": "Netz",
+  "copy": "Kopieren",
+  "copy_comment": "Kommentar",
+  "copy_content_path": "Inhaltspfad",
+  "copy_hash_v1": "Info-Hash v1",
+  "copy_hash_v2": "Info-Hash v2",
+  "copy_id": "Torrent-ID",
+  "copy_label": "{label} kopieren",
+  "copy_magnet": "Magnet-Link",
+  "copy_name": "Name",
+  "copy_url": "Adresse kopieren",
+  "date_today": "heute, {time}",
+  "date_yesterday": "gestern, {time}",
+  "density": "Listendichte",
+  "density_comfortable": "Bequem",
+  "density_compact": "Kompakt",
+  "density_compact_hint": "Mehr Zeilen auf einmal.",
+  "details": "Details",
+  "download": "Download",
+  "drop_text": ".torrent-Dateien oder Magnet-Links",
+  "drop_title": "Loslassen zum Hinzufügen",
+  "duration_d": [
+    {
+      "declarations": ["input d", "local p = d: plural"],
+      "selectors": ["p"],
+      "match": {
+        "p=one": "{d} Tag",
+        "p=other": "{d} Tage"
+      }
+    }
+  ],
+  "duration_d_h": "{d} T {h} Std",
+  "duration_h": "{h} Std",
+  "duration_h_min": "{h} Std {min} Min",
+  "duration_min": "{min} Min",
+  "duration_s": "{s} s",
+  "edit": "Bearbeiten …",
+  "error_action": "Das hat nicht geklappt",
+  "eta_left": "noch {eta}",
+  "expand": "Aufklappen",
+  "files_all": "Alle Dateien",
+  "files_filter": "Dateien filtern …",
+  "files_load_all": "Alle laden",
+  "files_no_metadata": "Die Dateiliste kommt, sobald die Infos zum Torrent da sind.",
+  "files_summary": [
+    {
+      "declarations": ["input n", "input size", "input total", "local p = total: plural"],
+      "selectors": ["p"],
+      "match": {
+        "p=one": "{n} von {total} Datei · {size}",
+        "p=other": "{n} von {total} Dateien · {size}"
+      }
+    }
+  ],
+  "files_want": "{name} laden",
+  "filter_active": "Aktiv",
+  "filter_all": "Alle",
+  "filter_checking": "Wird geprüft",
+  "filter_completed": "Fertig",
+  "filter_downloading": "Lädt",
+  "filter_errored": "Fehler",
+  "filter_inactive": "Untätig",
+  "filter_label": "Torrents filtern",
+  "filter_moving": "Wird verschoben",
+  "filter_options": "Filteroptionen",
+  "filter_placeholder": "Torrents filtern …",
+  "filter_placeholder_hash": "Info-Hash filtern …",
+  "filter_placeholder_path": "Speicherort filtern …",
+  "filter_regex": "Regulärer Ausdruck",
+  "filter_running": "Läuft",
+  "filter_search_in": "Suchen in",
+  "filter_seeding": "Seedet",
+  "filter_stalled": "Stockt",
+  "filter_stalled_downloading": "Stockt beim Laden",
+  "filter_stalled_uploading": "Stockt beim Seeden",
+  "filter_stopped": "Gestoppt",
+  "filters": "Filter",
+  "info_hash": "Info-Hash",
+  "info_hash_v1": "Info-Hash v1",
+  "info_hash_v2": "Info-Hash v2",
+  "key_delete": "Entf",
+  "language": "Sprache",
+  "language_hint": "Ohne Auswahl gilt die Sprache des Browsers.",
+  "last_minutes": "Letzte 5 Minuten",
+  "limit_unlimited": "unbegrenzt",
+  "location_hint": "qBittorrent verschiebt die Dateien dorthin.",
+  "location_label": "Neuer Ordner",
+  "location_title": "Speicherort ändern",
+  "login_banned": "Zu viele Versuche. qBittorrent hat diese Adresse vorübergehend gesperrt.",
+  "login_failed": "qBittorrent ist nicht erreichbar.",
+  "login_password": "Passwort",
+  "login_submit": "Anmelden",
+  "login_text": "Mit den Zugangsdaten der qBittorrent-Weboberfläche.",
+  "login_title": "Anmelden",
+  "login_username": "Benutzername",
+  "login_wrong": "Benutzername oder Passwort stimmen nicht.",
+  "logout": "Abmelden",
+  "main_menu": "Hauptmenü",
+  "more": "Mehr",
+  "more_actions": "Weitere Aktionen",
+  "n_of": "{n} von {total}",
+  "n_peers": [
+    {
+      "declarations": ["input n", "local p = n: plural"],
+      "selectors": ["p"],
+      "match": {
+        "p=one": "{n} Peer",
+        "p=other": "{n} Peers"
+      }
+    }
+  ],
+  "n_selected": [
+    {
+      "declarations": ["input n", "local p = n: plural"],
+      "selectors": ["p"],
+      "match": {
+        "p=one": "{n} ausgewählt",
+        "p=other": "{n} ausgewählt"
+      }
+    }
+  ],
+  "n_torrents": [
+    {
+      "declarations": ["input n", "local p = n: plural"],
+      "selectors": ["p"],
+      "match": {
+        "p=one": "{n} Torrent",
+        "p=other": "{n} Torrents"
+      }
+    }
+  ],
+  "name": "Name",
+  "nav_rss": "RSS",
+  "nav_search": "Suche",
+  "nav_settings": "Einstellungen",
+  "nav_statistics": "Statistik",
+  "nav_torrents": "Torrents",
+  "no": "Nein",
+  "no_results": "Nichts gefunden.",
+  "no_torrents": "Keine Torrents für diesen Filter.",
+  "off": "Aus",
+  "page_first": "Erste Seite",
+  "page_last": "Letzte Seite",
+  "page_next": "Nächste Seite",
+  "page_of": "Seite {page} von {pages}",
+  "page_prev": "Vorherige Seite",
+  "peers_add": "Peer hinzufügen",
+  "peers_add_label": "Peers",
+  "peers_add_text": "Adresse und Port, einer pro Zeile, z. B. 203.0.113.5:6881.",
+  "peers_add_title": "Peers hinzufügen",
+  "peers_ban": "Sperren",
+  "peers_connected": "Verbunden",
+  "peers_flags": "Flags: D lädt von dir, U lädt zu dir, E verschlüsselt, I eingehend, P µTP.",
+  "peers_incoming": "Eingehend",
+  "peers_none": "Gerade keine Peers verbunden.",
+  "peers_seeds": "Davon Seeds",
+  "peers_selected": "Ausgewählt:",
+  "peers_sorted": "Sortiert nach Tempo",
+  "pieces_label": "{have} von {total} Stückchen geladen",
+  "pieces_value": "{n} × {size}",
+  "prio_high": "Hoch",
+  "prio_ignored": "Nicht laden",
+  "prio_maximum": "Maximal",
+  "prio_mixed": "Gemischt",
+  "prio_normal": "Normal",
+  "priority": "Priorität",
+  "priority_for": "Priorität von {name}",
+  "queue": "Warteschlange",
+  "queue_bottom": "Ganz nach unten",
+  "queue_down": "Nach unten",
+  "queue_top": "Ganz nach oben",
+  "queue_up": "Nach oben",
+  "ratio_value": "Ratio {ratio}",
+  "remove": "Entfernen",
+  "remove_confirm": "Entfernen",
+  "remove_delete_files": "Dateien auch löschen",
+  "remove_delete_files_hint": "Sonst bleiben die geladenen Dateien auf der Platte.",
+  "remove_file": "{name} entfernen",
+  "remove_title": [
+    {
+      "declarations": ["input n", "local p = n: plural"],
+      "selectors": ["p"],
+      "match": {
+        "p=one": "Torrent entfernen?",
+        "p=other": "{n} Torrents entfernen?"
+      }
+    }
+  ],
+  "rename_hint": "Ändert nur den Namen in der Liste, nicht die Dateien.",
+  "rename_title": "Torrent umbenennen",
+  "reset": "Zurücksetzen",
+  "rows_all": "Alle",
+  "rows_per_page": "Zeilen pro Seite",
+  "rows_selected": [
+    {
+      "declarations": ["input selected", "input total", "local p = total: plural"],
+      "selectors": ["p"],
+      "match": {
+        "p=one": "{selected} von {total} Zeilen ausgewählt.",
+        "p=other": "{selected} von {total} Zeilen ausgewählt."
+      }
+    }
+  ],
+  "save": "Speichern",
+  "save_location": "Speicherort",
+  "select_all": "Alle auswählen",
+  "select_row": "{name} auswählen",
+  "settings_intro": "Das Wichtigste verständlich. Die Optionen von qBittorrent folgen.",
+  "settings_more_later": "Downloads, Tempo, Verbindung und „Alle Optionen“ folgen.",
+  "settings_sections": "Einstellungsbereiche",
+  "settings_ui": "Oberfläche",
+  "settings_ui_text": "Gilt nur für diesen Browser.",
+  "sidebar_description": "Filter und Bereiche",
+  "sidebar_title": "Navigation",
+  "size_of": "{done} von {total}",
+  "sort_by": "Nach {column} sortieren",
+  "speed": "Tempo",
+  "speed_chart_label": "Tempo der letzten Minuten, zuletzt ↓ {dl} und ↑ {up}",
+  "speed_limits": "Limit: ↓ {dl} · ↑ {up}",
+  "stat_avg_dl": "Ø Download",
+  "stat_avg_up": "Ø Upload",
+  "stat_comment": "Kommentar",
+  "stat_connections": "Verbindungen",
+  "stat_created_by": "Erstellt mit",
+  "stat_created_on": "Erstellt am",
+  "stat_downloaded": "Heruntergeladen",
+  "stat_last_seen": "Zuletzt vollständig gesehen",
+  "stat_limits": "Limits",
+  "stat_pieces": "Stückchen",
+  "stat_private": "Privat",
+  "stat_reannounce": "Nächste Meldung in",
+  "stat_seeding_time": "Seedet seit",
+  "stat_session": "Seit dem Start",
+  "stat_uploaded": "Hochgeladen",
+  "stat_wasted": "Verschwendet",
+  "state_checking": "Prüft",
+  "state_downloading": "Lädt",
+  "state_error": "Fehler",
+  "state_metadata": "Holt Infos",
+  "state_missing": "Dateien fehlen",
+  "state_moving": "Verschiebt",
+  "state_queued": "Wartet",
+  "state_seeding": "Seedet",
+  "state_stalled": "Stockt",
+  "state_stopped": "Gestoppt",
+  "status": "Status",
+  "summary_count": [
+    {
+      "declarations": ["input n", "local p = n: plural"],
+      "selectors": ["p"],
+      "match": {
+        "p=one": "{n} Torrent.",
+        "p=other": "{n} Torrents."
+      }
+    }
+  ],
+  "summary_downloading": [
+    {
+      "declarations": ["input n", "local p = n: plural"],
+      "selectors": ["p"],
+      "match": {
+        "p=one": "{n} lädt",
+        "p=other": "{n} laden"
+      }
+    }
+  ],
+  "summary_empty": "Noch keine Torrents. Füge einen über „Hinzufügen“ hinzu oder zieh eine .torrent-Datei hierher.",
+  "summary_errored": [
+    {
+      "declarations": ["input n", "local p = n: plural"],
+      "selectors": ["p"],
+      "match": {
+        "p=one": "{n} mit Fehler",
+        "p=other": "{n} mit Fehler"
+      }
+    }
+  ],
+  "summary_seeding": [
+    {
+      "declarations": ["input n", "local p = n: plural"],
+      "selectors": ["p"],
+      "match": {
+        "p=one": "{n} seedet",
+        "p=other": "{n} seeden"
+      }
+    }
+  ],
+  "summary_stopped": [
+    {
+      "declarations": ["input n", "local p = n: plural"],
+      "selectors": ["p"],
+      "match": {
+        "p=one": "{n} gestoppt",
+        "p=other": "{n} gestoppt"
+      }
+    }
+  ],
+  "tab_files": "Dateien",
+  "tab_overview": "Übersicht",
+  "tab_peers": "Peers",
+  "tab_trackers": "Tracker",
+  "tag_count": [
+    {
+      "declarations": ["input n", "local p = n: plural"],
+      "selectors": ["p"],
+      "match": {
+        "p=one": "{n} Torrent",
+        "p=other": "{n} Torrents"
+      }
+    }
+  ],
+  "tags": "Tags",
+  "tags_none": "Noch keine Tags",
+  "theme_dark": "Dunkel",
+  "theme_light": "Hell",
+  "theme_system": "Wie das System",
+  "theme_system_hint": "Folgt der Einstellung von Gerät und Browser.",
+  "toast_added": [
+    {
+      "declarations": ["input n", "local p = n: plural"],
+      "selectors": ["p"],
+      "match": {
+        "p=one": "Torrent hinzugefügt",
+        "p=other": "{n} Torrents hinzugefügt"
+      }
+    }
+  ],
+  "toast_copied": "Kopiert",
+  "toast_copy_failed": "Kopieren hat nicht geklappt",
+  "toast_moved": "Wird verschoben",
+  "toast_peer_banned": "Peer gesperrt",
+  "toast_peers_added": "Peers hinzugefügt",
+  "toast_reannounce": "Bei den Trackern neu angekündigt",
+  "toast_recheck": "Wird neu geprüft",
+  "toast_removed": [
+    {
+      "declarations": ["input n", "local p = n: plural"],
+      "selectors": ["p"],
+      "match": {
+        "p=one": "Torrent entfernt",
+        "p=other": "{n} Torrents entfernt"
+      }
+    }
+  ],
+  "toast_removed_files": [
+    {
+      "declarations": ["input n", "local p = n: plural"],
+      "selectors": ["p"],
+      "match": {
+        "p=one": "Torrent und Dateien gelöscht",
+        "p=other": "{n} Torrents und ihre Dateien gelöscht"
+      }
+    }
+  ],
+  "toggle_sidebar": "Seitenleiste umschalten",
+  "torrent_gone": "Dieser Torrent ist nicht mehr da.",
+  "tracker_counts": "{seeds} Seeds · {peers} Peers",
+  "tracker_disabled": "Aus",
+  "tracker_error": "Mit Fehler",
+  "tracker_failed": "Fehler",
+  "tracker_next": "nächste Meldung in {time}",
+  "tracker_not_contacted": "Noch nicht gefragt",
+  "tracker_tier": "Stufe {tier}",
+  "tracker_updating": "Meldet sich gerade",
+  "tracker_warning": "Mit Warnung",
+  "tracker_working": "Funktioniert",
+  "trackerless": "Ohne Tracker",
+  "trackers": "Tracker",
+  "trackers_add": "Tracker hinzufügen",
+  "trackers_add_label": "Tracker",
+  "trackers_add_text": "Eine Adresse pro Zeile. Eine leere Zeile beginnt eine neue Stufe.",
+  "trackers_add_title": "Tracker hinzufügen",
+  "trackers_edit_title": "Tracker bearbeiten",
+  "trackers_none": "Keine Tracker. Peers kommen dann nur über DHT, PeX und LSD.",
+  "trackers_other_sources": "Weitere Quellen",
+  "trackers_reannounce_all": "Alle neu ankündigen",
+  "uncategorized": "Ohne Kategorie",
+  "upload": "Upload",
+  "url": "Adresse",
+  "view": "Ansicht",
+  "webseeds": "HTTP-Quellen",
+  "webseeds_add_text": "Ein Webserver, der dieselben Dateien anbietet.",
+  "webseeds_add_title": "HTTP-Quelle hinzufügen",
+  "webseeds_edit_title": "HTTP-Quelle bearbeiten",
+  "webseeds_none": "Keine HTTP-Quellen.",
+  "yes": "Ja"
+}
