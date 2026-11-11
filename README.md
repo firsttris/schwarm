@@ -111,7 +111,16 @@ only its display settings (theme, language, columns) in your browser.
   filters for source, seeds and size, and "Download" opens the add dialog.
 - **Plugins** in the settings: enable, update, add by URL, remove.
 
-RSS, statistics and qBittorrent's settings follow in the next versions.
+### 📰 RSS
+
+- **Feeds and articles** in three columns: folders, unread counts, mark as read, refresh, rename,
+  change the URL; "Download" opens the add dialog.
+- **Auto-downloader** with a live preview: every recent article shows whether the rule takes it,
+  and why not ("missing: desktop", "excluded: arm64"). Episode filter, each episode only once,
+  category, folder, tags, pause afterwards; clone, import and export.
+- **"Make a rule from it"** on any article suggests a rule from its title.
+
+Statistics and qBittorrent's settings follow in the next versions.
 
 ## 📸 Screenshots
 

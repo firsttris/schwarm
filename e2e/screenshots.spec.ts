@@ -126,6 +126,25 @@ for (const scheme of ["light", "dark"] as const) {
     });
   });
 
+  test.describe(`desktop ${scheme} milestone 4`, () => {
+    test.use({ ...desktop, colorScheme: scheme });
+
+    test(`rss feeds ${scheme}`, async ({ page }) => {
+      await page.goto("./#/rss");
+      await page
+        .getByTestId("article-list")
+        .getByRole("button", { name: /Ubuntu 26.04.1 LTS Desktop/ })
+        .click();
+      await shot(page, `desktop-rss-${scheme}`);
+    });
+
+    test(`rss rules ${scheme}`, async ({ page }) => {
+      await page.goto("./#/rss?view=rules&rule=Ubuntu%20LTS");
+      await expect(page.getByTestId("rule-server-count")).toBeVisible();
+      await shot(page, `desktop-rules-${scheme}`);
+    });
+  });
+
   test.describe(`phone ${scheme}`, () => {
     test.use({ ...phone, colorScheme: scheme });
 

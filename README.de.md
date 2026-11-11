@@ -116,7 +116,16 @@ qBittorrent und merkt sich nur seine Anzeige-Einstellungen (Design, Sprache, Spa
   sortiert, Filter für Quelle, Seeds und Größe, und „Laden“ öffnet den Hinzufügen-Dialog.
 - **Plugins** in den Einstellungen: einschalten, aktualisieren, per Adresse hinzufügen, entfernen.
 
-RSS, Statistik und die Einstellungen von qBittorrent folgen in den nächsten Versionen.
+### 📰 RSS
+
+- **Feeds und Artikel** in drei Spalten: Ordner, ungelesene Zahl, gelesen markieren, aktualisieren,
+  umbenennen, Adresse ändern; „Laden“ öffnet den Hinzufügen-Dialog.
+- **Auto-Downloader** mit Live-Vorschau: Jeder aktuelle Artikel zeigt, ob die Regel ihn nimmt und
+  warum nicht („fehlt: desktop“, „ausgeschlossen: arm64“). Folgenfilter, jede Folge nur einmal,
+  Kategorie, Ordner, Tags, Pause danach; klonen, importieren und exportieren.
+- **„Regel daraus machen“** an jedem Artikel schlägt eine Regel aus dem Titel vor.
+
+Statistik und die Einstellungen von qBittorrent folgen in den nächsten Versionen.
 
 ## 📸 Bilder
 

@@ -78,6 +78,7 @@ import { m } from "@/paraglide/messages.js";
 import type { TorrentsSearch } from "@/routes/torrents";
 import { ConnectionCard } from "./connection";
 import { Logo } from "./logo";
+import { useRssUnread } from "./rss/rss-query";
 
 const statusIcons: Partial<Record<StatusFilter, LucideIcon>> = {
   all: ListIcon,
@@ -167,6 +168,7 @@ export function AppSidebar() {
   const { pathname } = useLocation();
   const search = useSearch({ strict: false }) as TorrentsSearch;
   const { setOpenMobile } = useSidebar();
+  const rssUnread = useRssUnread();
   const onTorrents = pathname === "/torrents";
   const status = search.status ?? "all";
   const close = () => setOpenMobile(false);
@@ -392,6 +394,7 @@ export function AppSidebar() {
                     <span>{label}</span>
                   </Link>
                 </SidebarMenuButton>
+                {to === "/rss" && rssUnread ? <Count n={rssUnread} /> : null}
               </SidebarMenuItem>
             ))}
           </SidebarMenu>

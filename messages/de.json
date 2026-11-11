@@ -398,6 +398,74 @@
       }
     }
   ],
+  "rss_add_feed_text": "Die Adresse eines RSS- oder Atom-Feeds.",
+  "rss_add_feed_title": "Feed hinzufügen",
+  "rss_add_folder_title": "Ordner anlegen",
+  "rss_all_articles": "Alle Artikel",
+  "rss_articles": "Artikel",
+  "rss_edit_url": "Adresse ändern …",
+  "rss_edit_url_title": "Adresse des Feeds",
+  "rss_feed": "Feed",
+  "rss_feed_error": "Der Feed ließ sich zuletzt nicht laden.",
+  "rss_feeds": "Feeds",
+  "rss_folder": "Ordner",
+  "rss_folder_none": "Kein Ordner",
+  "rss_mark_all_read": "Alle gelesen",
+  "rss_name_optional": "leer: Adresse",
+  "rss_no_articles": "Keine Artikel.",
+  "rss_pick_article": "Einen Artikel wählen, um ihn hier zu lesen.",
+  "rss_refresh": "Aktualisieren",
+  "rss_rename_title": "Umbenennen",
+  "rss_rule_create": "Regel daraus machen",
+  "rss_rule_cta": "Solche Artikel automatisch laden?",
+  "rss_rule_cta_text": "Aus dem Titel wird eine Regel vorgeschlagen.",
+  "rss_rules": "Auto-Downloader",
+  "rss_unread": "ungelesen",
+  "rss_updated": "Aktualisiert {time}",
+  "rss_website": "Webseite",
+  "rule_add_stopped": "Gestoppt hinzufügen",
+  "rule_clone": "Klonen",
+  "rule_copy_name": "{name} (Kopie)",
+  "rule_discard": "Verwerfen",
+  "rule_enabled": "{name} aktiv",
+  "rule_episode_filter": "Folgen",
+  "rule_episode_hint": "Staffel x Folgen, z. B. 1x2;8-15;20-; für Folge 2, 8 bis 15 und ab 20 von Staffel 1.",
+  "rule_episodes": "Nur bestimmte Folgen",
+  "rule_feeds": "In diesen Feeds",
+  "rule_ignore_days": "Danach Pause",
+  "rule_ignore_never": "Keine",
+  "rule_last": "zuletzt {time}",
+  "rule_loaded": "geladen",
+  "rule_matches": "passt",
+  "rule_must_contain": "Titel enthält",
+  "rule_must_hint": "Alle Wörter müssen vorkommen. | heißt „oder“, * und ? sind Platzhalter.",
+  "rule_must_not_contain": "Titel enthält nicht",
+  "rule_never": "noch nie",
+  "rule_new": "Neue Regel",
+  "rule_no_match": "passt nicht",
+  "rule_pick": "Eine Regel wählen oder eine neue anlegen.",
+  "rule_preview": "Vorschau",
+  "rule_preview_no_feeds": "Erst Feeds wählen.",
+  "rule_preview_text": "Letzte Artikel der gewählten Feeds",
+  "rule_reason_episode": "andere Folge",
+  "rule_reason_excluded": "ausgeschlossen: „{word}“",
+  "rule_reason_missing": "fehlt: „{word}“",
+  "rule_regex_hint": "Ein regulärer Ausdruck, ohne Unterschied von Groß- und Kleinschreibung.",
+  "rule_server_count": [
+    {
+      "declarations": ["input n", "local p = n: plural"],
+      "selectors": ["p"],
+      "match": {
+        "p=one": "Gespeichert: qBittorrent findet {n} passenden Artikel.",
+        "p=other": "Gespeichert: qBittorrent findet {n} passende Artikel."
+      }
+    }
+  ],
+  "rule_smart": "Jede Folge nur einmal",
+  "rules_export": "Exportieren",
+  "rules_import": "Importieren",
+  "rules_import_failed": "Die Datei enthält keine gültigen Regeln.",
+  "rules_none": "Noch keine Regeln.",
   "save": "Speichern",
   "save_location": "Speicherort",
   "schedule": "Zeitplan",
@@ -618,6 +686,9 @@
   "toast_category_saved": "Kategorie gespeichert",
   "toast_copied": "Kopiert",
   "toast_copy_failed": "Kopieren hat nicht geklappt",
+  "toast_feed_added": "Feed hinzugefügt",
+  "toast_feed_refreshing": "Wird aktualisiert",
+  "toast_feed_removed": "{name} entfernt",
   "toast_files_renamed": [
     {
       "declarations": ["input n", "local p = n: plural"],
@@ -654,6 +725,18 @@
       "match": {
         "p=one": "Torrent und Dateien gelöscht",
         "p=other": "{n} Torrents und ihre Dateien gelöscht"
+      }
+    }
+  ],
+  "toast_rule_removed": "Regel {name} gelöscht",
+  "toast_rule_saved": "Regel {name} gespeichert",
+  "toast_rules_imported": [
+    {
+      "declarations": ["input n", "local p = n: plural"],
+      "selectors": ["p"],
+      "match": {
+        "p=one": "{n} Regel importiert",
+        "p=other": "{n} Regeln importiert"
       }
     }
   ],
