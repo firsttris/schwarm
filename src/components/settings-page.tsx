@@ -10,8 +10,10 @@ import { type Density, defaultColumns, preferencesStore, usePreferences } from "
 import { cn } from "@/lib/utils";
 import { m } from "@/paraglide/messages.js";
 import { getLocale, locales, setLocale } from "@/paraglide/runtime.js";
-import { Route } from "@/routes/settings";
+import { Route, settingsSections as sections } from "@/routes/settings";
 import { PageHeader } from "./page-header";
+import { CookiesSection } from "./settings/cookies-section";
+import { LogSection } from "./settings/log-section";
 import {
   AllOptionsSection,
   ConnectionSection,
@@ -21,6 +23,7 @@ import {
   SeedingSection,
   SpeedSection,
 } from "./settings/pref-sections";
+import { SystemSection } from "./settings/system-section";
 
 const optionalColumns: [string, () => string][] = [
   ["status", m.col_status],
@@ -63,8 +66,6 @@ function Choice({ value, label, hint }: { value: string; label: string; hint?: s
   );
 }
 
-const sections = ["downloads", "speed", "seeding", "connection", "search", "ui", "all"] as const;
-
 function sectionTitle(id: (typeof sections)[number]): string {
   switch (id) {
     case "downloads":
@@ -79,6 +80,12 @@ function sectionTitle(id: (typeof sections)[number]): string {
       return m.settings_search();
     case "ui":
       return m.settings_ui();
+    case "log":
+      return m.log_title();
+    case "cookies":
+      return m.cookies_title();
+    case "system":
+      return m.system_title();
     case "all":
       return m.prefs_all();
   }
@@ -145,6 +152,9 @@ export function SettingsPage() {
           {section === "connection" && <ConnectionSection />}
           {section === "search" && <SearchRssSection />}
           {section === "ui" && <UiSection />}
+          {section === "log" && <LogSection />}
+          {section === "cookies" && <CookiesSection />}
+          {section === "system" && <SystemSection />}
           {section === "all" && <AllOptionsSection />}
         </div>
       </main>

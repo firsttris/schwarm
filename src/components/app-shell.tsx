@@ -6,11 +6,13 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { addDialogStore } from "@/lib/add-dialog";
 import { lazyNamed, WhenUsed } from "@/lib/lazy";
 import { manageStore } from "@/lib/manage";
+import { systemStore } from "@/lib/system";
 import { ThemeSync } from "@/lib/theme";
 import { DropZone } from "./add-torrent/drop-zone";
 import { AppSidebar } from "./app-sidebar";
 import { LoginScreen } from "./login-screen";
 import { PhoneNav } from "./phone-nav";
+import { StoppedScreen } from "./stopped-screen";
 
 /**
  * The frame of every page. qBittorrent answers 403 when it wants a login (it does not
@@ -20,14 +22,26 @@ import { PhoneNav } from "./phone-nav";
 // Loaded on first use (docs: code splitting)
 const AddTorrentDialog = lazyNamed(() => import("./add-torrent/add-torrent-dialog"), "AddTorrentDialog");
 const CategoriesDialog = lazyNamed(() => import("./categories-dialog"), "CategoriesDialog");
+const CreatorDialog = lazyNamed(() => import("./creator-dialog"), "CreatorDialog");
+const ShutdownDialog = lazyNamed(() => import("./shutdown-dialog"), "ShutdownDialog");
 
 export function AppShell() {
   const addOpen = addDialogStore.use().open;
   const manageOpen = manageStore.use().open;
+  const system = systemStore.use();
   const loginRequired = useLoginRequired();
   const version = useVersion();
   // Start polling once qBittorrent has answered without asking for a login
-  useMaindata(!loginRequired && version.isSuccess);
+  useMaindata(!loginRequired && version.isSuccess && !system.stopped);
+
+  if (system.stopped) {
+    return (
+      <>
+        <ThemeSync />
+        <StoppedScreen />
+      </>
+    );
+  }
 
   if (loginRequired) {
     return (
@@ -54,6 +68,12 @@ export function AppShell() {
       </WhenUsed>
       <WhenUsed active={manageOpen}>
         <CategoriesDialog />
+      </WhenUsed>
+      <WhenUsed active={system.creator}>
+        <CreatorDialog />
+      </WhenUsed>
+      <WhenUsed active={system.shutdown}>
+        <ShutdownDialog />
       </WhenUsed>
       <DropZone />
       <Toaster />

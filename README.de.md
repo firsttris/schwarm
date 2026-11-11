@@ -135,7 +135,14 @@ qBittorrent und merkt sich nur seine Anzeige-Einstellungen (Design, Sprache, Spa
 - **Denkt an das VPN**: Läuft qBittorrent über ein VPN-Netzwerk (z. B. `tun0` in einem
   VPN-Container), sind Netzwerk und Port gesperrt, damit man sie nicht aus Versehen ändert.
 
-Statistik, Protokoll und das Erstellen von Torrents folgen in der nächsten Version.
+### 🧰 Alles andere
+
+- **Statistik**: Tempo aller Torrents, Zahlen insgesamt und seit dem Start, Festplatte und Tracker.
+- **Protokoll** von qBittorrent, gefiltert nach Art und Text, und die gesperrten Peers.
+- **Torrents erstellen** aus Dateien auf dem Server, mit Trackern, Web-Seeds und Stückgröße; die
+  `.torrent`-Datei lädst du herunter, sobald sie fertig ist.
+- **Cookies** für private Tracker und Feeds, **Über** mit allen Versionen, **Abmelden** und
+  **qBittorrent beenden**.
 
 ## 📸 Bilder
 
@@ -151,6 +158,10 @@ Statistik, Protokoll und das Erstellen von Torrents folgen in der nächsten Vers
   <tr>
     <td><img src="docs/screenshots/desktop-settings-connection-light.png" alt="Verbindungs-Einstellungen mit VPN-Hinweis und Speicherleiste"></td>
     <td><img src="docs/screenshots/desktop-settings-all-dark.png" alt="Alle Optionen von qBittorrent, gesucht nach Port"></td>
+  </tr>
+  <tr>
+    <td><img src="docs/screenshots/desktop-statistics-dark.png" alt="Statistik mit Tempo-Diagramm, Zahlen insgesamt und Festplatte"></td>
+    <td><img src="docs/screenshots/desktop-log-light.png" alt="Protokoll von qBittorrent mit Filter nach Art"></td>
   </tr>
   <tr>
     <td><img src="docs/screenshots/phone-list-dark.png" alt="Torrent-Liste auf dem Handy mit Status-Reitern und Leiste unten" width="320"></td>

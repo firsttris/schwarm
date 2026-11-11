@@ -3,6 +3,16 @@ import { fixtureCategories, fixtureTags, type MockTorrent, makeFixtures, units }
 import { makePreferences } from "./preferences-fixture";
 import { type MockFeed, type MockFolder, makeRssRules, makeRssTree } from "./rss-fixtures";
 import { type MockPlugin, type MockResult, makePlugins, searchCorpus } from "./search-fixtures";
+import {
+  creatorStatus,
+  type MockCookie,
+  type MockCreatorTask,
+  type MockLogMessage,
+  type MockLogPeer,
+  makeCookies,
+  makeLog,
+  makePeerLog,
+} from "./system-fixtures";
 
 /**
  * A small stand-in for qBittorrent's WebUI API v2, for development and the E2E tests.
@@ -51,6 +61,11 @@ export function createMockApi(initial: MockOptions = {}) {
   let searchCounter: number;
   let rssTree: MockFolder;
   let rssRules: Record<string, Record<string, unknown>>;
+  let logMessages: MockLogMessage[];
+  let peerLog: MockLogPeer[];
+  let cookies: MockCookie[];
+  let creatorTasks: MockCreatorTask[];
+  let creatorCounter: number;
 
   function reset(next: MockOptions = {}) {
     options = {
@@ -76,6 +91,11 @@ export function createMockApi(initial: MockOptions = {}) {
     searchCounter = 0;
     rssTree = makeRssTree();
     rssRules = makeRssRules(options.now);
+    logMessages = makeLog(options.now);
+    peerLog = makePeerLog(options.now);
+    cookies = makeCookies(options.now);
+    creatorTasks = [];
+    creatorCounter = 0;
   }
   reset();
 
@@ -241,6 +261,15 @@ export function createMockApi(initial: MockOptions = {}) {
         alltime_ul: 3.96e12,
         global_ratio: "1.41",
         total_peer_connections: 87,
+        total_wasted_session: 23.4 * units.MB,
+        read_cache_hits: "0",
+        read_cache_overload: "0",
+        write_cache_overload: "1.15",
+        total_buffers_size: 64 * units.MB,
+        queued_io_jobs: 3,
+        average_time_queue: 12,
+        total_queued_size: 1.2 * units.MB,
+        queued_tracker_announces: 2,
       },
     };
   }
@@ -547,6 +576,14 @@ export function createMockApi(initial: MockOptions = {}) {
         trackers: [],
         webseeds: [],
         peers: [],
+      });
+    }
+    for (const name of names) {
+      logMessages.push({
+        id: logMessages.length,
+        timestamp: now(),
+        type: 1,
+        message: `Added new torrent. Torrent: "${name}"`,
       });
     }
     return names.length;
@@ -1127,11 +1164,79 @@ export function createMockApi(initial: MockOptions = {}) {
         return ok();
       case "transfer/banPeers": {
         const banned = new Set((p.get("peers") ?? "").split("|"));
+        for (const peer of banned) {
+          const ip = peer.replace(/:\d+$/, "").replace(/^\[|\]$/g, "");
+          peerLog.push({ id: peerLog.length, timestamp: now(), ip, blocked: false, reason: "Manually banned" });
+        }
         for (const t of torrents) t.peers = t.peers.filter((x) => !banned.has(`${x.ip}:${x.port}`));
         return ok();
       }
       case "torrents/add":
         return addTorrent(p) ? text("Ok.") : text("Fails.", 415);
+      case "app/buildInfo":
+        return json({
+          qt: "6.9.2",
+          libtorrent: "2.0.11.0",
+          boost: "1.88.0",
+          openssl: "3.5.4",
+          zlib: "1.3.1",
+          bitness: 64,
+          platform: "linux",
+        });
+      case "app/processInfo":
+        return json({ launch_time: options.now - 3 * 86400 });
+      case "app/shutdown":
+        sessions.clear();
+        return ok();
+      case "app/cookies":
+        return json(cookies);
+      case "app/setCookies": {
+        try {
+          const list = JSON.parse(p.get("cookies") ?? "") as MockCookie[];
+          if (!Array.isArray(list)) return text("cookies must be array", 400);
+          cookies = list;
+        } catch {
+          return text("Bad Request", 400);
+        }
+        return ok();
+      }
+      case "log/main": {
+        const last = Number(p.get("last_known_id") ?? -1);
+        return json(logMessages.filter((msg) => msg.id > (Number.isNaN(last) ? -1 : last)));
+      }
+      case "log/peers": {
+        const last = Number(p.get("last_known_id") ?? -1);
+        return json(peerLog.filter((peer) => peer.id > (Number.isNaN(last) ? -1 : last)));
+      }
+      case "torrentcreator/addTask": {
+        if (!p.get("sourcePath")) return text("Missing required parameters", 400);
+        const taskID = `mock-task-${++creatorCounter}`;
+        creatorTasks.push({ taskID, params: new URLSearchParams(p), timeAdded: now(), polls: 0 });
+        return json({ taskID });
+      }
+      case "torrentcreator/status": {
+        const id = p.get("taskID");
+        const list = id ? creatorTasks.filter((t) => t.taskID === id) : creatorTasks;
+        if (id && !list.length) return text("Not Found", 404);
+        return json(list.map((t) => creatorStatus(t, now())));
+      }
+      case "torrentcreator/torrentFile": {
+        const task = creatorTasks.find((t) => t.taskID === p.get("taskID"));
+        if (!task) return text("Not Found", 404);
+        if (task.polls < 4) return text("Torrent creation is still unfinished.", 409);
+        const name = (task.params.get("sourcePath") ?? "").split("/").filter(Boolean).pop() ?? task.taskID;
+        return new Response(`d4:info d4:name${name.length}:${name}ee`, {
+          headers: {
+            "content-type": "application/x-bittorrent",
+            "content-disposition": `attachment; filename="${name}.torrent"`,
+          },
+        });
+      }
+      case "torrentcreator/deleteTask": {
+        const before = creatorTasks.length;
+        creatorTasks = creatorTasks.filter((t) => t.taskID !== p.get("taskID"));
+        return before === creatorTasks.length ? text("Not Found", 404) : ok();
+      }
       default:
         return text("Not Found", 404);
     }

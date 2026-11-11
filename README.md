@@ -129,7 +129,14 @@ only its display settings (theme, language, columns) in your browser.
 - **VPN aware**: if qBittorrent runs behind a VPN interface (e.g. `tun0` in a VPN container), the
   network and port are locked so they are not changed by accident.
 
-Statistics, the log and the torrent creator follow in the next version.
+### 🧰 Everything else
+
+- **Statistics**: overall speed, all-time and session figures, disk and tracker queues.
+- **Log** of qBittorrent, filtered by kind and text, and the blocked peers.
+- **Create torrents** from files on the server, with trackers, web seeds and piece size; download
+  the `.torrent` when it is done.
+- **Cookies** for private trackers and feeds, **about** with all versions, **log out** and
+  **quit qBittorrent**.
 
 ## 📸 Screenshots
 
@@ -145,6 +152,10 @@ Statistics, the log and the torrent creator follow in the next version.
   <tr>
     <td><img src="docs/screenshots/desktop-settings-connection-light.png" alt="Connection settings with the VPN note and the save bar"></td>
     <td><img src="docs/screenshots/desktop-settings-all-dark.png" alt="All options of qBittorrent, searched for port"></td>
+  </tr>
+  <tr>
+    <td><img src="docs/screenshots/desktop-statistics-dark.png" alt="Statistics page with speed chart, all-time figures and disk cache"></td>
+    <td><img src="docs/screenshots/desktop-log-light.png" alt="Log of qBittorrent with filters by kind"></td>
   </tr>
   <tr>
     <td><img src="docs/screenshots/phone-list-dark.png" alt="Torrent list on a phone with status tabs and bottom navigation" width="320"></td>
