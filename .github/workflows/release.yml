@@ -36,6 +36,8 @@ jobs:
       github-release: false
     secrets:
       DOCKER_PAT: ${{ secrets.DOCKER_PAT }}
+    # contents: write although github-release is off: GitHub checks the permissions of every job
+    # of the called workflow at start, also of the skipped release job (startup failure otherwise)
     permissions:
-      contents: read
+      contents: write
       packages: write
