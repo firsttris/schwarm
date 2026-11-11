@@ -62,10 +62,13 @@ bun run e2e
 ## Project notes
 
 - Layout: `src/api/` (typed client, Zod schemas, maindata merge, queries), `src/lib/` (filters,
-  formatting, file tree, stores), `src/components/ui/` (shadcn components, copied from
-  `shadcn-ui/ui` → `apps/v4/registry/new-york-v4/ui`; the registry host is not reachable from the
-  cloud sessions, so `shadcn add` does not work there), `src/routes/` (file-based, hash history),
-  `dev/` (mock qBittorrent: `mock-api.ts`, sample data from the mockup in `fixtures.ts`).
+  formatting, file tree, rename, limits, stores), `src/components/ui/` (shadcn components),
+  `src/routes/` (file-based, hash history), `dev/` (mock qBittorrent: `mock-api.ts`, sample data
+  from the mockup in `fixtures.ts`).
+- New shadcn components: `bunx --bun shadcn@latest add <name>`. The CLI adds the npm package `cn`
+  and imports `{ cn } from "cn"`: remove that package and import from `@/lib/utils`. Local changes
+  to the components, to keep when updating one: texts through Paraglide (dialog, sheet, sidebar,
+  breadcrumb), a dash for an indeterminate checkbox, the icon gap of `ContextMenuSubTrigger`.
 - `bun run dev` starts Vite and the mock API; E2E tests build and serve `dist/public` from the mock
   like qBittorrent does (no SPA fallback). `MOCK_AUTH=1` asks for a login (admin / adminadmin).
 - Paraglide loads its message-format plugin from `node_modules` (`project.inlang/settings.json`),

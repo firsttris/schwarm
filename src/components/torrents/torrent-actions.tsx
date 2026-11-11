@@ -5,6 +5,7 @@ import {
   CopyIcon,
   FolderIcon,
   FolderInputIcon,
+  GaugeIcon,
   ListOrderedIcon,
   MegaphoneIcon,
   PencilIcon,
@@ -27,7 +28,7 @@ import { isStopped, torrentTags } from "@/lib/torrents";
 import { m } from "@/paraglide/messages.js";
 
 /** Dialogs opened from the menus; rendered once by <TorrentDialogs />. */
-export type TorrentDialog = { kind: "remove" | "location" | "rename"; hashes: string[] } | null;
+export type TorrentDialog = { kind: "remove" | "location" | "rename" | "limits"; hashes: string[] } | null;
 export const torrentDialogStore = createMemoryStore<TorrentDialog>(null);
 
 export function useTorrentActions() {
@@ -70,6 +71,16 @@ export function useTorrentActions() {
               ? api.decreasePrio(hashes)
               : api.bottomPrio(hashes),
       ),
+    /**
+     * Moves torrents by a number of places in the queue. qBittorrent has no "set position",
+     * so it is one increasePrio or decreasePrio per place (torrentscontroller.cpp).
+     */
+    moveInQueue: (hashes: string[], places: number) =>
+      run(async () => {
+        for (let i = 0; i < Math.abs(places); i++) {
+          await (places < 0 ? api.increasePrio(hashes) : api.decreasePrio(hashes));
+        }
+      }),
     setAutoTmm: (hashes: string[], enable: boolean) => run(() => api.setAutoManagement(hashes, enable)),
     setSuperSeeding: (hashes: string[], value: boolean) => run(() => api.setSuperSeeding(hashes, value)),
     /** The toggles flip each torrent, so only those that differ from the wanted value are sent. */
@@ -168,7 +179,7 @@ export function TorrentMenuItems({ kit: K, torrents }: { kit: Kit; torrents: Tor
     ? (torrents[0]?.category ?? "")
     : undefined;
   const queueing = data?.serverState.queueing ?? false;
-  const openDialog = (kind: "remove" | "location" | "rename") => torrentDialogStore.set({ kind, hashes });
+  const openDialog = (kind: NonNullable<TorrentDialog>["kind"]) => torrentDialogStore.set({ kind, hashes });
 
   if (!torrents.length) return null;
   return (
@@ -246,6 +257,9 @@ export function TorrentMenuItems({ kit: K, torrents }: { kit: Kit; torrents: Tor
           </K.SubContent>
         </K.Sub>
       )}
+      <K.Item onSelect={() => openDialog("limits")}>
+        <GaugeIcon /> {m.action_limits()}
+      </K.Item>
       <K.Sub>
         <K.SubTrigger>
           <Settings2Icon /> {m.advanced()}

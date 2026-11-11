@@ -45,6 +45,25 @@ export function TorrentTable({
 
   const selectOnly = (hash: string) => table.setRowSelection({ [hash]: true });
 
+  // Drag to reorder the queue, while the list is sorted by queue position (features.md)
+  const sort = table.getState().sorting[0];
+  const queueSorted = sort?.id === "priority" && !sort.desc;
+  const dragged = useRef<string[]>([]);
+  const [dropTarget, setDropTarget] = useState<string | null>(null);
+  const onDrop = (target: Torrent) => {
+    setDropTarget(null);
+    const moving = dragged.current
+      .map((h) => rows.find((r) => r.id === h)?.original)
+      .filter((t): t is Torrent => !!t && t.priority > 0);
+    dragged.current = [];
+    const first = moving[0];
+    if (!first || target.priority <= 0 || moving.some((t) => t.hash === target.hash)) return;
+    void actions.moveInQueue(
+      moving.map((t) => t.hash),
+      target.priority - first.priority,
+    );
+  };
+
   const onRowClick = (event: MouseEvent, row: Row<Torrent>, index: number) => {
     const hash = row.id;
     setFocused(hash);
@@ -199,10 +218,32 @@ export function TorrentTable({
                     aria-selected={isSelected}
                     aria-rowindex={item.index + 2}
                     style={{ height: rowHeight }}
-                    className="border-b transition-colors last:border-b-0 hover:bg-muted/50 data-[state=selected]:bg-muted data-[focused]:shadow-[inset_2px_0_0_var(--ring)]"
+                    className="border-b transition-colors last:border-b-0 hover:bg-muted/50 data-[state=selected]:bg-muted data-[focused]:shadow-[inset_2px_0_0_var(--ring)] data-[drop]:shadow-[inset_0_2px_0_var(--primary)] [&[draggable=true]]:cursor-grab"
                     onClick={(e) => onRowClick(e, row, item.index)}
                     onDoubleClick={() => onOpen(row.id)}
                     onContextMenu={() => onContextMenu(row)}
+                    draggable={queueSorted && row.original.priority > 0}
+                    onDragStart={(e) => {
+                      dragged.current = row.getIsSelected() ? selected.map((t) => t.hash) : [row.id];
+                      e.dataTransfer.effectAllowed = "move";
+                      e.dataTransfer.setData("text/plain", row.original.name);
+                    }}
+                    onDragOver={(e) => {
+                      if (!dragged.current.length) return;
+                      e.preventDefault();
+                      setDropTarget(row.id);
+                    }}
+                    onDragLeave={() => setDropTarget((t) => (t === row.id ? null : t))}
+                    onDrop={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      onDrop(row.original);
+                    }}
+                    onDragEnd={() => {
+                      dragged.current = [];
+                      setDropTarget(null);
+                    }}
+                    data-drop={dropTarget === row.id || undefined}
                     data-testid="torrent-row"
                   >
                     {row.getVisibleCells().map((cell) => (

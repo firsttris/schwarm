@@ -7,6 +7,7 @@ import { ThemeSync } from "@/lib/theme";
 import { AddTorrentDialog } from "./add-torrent/add-torrent-dialog";
 import { DropZone } from "./add-torrent/drop-zone";
 import { AppSidebar } from "./app-sidebar";
+import { CategoriesDialog } from "./categories-dialog";
 import { LoginScreen } from "./login-screen";
 import { PhoneNav } from "./phone-nav";
 
@@ -42,6 +43,7 @@ export function AppShell() {
         <PhoneNav />
       </SidebarProvider>
       <AddTorrentDialog />
+      <CategoriesDialog />
       <DropZone />
       <Toaster />
     </TooltipProvider>

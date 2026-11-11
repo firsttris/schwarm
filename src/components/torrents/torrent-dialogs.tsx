@@ -14,6 +14,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { m } from "@/paraglide/messages.js";
+import { LimitsDialog } from "./limits-dialog";
 import { torrentDialogStore } from "./torrent-actions";
 
 /** Remove (with "Dateien auch löschen"), set location and rename, opened from any torrent menu. */
@@ -53,6 +54,8 @@ export function TorrentDialogs({ onRemoved }: { onRemoved?: (hashes: string[]) =
   };
 
   const name = torrents.length === 1 ? (first?.name ?? "") : m.n_torrents({ n: torrents.length });
+
+  if (dialog?.kind === "limits") return <LimitsDialog torrents={torrents} open onClose={close} />;
 
   return (
     <Dialog open={!!dialog} onOpenChange={(open) => !open && close()}>

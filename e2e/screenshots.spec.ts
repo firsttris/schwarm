@@ -59,6 +59,55 @@ for (const scheme of ["light", "dark"] as const) {
     });
   });
 
+  test.describe(`desktop ${scheme} milestone 2`, () => {
+    test.use({ ...desktop, colorScheme: scheme });
+
+    test(`speed menu ${scheme}`, async ({ page }) => {
+      await openTorrents(page);
+      await page.getByTestId("global-speeds").click();
+      await page.getByRole("menuitem", { name: /Langsamer Modus/ }).click();
+      await expect(page.getByTestId("global-speeds")).toContainText("Langsam");
+      await shot(page, `desktop-speed-${scheme}`);
+    });
+
+    test(`limits ${scheme}`, async ({ page }) => {
+      await openTorrents(page);
+      await row(page, "debian").click({ button: "right", delay: 50 });
+      await page.getByRole("menuitem", { name: "Limits …" }).click();
+      await page.getByLabel("Eigene Grenze").check();
+      await shot(page, `desktop-limits-${scheme}`);
+    });
+
+    test(`categories ${scheme}`, async ({ page }) => {
+      await openTorrents(page);
+      await page.getByRole("button", { name: "Kategorien verwalten" }).click();
+      await page.getByTestId("manage-dialog").getByRole("button", { name: "Linux bearbeiten" }).click();
+      await shot(page, `desktop-categories-${scheme}`);
+    });
+
+    test(`rename files ${scheme}`, async ({ page }) => {
+      await page.goto(`./#/torrents?torrent=${await sintelHash(page)}&tab=files`);
+      await page.getByRole("button", { name: "Umbenennen …" }).click();
+      const dialog = page.getByTestId("rename-files-dialog");
+      await dialog.getByLabel("Suchen nach").fill("Sintel\\.(\\w\\w)\\.srt");
+      await dialog.getByLabel("Ersetzen durch").fill("Untertitel-$1.srt");
+      await dialog.getByLabel("Regulärer Ausdruck").check();
+      await shot(page, `desktop-rename-${scheme}`);
+    });
+
+    test(`add with files ${scheme}`, async ({ page }) => {
+      await openTorrents(page);
+      await page.getByRole("button", { name: "Hinzufügen" }).click();
+      const dialog = page.getByTestId("add-dialog");
+      await dialog
+        .getByLabel("Magnet-Link oder URL")
+        .fill("magnet:?xt=urn:btih:9c2e6b8f2b4e0f6c3a1d5e7f9a0b1c2d3e4f5a6b&dn=Cosmos+Laundromat");
+      await dialog.getByRole("button", { name: "Dateien wählen" }).click();
+      await dialog.getByRole("checkbox", { name: "Extras laden" }).uncheck();
+      await shot(page, `desktop-add-files-${scheme}`);
+    });
+  });
+
   test.describe(`phone ${scheme}`, () => {
     test.use({ ...phone, colorScheme: scheme });
 

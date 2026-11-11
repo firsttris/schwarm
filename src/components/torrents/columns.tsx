@@ -152,7 +152,8 @@ function simple(
     meta,
     header: ({ column }) => <SortHeader column={column} label={meta.label()} align={meta.align} />,
     cell: ({ row }) => render(row.original),
-    sortDescFirst: meta.align === "right",
+    // numbers start with the largest, the queue position with the first place
+    sortDescFirst: meta.align === "right" && id !== "priority",
   };
 }
 

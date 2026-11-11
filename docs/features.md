@@ -3,7 +3,7 @@
 Everything the stock WebUI of qBittorrent 5.3.0 can do (from `src/webui/www/private` and
 `src/webui/api`), and where it goes in Schwarm. "Milestone" refers to [`spec.md`](spec.md).
 
-Done: milestone 1. Areas of later milestones (Suche, RSS, Statistik) keep their place in the
+Done: milestones 1 and 2. Areas of later milestones (Suche, RSS, Statistik) keep their place in the
 navigation with a "Kommt bald" page.
 
 ## Torrent list
@@ -17,10 +17,10 @@ navigation with a "Kommt bald" page.
 | Automatic torrent management, super seeding, sequential download, first/last piece first | Context menu → "Erweitert" as checkbox items | 1 |
 | Per-torrent limits: download, upload, ratio and seeding time | Context menu → "Limits …" (one dialog for all) | 2 |
 | Force recheck, force reannounce | Context menu | 1 |
-| Queue: top, up, down, bottom | Context menu → "Warteschlange" (shown when queueing is on); drag when sorted by queue | 1 (menu), 2 (drag) |
+| Queue: top, up, down, bottom | Context menu → "Warteschlange" (shown when queueing is on); drag rows while sorted by the "Warteschlange" column | 1 (menu), 2 (drag) |
 | Copy: name, info hash v1/v2, magnet, torrent ID, comment, content path | Context menu → "Kopieren" | 1 |
 | Export .torrent | Context menu | 1 |
-| Start all / stop all, pause/resume session | Menu behind the app name in the sidebar | 2 |
+| Start all / stop all, pause/resume session | Menu behind the app name in the sidebar ("Alles anhalten" / "Weitermachen") | 2 |
 | Select all, invert selection | `Ctrl+A`, header checkbox | 1 |
 | Status filters (all, downloading, seeding, completed, running, stopped, active, inactive, stalled, stalled up/down, checking, moving, errored) | Sidebar: the five common ones, the rest under "Mehr" | 1 |
 | Categories with subcategories | Sidebar, indented | 1 |
@@ -56,8 +56,8 @@ navigation with a "Kommt bald" page.
 | Search plugins: install, update, enable, uninstall | Settings → "Suche & RSS" | 3 |
 | RSS: feeds and folders, articles, mark read, refresh, edit feed URL | Page "RSS" → "Feeds" | 4 |
 | RSS auto-downloader: rules, episode filter, smart filter, preview of matching articles, clone, import/export | Page "RSS" → "Auto-Downloader" | 4 |
-| Create, edit, delete categories and tags, remove unused | Dialog from the sidebar | 2 |
-| Global speed limits and alternative limits (turtle), schedule | Header: speed button with a menu ("Langsamer Modus") | 2 |
+| Create, edit, delete categories and tags, remove unused | Dialog "Kategorien und Tags" from the sidebar group buttons and the app menu | 2 |
+| Global speed limits and alternative limits (turtle), schedule | Header: speed button with a menu ("Langsamer Modus"), "Limits bearbeiten …" dialog with the schedule | 2 |
 | Connection status, external IP, DHT nodes, free disk space | Sidebar card; badge on the phone | 1 |
 | Log (execution log, banned peers) | Settings → "System" → "Log" | 6 |
 | Statistics | Page "Statistik" | 6 |

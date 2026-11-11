@@ -148,6 +148,8 @@ export const serverStateSchema = z
     queueing: z.boolean(),
     refresh_interval: num,
     use_alt_speed_limits: z.boolean(),
+    /** true while the whole session is paused (transfer/pauseSession). */
+    session_state: z.boolean(),
     alltime_dl: num,
     alltime_ul: num,
     total_peer_connections: num,
@@ -311,3 +313,55 @@ export const torrentPeersResponseSchema = z
 
 /** torrents/pieceStates: 0 not downloaded, 1 downloading, 2 downloaded. */
 export const pieceStatesSchema = z.array(num);
+
+/** torrents/fetchMetadata and torrents/parseMetadata (serializeTorrentInfo in torrentscontroller.cpp). */
+export const torrentInfoSchema = z
+  .object({
+    infohash_v1: str.optional(),
+    infohash_v2: str.optional(),
+    hash: str.optional(),
+    info: z
+      .object({
+        name: str,
+        length: num,
+        piece_length: num.optional(),
+        pieces_num: num.optional(),
+        private: z.boolean().optional(),
+        files: z.array(z.object({ path: str, length: num, priority: num.optional() }).loose()),
+      })
+      .loose()
+      .optional(),
+    trackers: z.array(z.object({ url: str, tier: num }).loose()).optional(),
+    created_by: str.optional(),
+    comment: str.optional(),
+  })
+  .loose();
+export type TorrentInfo = z.infer<typeof torrentInfoSchema>;
+
+/** The part of app/preferences that the speed menu edits (appcontroller.cpp, preferencesAction). */
+export const speedPreferencesSchema = z
+  .object({
+    dl_limit: num,
+    up_limit: num,
+    alt_dl_limit: num,
+    alt_up_limit: num,
+    scheduler_enabled: z.boolean(),
+    schedule_from_hour: num,
+    schedule_from_min: num,
+    schedule_to_hour: num,
+    schedule_to_min: num,
+    /** Scheduler::Days in src/base/preferences.h: 0 every day, 1 weekdays, 2 weekend, 3–9 Monday–Sunday. */
+    scheduler_days: num,
+  })
+  .partial()
+  .loose();
+export type SpeedPreferences = z.infer<typeof speedPreferencesSchema>;
+
+/** ShareLimitAction and ShareLimitsMode in src/base/bittorrent/sharelimits.h, sent by name. */
+export const shareLimitActions = ["Default", "Stop", "Remove", "RemoveWithContent", "EnableSuperSeeding"] as const;
+export type ShareLimitAction = (typeof shareLimitActions)[number];
+export const shareLimitsModes = ["Default", "MatchAny", "MatchAll"] as const;
+export type ShareLimitsMode = (typeof shareLimitsModes)[number];
+/** -2 follows the global setting, -1 means no limit (DEFAULT_RATIO_LIMIT, NO_RATIO_LIMIT). */
+export const USE_GLOBAL_LIMIT = -2;
+export const NO_LIMIT = -1;

@@ -4,6 +4,11 @@ import {
   maindataResponseSchema,
   pieceStatesSchema,
   propertiesSchema,
+  type ShareLimitAction,
+  type ShareLimitsMode,
+  type SpeedPreferences,
+  speedPreferencesSchema,
+  torrentInfoSchema,
   torrentPeersResponseSchema,
   trackersSchema,
   webseedsSchema,
@@ -95,6 +100,18 @@ export interface AddTorrentOptions {
   /** Bytes per second; 0 is unlimited. */
   dlLimit?: number;
   upLimit?: number;
+  /** One priority per file index, after choosing files (addAction: "filePriorities"). */
+  filePriorities?: number[];
+}
+
+export interface ShareLimits {
+  /** -2 global, -1 none, otherwise the ratio. */
+  ratioLimit: number;
+  /** Minutes; -2 global, -1 none. */
+  seedingTimeLimit: number;
+  inactiveSeedingTimeLimit: number;
+  shareLimitAction: ShareLimitAction;
+  shareLimitsMode: ShareLimitsMode;
 }
 
 export const api = {
@@ -156,12 +173,55 @@ export const api = {
   addPeers: (list: string[], peers: string[]) =>
     post("torrents/addPeers", { hashes: hashes(list), peers: peers.join("|") }),
 
+  /** Per torrent, bytes per second; 0 is unlimited. */
+  setDownloadLimit: (list: string[], limit: number) =>
+    post("torrents/setDownloadLimit", { hashes: hashes(list), limit }),
+  setUploadLimit: (list: string[], limit: number) => post("torrents/setUploadLimit", { hashes: hashes(list), limit }),
+  setShareLimits: (list: string[], limits: ShareLimits) =>
+    post("torrents/setShareLimits", { hashes: hashes(list), ...limits }),
+
+  createCategory: (category: string, savePath: string) => post("torrents/createCategory", { category, savePath }),
+  editCategory: (category: string, savePath: string) => post("torrents/editCategory", { category, savePath }),
+  /** Several categories are joined with a line break (removeCategoriesAction). */
+  removeCategories: (categories: string[]) => post("torrents/removeCategories", { categories: categories.join("\n") }),
+  createTags: (tags: string[]) => post("torrents/createTags", { tags: tags.join(",") }),
+  deleteTags: (tags: string[]) => post("torrents/deleteTags", { tags: tags.join(",") }),
+
+  renameFile: (hash: string, oldPath: string, newPath: string) =>
+    post("torrents/renameFile", { hash, oldPath, newPath }),
+  renameFolder: (hash: string, oldPath: string, newPath: string) =>
+    post("torrents/renameFolder", { hash, oldPath, newPath }),
+
+  /**
+   * Metadata of a magnet link or hash before adding. qBittorrent answers 202 with the hashes
+   * while it is still fetching, then 200 with the file list (fetchMetadataAction).
+   */
+  fetchMetadata: async (source: string) => {
+    const res = await request("torrents/fetchMetadata", { method: "POST", body: toSearch({ source }) });
+    return { ready: res.status === 200, info: torrentInfoSchema.parse(await res.json()) };
+  },
+  /** Metadata of .torrent files, one result per file (parseMetadataAction). */
+  parseMetadata: async (files: File[]) => {
+    const form = new FormData();
+    for (const file of files) form.append("torrents", file, file.name);
+    const res = await request("torrents/parseMetadata", { method: "POST", body: form });
+    return torrentInfoSchema.array().parse(await res.json());
+  },
+
   // transfer (transfercontroller.cpp)
   banPeers: (peers: string[]) => post("transfer/banPeers", { peers: peers.join("|") }),
+  toggleSpeedLimitsMode: () => post("transfer/toggleSpeedLimitsMode"),
+  pauseSession: () => post("transfer/pauseSession"),
+  resumeSession: () => post("transfer/resumeSession"),
+
+  // app (appcontroller.cpp): preferences are sent as one JSON object
+  speedPreferences: () => get("app/preferences", speedPreferencesSchema),
+  setPreferences: (prefs: SpeedPreferences) => post("app/setPreferences", { json: JSON.stringify(prefs) }),
 
   add: (options: AddTorrentOptions) => {
     const form = new FormData();
-    const { urls, files, tags, ...rest } = options;
+    const { urls, files, tags, filePriorities, ...rest } = options;
+    if (filePriorities?.length) form.set("filePriorities", filePriorities.join(","));
     if (urls?.length) form.set("urls", urls.join("\n"));
     for (const file of files ?? []) form.append("torrents", file, file.name);
     if (tags?.length) form.set("tags", tags.join(","));
