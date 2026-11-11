@@ -42,8 +42,11 @@ This file is the brief for building it. Read it fully before starting a mileston
   and attaches it to the GitHub release (shared workflows in `firsttris/workflows`: `bump-version.yml`,
   `tested-on-main.yml`, `github-release.yml`).
 - Install = unpack the folder somewhere qBittorrent can read it and set the alternative WebUI path
-  to it. The README explains this, including Docker (`linuxserver/qbittorrent`: put it under
-  `/config/schwarm`).
+  to it. The README explains this, including other Docker images (put it under `/config/schwarm`).
+- The same tag publishes a Docker mod for `linuxserver/qbittorrent` (`docker/`): `tristanteu/schwarm`
+  on Docker Hub and `ghcr.io/firsttris/schwarm` (shared `docker-release.yml`, secret `DOCKER_PAT`).
+  Its init script sets `[WebUI] AlternativeUIEnabled` and `RootFolder=/schwarm` before qBittorrent
+  starts; the CI starts it on the real image (`docker/test-mod.sh`).
 
 ## Stack
 

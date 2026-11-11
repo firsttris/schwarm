@@ -41,6 +41,22 @@ auch hinter einem VPN-Container wie gluetun.
 
 ## 🚀 Installation
 
+### Docker (`linuxserver/qbittorrent`)
+
+Schwarm gibt es als [Docker-Mod](docker/README.md): eine Zeile in der Umgebung des Containers, und
+es wird bei jedem Start eingerichtet und aktualisiert.
+
+```yaml
+environment:
+  - DOCKER_MODS=tristanteu/schwarm:latest
+```
+
+Container neu erstellen, Weboberfläche wie gewohnt öffnen. Das Image gibt es auch unter
+`ghcr.io/firsttris/schwarm`. Zum Entfernen die Zeile wieder herausnehmen: qBittorrent kehrt von
+selbst zu seiner eigenen Weboberfläche zurück.
+
+### Von Hand
+
 1. `schwarm-vX.Y.Z.zip` aus dem [neuesten Release](https://github.com/firsttris/schwarm/releases/latest)
    laden und dort entpacken, wo qBittorrent es lesen kann. Es entsteht ein Ordner `schwarm/` mit
    `public/` darin.
@@ -48,8 +64,8 @@ auch hinter einem VPN-Container wie gluetun.
    `schwarm` setzen (den, der `public/` enthält).
 3. Weboberfläche neu laden.
 
-**Docker (`linuxserver/qbittorrent`)**: ins Config-Volume entpacken, z. B. nach `/config/schwarm`,
-und `/config/schwarm` als Pfad der alternativen Weboberfläche eintragen.
+**Andere Docker-Images** (z. B. `hotio/qbittorrent`): ins Config-Volume entpacken, z. B. nach
+`/config/schwarm`, und `/config/schwarm` als Pfad der alternativen Weboberfläche eintragen.
 
 ```bash
 cd /pfad/zur/qbittorrent/config && curl -L -o schwarm.zip \
@@ -185,8 +201,9 @@ Ja: Schwarm ersetzt die eingebaute Oberfläche als „alternative Web UI“ von 
 dieselbe WebUI-API, es muss nichts weiter installiert werden.
 
 ### Läuft Schwarm mit qBittorrent in Docker?
-Ja. Den entpackten Ordner ins Config-Volume legen (bei `linuxserver/qbittorrent`:
-`/config/schwarm`) und diesen Pfad als alternative Web UI eintragen.
+Ja. Bei `linuxserver/qbittorrent` `DOCKER_MODS=tristanteu/schwarm:latest` in die Umgebung
+schreiben ([Docker-Mod](docker/README.md)). Bei anderen Images den entpackten Ordner ins
+Config-Volume legen (`/config/schwarm`) und diesen Pfad als alternative Web UI eintragen.
 
 ### Welche qBittorrent-Version brauche ich?
 Gebaut ist es für qBittorrent 5.3 (WebUI-API 2.16). qBittorrent ab 5.0 sollte gehen; 4.x nutzt

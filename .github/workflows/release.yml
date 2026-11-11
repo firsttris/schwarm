@@ -9,6 +9,9 @@ jobs:
   # The release ZIP is built by the CI (artifact "dist"), so the CI always runs here
   checks:
     uses: ./.github/workflows/ci.yml
+    permissions:
+      contents: read
+      packages: write # the Docker mod check keeps its build cache in ghcr.io
 
   release:
     needs: checks
@@ -18,3 +21,21 @@ jobs:
       release-artifact: dist
     permissions:
       contents: write
+
+  # The Docker mod for linuxserver/qbittorrent (docker/README.md): tristanteu/schwarm on Docker Hub
+  # and ghcr.io/firsttris/schwarm, :x.y.z, :x.y and :latest. The GitHub release is the job above.
+  docker:
+    needs: checks
+    if: startsWith(github.ref, 'refs/tags/v')
+    uses: firsttris/workflows/.github/workflows/docker-release.yml@v1
+    with:
+      image: tristanteu/schwarm
+      description: Schwarm, a modern web UI for qBittorrent, as a Docker mod for linuxserver/qbittorrent
+      ghcr: true
+      readme: docker/README.md
+      github-release: false
+    secrets:
+      DOCKER_PAT: ${{ secrets.DOCKER_PAT }}
+    permissions:
+      contents: read
+      packages: write

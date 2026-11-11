@@ -40,14 +40,29 @@ behind a VPN container such as gluetun.
 
 ## 🚀 Install
 
+### Docker (`linuxserver/qbittorrent`)
+
+Schwarm comes as a [Docker mod](docker/README.md): one line in the container's environment, and it
+is set up and updated with every start.
+
+```yaml
+environment:
+  - DOCKER_MODS=tristanteu/schwarm:latest
+```
+
+Recreate the container, open the web UI as before. The image is also at `ghcr.io/firsttris/schwarm`.
+To remove it, take the line out again: qBittorrent goes back to its own web UI by itself.
+
+### By hand
+
 1. Download `schwarm-vX.Y.Z.zip` from the [latest release](https://github.com/firsttris/schwarm/releases/latest)
    and unpack it somewhere qBittorrent can read it. You get a folder `schwarm/` with `public/` inside.
 2. In qBittorrent: **Options → Web UI → Use alternative WebUI**, and set the path to the `schwarm`
    folder (the one that contains `public/`).
 3. Reload the web UI.
 
-**Docker (`linuxserver/qbittorrent`)**: unpack into the config volume, e.g. `/config/schwarm`, and
-set the alternative WebUI path to `/config/schwarm`.
+**Other Docker images** (e.g. `hotio/qbittorrent`): unpack into the config volume, e.g.
+`/config/schwarm`, and set the alternative WebUI path to `/config/schwarm`.
 
 ```bash
 cd /path/to/qbittorrent/config && curl -L -o schwarm.zip \
@@ -179,8 +194,9 @@ Yes: Schwarm replaces the stock web UI as qBittorrent's "alternative WebUI". It 
 WebUI API, so nothing else needs to be installed.
 
 ### Does Schwarm work with qBittorrent in Docker?
-Yes. Put the unpacked folder into the config volume (for `linuxserver/qbittorrent`:
-`/config/schwarm`) and set that path as the alternative WebUI.
+Yes. With `linuxserver/qbittorrent` add `DOCKER_MODS=tristanteu/schwarm:latest` to the
+environment ([Docker mod](docker/README.md)). With other images put the unpacked folder into the
+config volume (`/config/schwarm`) and set that path as the alternative WebUI.
 
 ### Which qBittorrent version do I need?
 It is built against qBittorrent 5.3 (WebUI API 2.16). qBittorrent 5.0 and newer should work; 4.x
