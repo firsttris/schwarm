@@ -20,7 +20,7 @@ printf 'FROM %s\nCOPY --from=%s / /\n' "$BASE" "$MOD" |
 docker run -d --name "$NAME" -e WEBUI_PORT="$PORT" -p "$PORT:$PORT" "$NAME" >/dev/null
 
 for _ in $(seq 60); do
-  if curl -fs "http://localhost:$PORT/" | grep -q "<title>Schwarm</title>"; then
+  if [[ "$(curl -fs "http://localhost:$PORT/" || true)" == *"<title>Schwarm</title>"* ]]; then
     break
   fi
   sleep 1
@@ -32,11 +32,14 @@ fail() {
   exit 1
 }
 
-curl -fs "http://localhost:$PORT/" | grep -q "<title>Schwarm</title>" || fail "qBittorrent does not serve Schwarm"
+page=$(curl -fs "http://localhost:$PORT/" || true)
+[[ "$page" == *"<title>Schwarm</title>"* ]] || fail "qBittorrent does not serve Schwarm"
 status=$(curl -s -o /dev/null -w '%{http_code}' "http://localhost:$PORT/api/v2/app/version")
 [[ "$status" == 403 ]] || fail "api/v2/app/version answered $status without a login, expected 403"
 conf=$(docker exec "$NAME" cat /config/qBittorrent/qBittorrent.conf)
 grep -qx 'AlternativeUIEnabled=true' <<<"$conf" || fail "AlternativeUIEnabled=true missing"
 grep -qx 'RootFolder=/schwarm' <<<"$conf" || fail "RootFolder=/schwarm missing"
-docker logs "$NAME" 2>&1 | grep -q '\*\*\*\* Schwarm v' || fail "the mod's init did not run"
+# into a variable first: with pipefail, grep -q stopping early would fail docker logs (SIGPIPE)
+logs=$(docker logs "$NAME" 2>&1)
+grep -q '\*\*\*\* Schwarm v' <<<"$logs" || fail "the mod's init did not run"
 echo "OK: $(docker exec "$NAME" cat /schwarm/version.txt) served by $(docker exec "$NAME" /app/qbittorrent-nox --version)"
