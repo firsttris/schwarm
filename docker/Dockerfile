@@ -9,15 +9,18 @@ WORKDIR /src
 COPY package.json bun.lock ./
 RUN bun install --frozen-lockfile
 COPY . .
-# vite build and the build check (no QBT_TR(, relative paths)
+# vite build and the build check (no QBT_TR(, relative paths), then the mod's tree in /out
 RUN bun run build \
-    && bun -e 'console.log(`v${require("./package.json").version}`)' > dist/version.txt
+    && mkdir -p /out/schwarm \
+    && cp -r docker/root/. /out/ \
+    && cp -r dist/public /out/schwarm/public \
+    && bun -e 'console.log(`v${require("./package.json").version}`)' > /out/schwarm/version.txt
 
 FROM scratch
 LABEL maintainer="firsttris" \
       org.opencontainers.image.title="Schwarm (Docker mod for linuxserver/qbittorrent)" \
       org.opencontainers.image.source="https://github.com/firsttris/schwarm" \
       org.opencontainers.image.licenses="AGPL-3.0-only"
-COPY docker/root/ /
-COPY --from=build /src/dist/public/ /schwarm/public/
-COPY --from=build /src/dist/version.txt /schwarm/version.txt
+# One COPY, one layer: the mod loader of linuxserver applies only the first layer of a mod
+# (/docker-mods, get_blob_sha: .layers[0].digest)
+COPY --from=build /out/ /
