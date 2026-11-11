@@ -13,11 +13,13 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { lazyNamed, WhenUsed } from "@/lib/lazy";
 import { m } from "@/paraglide/messages.js";
-import { LimitsDialog } from "./limits-dialog";
 import { torrentDialogStore } from "./torrent-actions";
 
 /** Remove (with "Dateien auch löschen"), set location and rename, opened from any torrent menu. */
+const LimitsDialog = lazyNamed(() => import("./limits-dialog"), "LimitsDialog");
+
 export function TorrentDialogs({ onRemoved }: { onRemoved?: (hashes: string[]) => void }) {
   const dialog = torrentDialogStore.use();
   const { data } = useMaindata();
@@ -55,7 +57,13 @@ export function TorrentDialogs({ onRemoved }: { onRemoved?: (hashes: string[]) =
 
   const name = torrents.length === 1 ? (first?.name ?? "") : m.n_torrents({ n: torrents.length });
 
-  if (dialog?.kind === "limits") return <LimitsDialog torrents={torrents} open onClose={close} />;
+  if (dialog?.kind === "limits") {
+    return (
+      <WhenUsed active>
+        <LimitsDialog torrents={torrents} open onClose={close} />
+      </WhenUsed>
+    );
+  }
 
   return (
     <Dialog open={!!dialog} onOpenChange={(open) => !open && close()}>

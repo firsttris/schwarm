@@ -56,6 +56,7 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { statusLabel } from "@/lib/labels";
+import { openManage } from "@/lib/manage";
 import { type Theme, useTheme } from "@/lib/theme";
 import {
   categoryTree,
@@ -75,7 +76,6 @@ import {
 import { cn } from "@/lib/utils";
 import { m } from "@/paraglide/messages.js";
 import type { TorrentsSearch } from "@/routes/torrents";
-import { openManage } from "./categories-dialog";
 import { ConnectionCard } from "./connection";
 import { Logo } from "./logo";
 

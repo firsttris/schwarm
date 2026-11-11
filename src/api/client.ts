@@ -1,4 +1,4 @@
-import type { z } from "zod";
+import * as z from "zod/mini";
 import {
   filesSchema,
   maindataResponseSchema,
@@ -56,7 +56,7 @@ async function request(path: string, init?: RequestInit): Promise<Response> {
   return res;
 }
 
-async function get<T>(path: string, schema: z.ZodType<T>, params: Params = {}): Promise<T> {
+async function get<T>(path: string, schema: z.ZodMiniType<T>, params: Params = {}): Promise<T> {
   const search = toSearch(params).toString();
   const res = await request(search ? `${path}?${search}` : path);
   return schema.parse(await res.json());
@@ -205,7 +205,7 @@ export const api = {
     const form = new FormData();
     for (const file of files) form.append("torrents", file, file.name);
     const res = await request("torrents/parseMetadata", { method: "POST", body: form });
-    return torrentInfoSchema.array().parse(await res.json());
+    return z.array(torrentInfoSchema).parse(await res.json());
   },
 
   // transfer (transfercontroller.cpp)

@@ -69,6 +69,10 @@ bun run e2e
   and imports `{ cn } from "cn"`: remove that package and import from `@/lib/utils`. Local changes
   to the components, to keep when updating one: texts through Paraglide (dialog, sheet, sidebar,
   breadcrumb), a dash for an indeterminate checkbox, the icon gap of `ContextMenuSubTrigger`.
+- Code splitting: what the first screen (the torrent list) does not need is loaded on first use
+  with `lazyNamed` and `<WhenUsed>` from `src/lib/lazy.tsx` (details, dialogs); routes are split by
+  the router plugin; React, TanStack, Radix and the other libraries get their own chunks
+  (`vite.config.ts`). Zod is used as `zod/mini`.
 - `bun run dev` starts Vite and the mock API; E2E tests build and serve `dist/public` from the mock
   like qBittorrent does (no SPA fallback). `MOCK_AUTH=1` asks for a login (admin / adminadmin).
 - Paraglide loads its message-format plugin from `node_modules` (`project.inlang/settings.json`),
