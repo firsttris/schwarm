@@ -13,6 +13,11 @@ ROOT=/schwarm
 
 echo "**** Schwarm $(cat "${ROOT}/version.txt" 2>/dev/null) in ${ROOT} ****"
 
+if [[ ! -f "${ROOT}/public/index.html" ]]; then
+    echo "**** ${ROOT}/public/index.html missing: leaving the WebUI setting as it is ****"
+    exit 0
+fi
+
 if [[ "${SCHWARM_WEBUI:-true}" != "true" ]]; then
     echo "**** SCHWARM_WEBUI=${SCHWARM_WEBUI}: leaving the WebUI setting as it is ****"
     exit 0

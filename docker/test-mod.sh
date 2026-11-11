@@ -13,6 +13,13 @@ NAME=schwarm-mod-test
 cleanup() { docker rm -f "$NAME" >/dev/null 2>&1 || true; }
 trap cleanup EXIT
 
+# the mod loader of linuxserver applies only the first layer of a mod (/docker-mods, get_blob_sha)
+layers=$(docker image inspect --format '{{len .RootFS.Layers}}' "$MOD")
+if [[ "$layers" != 1 ]]; then
+  echo "FAIL: the mod has $layers layers, linuxserver applies only the first"
+  exit 1
+fi
+
 # the default builder (docker driver) sees the locally loaded mod image
 printf 'FROM %s\nCOPY --from=%s / /\n' "$BASE" "$MOD" |
   docker buildx build --builder default --load -q -t "$NAME" - >/dev/null
