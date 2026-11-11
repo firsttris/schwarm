@@ -67,6 +67,15 @@ export interface MockTorrent {
   webseeds: string[];
   peers: MockPeer[];
   error?: string;
+  dl_limit?: number;
+  up_limit?: number;
+  share?: {
+    ratioLimit: number;
+    seedingTimeLimit: number;
+    inactiveSeedingTimeLimit: number;
+    shareLimitAction: string;
+    shareLimitsMode: string;
+  };
 }
 
 const KB = 1000;

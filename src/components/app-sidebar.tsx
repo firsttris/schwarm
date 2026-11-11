@@ -8,20 +8,25 @@ import {
   CircleArrowDownIcon,
   CircleArrowUpIcon,
   CirclePauseIcon,
+  CirclePlayIcon,
   FolderIcon,
   ListIcon,
   LogOutIcon,
   type LucideIcon,
   MonitorIcon,
   MoonIcon,
+  PauseIcon,
+  PlayIcon,
   RssIcon,
   SearchIcon,
+  Settings2Icon,
   SlidersHorizontalIcon,
   SunIcon,
+  TagsIcon,
 } from "lucide-react";
 import { useMemo } from "react";
 import { api } from "@/api/client";
-import { authState, resetMaindata, useMaindata, useVersion } from "@/api/queries";
+import { authState, resetMaindata, useMaindata, useRunAction, useVersion } from "@/api/queries";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import {
   DropdownMenu,
@@ -38,6 +43,7 @@ import {
   SidebarContent,
   SidebarFooter,
   SidebarGroup,
+  SidebarGroupAction,
   SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
@@ -69,6 +75,7 @@ import {
 import { cn } from "@/lib/utils";
 import { m } from "@/paraglide/messages.js";
 import type { TorrentsSearch } from "@/routes/torrents";
+import { openManage } from "./categories-dialog";
 import { ConnectionCard } from "./connection";
 import { Logo } from "./logo";
 
@@ -84,6 +91,9 @@ function AppMenu() {
   const version = useVersion();
   const { theme, setTheme } = useTheme();
   const queryClient = useQueryClient();
+  const run = useRunAction();
+  const { data } = useMaindata();
+  const paused = data?.serverState.session_state ?? false;
   const logout = async () => {
     await api.logout().catch(() => undefined);
     resetMaindata();
@@ -105,6 +115,23 @@ function AppMenu() {
         </SidebarMenuButton>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-60" align="start">
+        <DropdownMenuLabel className="text-muted-foreground text-xs">{m.nav_torrents()}</DropdownMenuLabel>
+        <DropdownMenuItem onSelect={() => run(() => api.start(["all"]), { success: m.toast_all_started() })}>
+          <CirclePlayIcon /> {m.start_all()}
+        </DropdownMenuItem>
+        <DropdownMenuItem onSelect={() => run(() => api.stop(["all"]), { success: m.toast_all_stopped() })}>
+          <CirclePauseIcon /> {m.stop_all()}
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          onSelect={() => run(() => (paused ? api.resumeSession() : api.pauseSession()))}
+          title={m.pause_session_hint()}
+        >
+          {paused ? <PlayIcon /> : <PauseIcon />} {paused ? m.resume_session() : m.pause_session()}
+        </DropdownMenuItem>
+        <DropdownMenuItem onSelect={() => openManage("categories")}>
+          <TagsIcon /> {m.manage_menu()}
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
         <DropdownMenuLabel className="text-muted-foreground text-xs">{m.appearance()}</DropdownMenuLabel>
         <DropdownMenuRadioGroup value={theme} onValueChange={(v) => setTheme(v as Theme)}>
           <DropdownMenuRadioItem value="light">
@@ -233,6 +260,10 @@ export function AppSidebar() {
 
         <SidebarGroup>
           <SidebarGroupLabel>{m.categories()}</SidebarGroupLabel>
+          <SidebarGroupAction title={m.manage_categories()} onClick={() => openManage("categories")}>
+            <Settings2Icon />
+            <span className="sr-only">{m.manage_categories()}</span>
+          </SidebarGroupAction>
           <SidebarMenu aria-label={m.categories()}>
             {categories.map((c) => (
               <SidebarMenuItem key={c.name}>
@@ -262,6 +293,10 @@ export function AppSidebar() {
         {(data?.tags.length ?? 0) > 0 && (
           <SidebarGroup>
             <SidebarGroupLabel>{m.tags()}</SidebarGroupLabel>
+            <SidebarGroupAction title={m.manage_tags()} onClick={() => openManage("tags")}>
+              <Settings2Icon />
+              <span className="sr-only">{m.manage_tags()}</span>
+            </SidebarGroupAction>
             <ul className="flex flex-wrap gap-1.5 px-2" aria-label={m.tags()}>
               {data?.tags.map((tag) => {
                 const active = onTorrents && search.tag === tag;

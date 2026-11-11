@@ -30,7 +30,7 @@ test("adds a .torrent file", async ({ page }) => {
     mimeType: "application/x-bittorrent",
     buffer: Buffer.from("d4:infod4:name6:Springee"),
   });
-  await expect(dialog.getByText("Spring (2019).torrent")).toBeVisible();
+  await expect(dialog.getByText("Spring (2019).torrent").first()).toBeVisible();
   await dialog.getByLabel("Sofort starten").uncheck();
   await dialog.getByRole("button", { name: "Hinzufügen" }).click();
   const added = page.getByTestId("torrent-row").filter({ hasText: "Spring (2019)" });

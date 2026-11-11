@@ -2,6 +2,7 @@
   "$schema": "https://inlang.com/schema/inlang-message-format",
   "action_export": ".torrent exportieren",
   "action_force_start": "Zwangsstart",
+  "action_limits": "Limits …",
   "action_location": "Speicherort ändern …",
   "action_reannounce": "Neu ankündigen",
   "action_recheck": "Neu prüfen",
@@ -16,6 +17,8 @@
   "add_description": "Magnet-Link einfügen oder eine .torrent-Datei wählen.",
   "add_dl_limit": "↓ Limit",
   "add_files_choose": ".torrent-Dateien wählen",
+  "add_files_choose_files": "Dateien wählen",
+  "add_files_hide": "Ausblenden",
   "add_files_hint": "Oder hierher ziehen, gern mehrere.",
   "add_incomplete_path": "Unfertige Dateien woanders ablegen",
   "add_layout": "Ordner anlegen",
@@ -29,6 +32,18 @@
   "add_management_auto": "Automatisch nach Kategorie",
   "add_management_hint": "Automatisch: Kategorie bestimmt den Speicherort (Automatic Torrent Management).",
   "add_management_manual": "Von Hand",
+  "add_meta_failed": "Infos nicht verfügbar, Hinzufügen geht trotzdem.",
+  "add_meta_loading": "Infos werden geholt …",
+  "add_meta_summary": [
+    {
+      "declarations": ["input n", "input size", "local p = n: plural"],
+      "selectors": ["p"],
+      "match": {
+        "p=one": "{size} · {n} Datei",
+        "p=other": "{size} · {n} Dateien"
+      }
+    }
+  ],
   "add_more_options": "Weitere Optionen",
   "add_rename": "Anderer Name",
   "add_save_in": "Speichern in",
@@ -58,8 +73,12 @@
   "back": "Zurück",
   "cancel": "Abbrechen",
   "categories": "Kategorien",
+  "categories_none": "Noch keine Kategorien.",
   "category": "Kategorie",
+  "category_default_path": "Standardordner",
   "category_none": "Keine",
+  "category_path_placeholder": "leer: Standardordner",
+  "category_rename_hint": "qBittorrent kann Kategorien nicht umbenennen.",
   "clear_filters": "Filter löschen",
   "close": "Schließen",
   "col_added_on": "Hinzugefügt",
@@ -111,6 +130,10 @@
   "copy_url": "Adresse kopieren",
   "date_today": "heute, {time}",
   "date_yesterday": "gestern, {time}",
+  "days_every": "Jeden Tag",
+  "days_weekdays": "Mo–Fr",
+  "days_weekend": "Wochenende",
+  "delete_name": "{name} löschen",
   "density": "Listendichte",
   "density_comfortable": "Bequem",
   "density_compact": "Kompakt",
@@ -135,6 +158,7 @@
   "duration_min": "{min} Min",
   "duration_s": "{s} s",
   "edit": "Bearbeiten …",
+  "edit_name": "{name} bearbeiten",
   "error_action": "Das hat nicht geklappt",
   "eta_left": "noch {eta}",
   "expand": "Aufklappen",
@@ -183,6 +207,20 @@
   "language_hint": "Ohne Auswahl gilt die Sprache des Browsers.",
   "last_minutes": "Letzte 5 Minuten",
   "limit_unlimited": "unbegrenzt",
+  "limits_download": "Download",
+  "limits_inactive_time": "Bis so lange untätig",
+  "limits_match_all": "Erst wenn alle Grenzen erreicht sind",
+  "limits_ratio": "Bis Ratio",
+  "limits_seeding_time": "Bis Seed-Zeit",
+  "limits_share_custom": "Eigene Grenze",
+  "limits_share_global": "Wie in den Einstellungen",
+  "limits_share_none": "Ohne Ende",
+  "limits_share_text": "Wann qBittorrent aufhört, diesen Torrent hochzuladen.",
+  "limits_share_title": "Wie lange weitergeben",
+  "limits_speed_hint": "Leer lassen für unbegrenzt. Das allgemeine Limit gilt trotzdem.",
+  "limits_then": "Danach",
+  "limits_title": "Limits",
+  "limits_upload": "Upload",
   "location_hint": "qBittorrent verschiebt die Dateien dorthin.",
   "location_label": "Neuer Ordner",
   "location_title": "Speicherort ändern",
@@ -196,6 +234,11 @@
   "login_wrong": "Benutzername oder Passwort stimmen nicht.",
   "logout": "Abmelden",
   "main_menu": "Hauptmenü",
+  "manage_categories": "Kategorien verwalten",
+  "manage_menu": "Kategorien und Tags …",
+  "manage_tags": "Tags verwalten",
+  "manage_text": "Kategorien bestimmen den Speicherort, Tags sind frei.",
+  "manage_title": "Kategorien und Tags",
   "more": "Mehr",
   "more_actions": "Weitere Aktionen",
   "n_of": "{n} von {total}",
@@ -244,6 +287,8 @@
   "page_next": "Nächste Seite",
   "page_of": "Seite {page} von {pages}",
   "page_prev": "Vorherige Seite",
+  "pause_session": "Alles anhalten",
+  "pause_session_hint": "Hält qBittorrent an, ohne den Status der Torrents zu ändern.",
   "peers_add": "Peer hinzufügen",
   "peers_add_label": "Peers",
   "peers_add_text": "Adresse und Port, einer pro Zeile, z. B. 203.0.113.5:6881.",
@@ -286,9 +331,54 @@
       }
     }
   ],
+  "remove_unused": "Unbenutzte entfernen",
+  "rename_applies": "Gilt für",
+  "rename_applies_both": "Name und Endung",
+  "rename_applies_extension": "Nur Endung",
+  "rename_applies_name": "Nur Name",
+  "rename_apply": [
+    {
+      "declarations": ["input n", "local p = n: plural"],
+      "selectors": ["p"],
+      "match": {
+        "p=one": "{n} umbenennen",
+        "p=other": "{n} umbenennen"
+      }
+    }
+  ],
+  "rename_bad_regex": "Der reguläre Ausdruck ist ungültig.",
+  "rename_case": "Groß-/Kleinschreibung beachten",
+  "rename_enumerate": "Nummerierung ab",
+  "rename_file_title": "Datei umbenennen",
+  "rename_files": "Dateien",
+  "rename_files_text": "Suchen und ersetzen in den Namen, mit Vorschau.",
+  "rename_files_title": "Dateien umbenennen",
+  "rename_folder_title": "Ordner umbenennen",
+  "rename_folders": "Ordner",
   "rename_hint": "Ändert nur den Namen in der Liste, nicht die Dateien.",
+  "rename_match_all": "Alle Vorkommen",
+  "rename_name": "{name} umbenennen",
+  "rename_preview": [
+    {
+      "declarations": ["input n", "local p = n: plural"],
+      "selectors": ["p"],
+      "match": {
+        "p=one": "Vorschau: {n} Änderung",
+        "p=other": "Vorschau: {n} Änderungen"
+      }
+    }
+  ],
+  "rename_preview_none": "Noch nichts zu ändern.",
+  "rename_problem_duplicate": "Diesen Namen gibt es dann zweimal.",
+  "rename_problem_empty": "Der Name darf nicht leer sein.",
+  "rename_problem_slash": "Kein / im Namen.",
+  "rename_replace": "Ersetzen durch",
+  "rename_search": "Suchen nach",
   "rename_title": "Torrent umbenennen",
+  "rename_to": "wird zu",
+  "rename_tokens": "Im Ersetzen: $1, $2 … für Gruppen, $d, $dd … für eine laufende Nummer.",
   "reset": "Zurücksetzen",
+  "resume_session": "Weitermachen",
   "rows_all": "Alle",
   "rows_per_page": "Zeilen pro Seite",
   "rows_selected": [
@@ -303,6 +393,12 @@
   ],
   "save": "Speichern",
   "save_location": "Speicherort",
+  "schedule": "Zeitplan",
+  "schedule_days": "An",
+  "schedule_enable": "Langsamen Modus nach Zeitplan",
+  "schedule_from": "Von",
+  "schedule_hint": "Schaltet ihn zur gewählten Zeit ein und danach wieder aus.",
+  "schedule_to": "Bis",
   "select_all": "Alle auswählen",
   "select_row": "{name} auswählen",
   "settings_intro": "Das Wichtigste verständlich. Die Optionen von qBittorrent folgen.",
@@ -310,13 +406,27 @@
   "settings_sections": "Einstellungsbereiche",
   "settings_ui": "Oberfläche",
   "settings_ui_text": "Gilt nur für diesen Browser.",
+  "share_action_default": "Wie in den Einstellungen",
+  "share_action_remove": "Aus der Liste entfernen",
+  "share_action_remove_files": "Entfernen und Dateien löschen",
+  "share_action_stop": "Stoppen",
+  "share_action_super_seeding": "Super-Seeding einschalten",
   "sidebar_description": "Filter und Bereiche",
   "sidebar_title": "Navigation",
   "size_of": "{done} von {total}",
+  "slow_mode": "Langsamer Modus",
+  "slow_mode_hint": "Andere Limits, z. B. tagsüber",
+  "slow_mode_short": "Langsam",
   "sort_by": "Nach {column} sortieren",
   "speed": "Tempo",
   "speed_chart_label": "Tempo der letzten Minuten, zuletzt ↓ {dl} und ↑ {up}",
-  "speed_limits": "Limit: ↓ {dl} · ↑ {up}",
+  "speed_edit": "Limits bearbeiten …",
+  "speed_edit_text": "Gelten für alle Torrents zusammen. Leer heißt unbegrenzt.",
+  "speed_edit_title": "Tempo-Limits",
+  "speed_menu": "Tempo und Limits",
+  "speed_normal": "Normal",
+  "speed_slow": "Langsam",
+  "start_all": "Alle starten",
   "stat_avg_dl": "Ø Download",
   "stat_avg_up": "Ø Upload",
   "stat_comment": "Kommentar",
@@ -344,6 +454,9 @@
   "state_stalled": "Stockt",
   "state_stopped": "Gestoppt",
   "status": "Status",
+  "stop_all": "Alle stoppen",
+  "subcategory": "Unterkategorie",
+  "subcategory_hint": "Erst eine Kategorie anklicken.",
   "summary_count": [
     {
       "declarations": ["input n", "local p = n: plural"],
@@ -399,6 +512,7 @@
   "tab_overview": "Übersicht",
   "tab_peers": "Peers",
   "tab_trackers": "Tracker",
+  "tag": "Tag",
   "tag_count": [
     {
       "declarations": ["input n", "local p = n: plural"],
@@ -410,6 +524,8 @@
     }
   ],
   "tags": "Tags",
+  "tags_new": "Neuer Tag",
+  "tags_new_placeholder": "Neuer Tag, mehrere mit Komma",
   "tags_none": "Noch keine Tags",
   "theme_dark": "Dunkel",
   "theme_light": "Hell",
@@ -425,8 +541,24 @@
       }
     }
   ],
+  "toast_all_started": "Alle Torrents gestartet",
+  "toast_all_stopped": "Alle Torrents gestoppt",
+  "toast_category_created": "Kategorie {name} angelegt",
+  "toast_category_removed": "Kategorie {name} gelöscht",
+  "toast_category_saved": "Kategorie gespeichert",
   "toast_copied": "Kopiert",
   "toast_copy_failed": "Kopieren hat nicht geklappt",
+  "toast_files_renamed": [
+    {
+      "declarations": ["input n", "local p = n: plural"],
+      "selectors": ["p"],
+      "match": {
+        "p=one": "{n} Name geändert",
+        "p=other": "{n} Namen geändert"
+      }
+    }
+  ],
+  "toast_limits_saved": "Limits gespeichert",
   "toast_moved": "Wird verschoben",
   "toast_peer_banned": "Peer gesperrt",
   "toast_peers_added": "Peers hinzugefügt",
@@ -449,6 +581,17 @@
       "match": {
         "p=one": "Torrent und Dateien gelöscht",
         "p=other": "{n} Torrents und ihre Dateien gelöscht"
+      }
+    }
+  ],
+  "toast_tag_removed": "Tag {name} gelöscht",
+  "toast_unused_removed": [
+    {
+      "declarations": ["input n", "local p = n: plural"],
+      "selectors": ["p"],
+      "match": {
+        "p=one": "{n} unbenutzter Eintrag entfernt",
+        "p=other": "{n} unbenutzte Einträge entfernt"
       }
     }
   ],
@@ -475,6 +618,7 @@
   "trackers_other_sources": "Weitere Quellen",
   "trackers_reannounce_all": "Alle neu ankündigen",
   "uncategorized": "Ohne Kategorie",
+  "unused": "unbenutzt",
   "upload": "Upload",
   "url": "Adresse",
   "view": "Ansicht",

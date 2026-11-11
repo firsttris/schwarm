@@ -1,5 +1,5 @@
 import { useQueryClient } from "@tanstack/react-query";
-import { ChevronDownIcon, ChevronRightIcon, SearchIcon } from "lucide-react";
+import { ChevronDownIcon, ChevronRightIcon, PencilIcon, SearchIcon } from "lucide-react";
 import { useMemo, useState } from "react";
 import { api } from "@/api/client";
 import { useFiles, useRunAction } from "@/api/queries";
@@ -22,6 +22,8 @@ import { buildFileTree, type FileNode, filterTree, flattenTree, isWanted, MIXED 
 import { formatBytes, percentValue } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import { m } from "@/paraglide/messages.js";
+import { InputDialog, type InputDialogState } from "./input-dialog";
+import { RenameFilesDialog } from "./rename-files-dialog";
 
 export function priorityLabel(priority: number): string {
   switch (priority) {
@@ -38,7 +40,7 @@ export function priorityLabel(priority: number): string {
   }
 }
 
-function PriorityMenu({ node, onChange }: { node: FileNode; onChange: (priority: number) => void }) {
+export function PriorityMenu({ node, onChange }: { node: FileNode; onChange: (priority: number) => void }) {
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
@@ -73,8 +75,29 @@ export function FilesTab({ t }: { t: Torrent }) {
   const run = useRunAction();
   const [filter, setFilter] = useState("");
   const [collapsed, setCollapsed] = useState<Set<string>>(new Set());
+  const [renaming, setRenaming] = useState(false);
+  const [dialog, setDialog] = useState<InputDialogState | null>(null);
+
+  const renameOne = (node: FileNode) =>
+    setDialog({
+      title: node.isDir ? m.rename_folder_title() : m.rename_file_title(),
+      label: m.name(),
+      initial: node.name,
+      submit: m.save(),
+      onSubmit: (name) => {
+        const parent = node.path.slice(0, node.path.length - node.name.length);
+        const newPath = parent + name;
+        if (newPath === node.path) return;
+        void run(
+          () =>
+            node.isDir ? api.renameFolder(t.hash, node.path, newPath) : api.renameFile(t.hash, node.path, newPath),
+          { invalidate: [["files", t.hash]] },
+        );
+      },
+    });
 
   const tree = useMemo(() => buildFileTree(files ?? []), [files]);
+  const allNodes = useMemo(() => flattenTree(tree), [tree]);
   const rows = useMemo(
     () => flattenTree(filterTree(tree, filter), filter ? new Set() : collapsed),
     [tree, filter, collapsed],
@@ -113,18 +136,23 @@ export function FilesTab({ t }: { t: Torrent }) {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="relative">
-        <SearchIcon
-          className="pointer-events-none absolute top-1/2 left-2.5 size-4 -translate-y-1/2 text-muted-foreground"
-          aria-hidden
-        />
-        <Input
-          value={filter}
-          onChange={(e) => setFilter(e.target.value)}
-          placeholder={m.files_filter()}
-          aria-label={m.files_filter()}
-          className="h-8 pl-8"
-        />
+      <div className="flex gap-2">
+        <div className="relative flex-1">
+          <SearchIcon
+            className="pointer-events-none absolute top-1/2 left-2.5 size-4 -translate-y-1/2 text-muted-foreground"
+            aria-hidden
+          />
+          <Input
+            value={filter}
+            onChange={(e) => setFilter(e.target.value)}
+            placeholder={m.files_filter()}
+            aria-label={m.files_filter()}
+            className="h-8 pl-8"
+          />
+        </div>
+        <Button variant="outline" size="sm" onClick={() => setRenaming(true)}>
+          {m.action_rename()}
+        </Button>
       </div>
 
       <section className="overflow-hidden rounded-lg border text-sm" aria-label={m.tab_files()}>
@@ -148,7 +176,7 @@ export function FilesTab({ t }: { t: Torrent }) {
           return (
             <div
               key={node.path}
-              className="grid min-h-11 grid-cols-[16px_minmax(0,1fr)_64px_96px] items-center gap-3 border-b px-2 py-1.5 last:border-b-0"
+              className="group/file grid min-h-11 grid-cols-[16px_minmax(0,1fr)_64px_96px] items-center gap-3 border-b px-2 py-1.5 last:border-b-0"
             >
               <Checkbox
                 checked={wantedState(node)}
@@ -182,6 +210,14 @@ export function FilesTab({ t }: { t: Torrent }) {
                     title={node.path}
                   >
                     {node.name}
+                    <button
+                      type="button"
+                      className="ml-1.5 inline-flex align-middle text-muted-foreground opacity-0 hover:text-foreground focus-visible:opacity-100 group-hover/file:opacity-100"
+                      aria-label={m.rename_name({ name: node.name })}
+                      onClick={() => renameOne(node)}
+                    >
+                      <PencilIcon className="size-3.5" />
+                    </button>
                   </span>
                   {!node.isDir && on && (
                     <Progress value={percentValue(node.progress)} className="h-1.5" aria-label={m.col_progress()} />
@@ -211,6 +247,8 @@ export function FilesTab({ t }: { t: Torrent }) {
           </Button>
         )}
       </div>
+      <RenameFilesDialog hash={t.hash} nodes={allNodes} open={renaming} onClose={() => setRenaming(false)} />
+      <InputDialog state={dialog} onClose={() => setDialog(null)} />
     </div>
   );
 }

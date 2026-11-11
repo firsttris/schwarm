@@ -2,6 +2,7 @@
   "$schema": "https://inlang.com/schema/inlang-message-format",
   "action_export": "Export .torrent",
   "action_force_start": "Force start",
+  "action_limits": "Limits …",
   "action_location": "Set location …",
   "action_reannounce": "Reannounce",
   "action_recheck": "Recheck",
@@ -16,6 +17,8 @@
   "add_description": "Paste a magnet link or choose a .torrent file.",
   "add_dl_limit": "↓ Limit",
   "add_files_choose": "Choose .torrent files",
+  "add_files_choose_files": "Choose files",
+  "add_files_hide": "Hide",
   "add_files_hint": "Or drop them here, several at once is fine.",
   "add_incomplete_path": "Keep incomplete files elsewhere",
   "add_layout": "Content layout",
@@ -29,6 +32,18 @@
   "add_management_auto": "Automatic by category",
   "add_management_hint": "Automatic: the category decides the location (Automatic Torrent Management).",
   "add_management_manual": "Manual",
+  "add_meta_failed": "Info not available, adding works anyway.",
+  "add_meta_loading": "Getting the info …",
+  "add_meta_summary": [
+    {
+      "declarations": ["input n", "input size", "local p = n: plural"],
+      "selectors": ["p"],
+      "match": {
+        "p=one": "{size} · {n} file",
+        "p=other": "{size} · {n} files"
+      }
+    }
+  ],
   "add_more_options": "More options",
   "add_rename": "Rename to",
   "add_save_in": "Save to",
@@ -58,8 +73,12 @@
   "back": "Back",
   "cancel": "Cancel",
   "categories": "Categories",
+  "categories_none": "No categories yet.",
   "category": "Category",
+  "category_default_path": "Default folder",
   "category_none": "None",
+  "category_path_placeholder": "empty: default folder",
+  "category_rename_hint": "qBittorrent cannot rename categories.",
   "clear_filters": "Clear filters",
   "close": "Close",
   "col_added_on": "Added",
@@ -111,6 +130,10 @@
   "copy_url": "Copy address",
   "date_today": "today, {time}",
   "date_yesterday": "yesterday, {time}",
+  "days_every": "Every day",
+  "days_weekdays": "Mon–Fri",
+  "days_weekend": "Weekend",
+  "delete_name": "Delete {name}",
   "density": "List density",
   "density_comfortable": "Comfortable",
   "density_compact": "Compact",
@@ -135,6 +158,7 @@
   "duration_min": "{min} min",
   "duration_s": "{s} s",
   "edit": "Edit …",
+  "edit_name": "Edit {name}",
   "error_action": "That did not work",
   "eta_left": "{eta} left",
   "expand": "Expand",
@@ -183,6 +207,20 @@
   "language_hint": "Without a choice, the browser's language applies.",
   "last_minutes": "Last 5 minutes",
   "limit_unlimited": "unlimited",
+  "limits_download": "Download",
+  "limits_inactive_time": "Until inactive for",
+  "limits_match_all": "Only when all limits are reached",
+  "limits_ratio": "Until ratio",
+  "limits_seeding_time": "Until seeding time",
+  "limits_share_custom": "Own limit",
+  "limits_share_global": "As in the settings",
+  "limits_share_none": "Forever",
+  "limits_share_text": "When qBittorrent stops uploading this torrent.",
+  "limits_share_title": "How long to share",
+  "limits_speed_hint": "Leave empty for unlimited. The global limit still applies.",
+  "limits_then": "Then",
+  "limits_title": "Limits",
+  "limits_upload": "Upload",
   "location_hint": "qBittorrent moves the files there.",
   "location_label": "New folder",
   "location_title": "Set location",
@@ -196,6 +234,11 @@
   "login_wrong": "Wrong username or password.",
   "logout": "Log out",
   "main_menu": "Main menu",
+  "manage_categories": "Manage categories",
+  "manage_menu": "Categories and tags …",
+  "manage_tags": "Manage tags",
+  "manage_text": "Categories decide the save path, tags are free.",
+  "manage_title": "Categories and tags",
   "more": "More",
   "more_actions": "More actions",
   "n_of": "{n} of {total}",
@@ -244,6 +287,8 @@
   "page_next": "Next page",
   "page_of": "Page {page} of {pages}",
   "page_prev": "Previous page",
+  "pause_session": "Pause everything",
+  "pause_session_hint": "Pauses qBittorrent without changing the torrents' state.",
   "peers_add": "Add peer",
   "peers_add_label": "Peers",
   "peers_add_text": "Address and port, one per line, e.g. 203.0.113.5:6881.",
@@ -286,9 +331,54 @@
       }
     }
   ],
+  "remove_unused": "Remove unused",
+  "rename_applies": "Applies to",
+  "rename_applies_both": "Name and extension",
+  "rename_applies_extension": "Extension only",
+  "rename_applies_name": "Name only",
+  "rename_apply": [
+    {
+      "declarations": ["input n", "local p = n: plural"],
+      "selectors": ["p"],
+      "match": {
+        "p=one": "Rename {n}",
+        "p=other": "Rename {n}"
+      }
+    }
+  ],
+  "rename_bad_regex": "The regular expression is invalid.",
+  "rename_case": "Match case",
+  "rename_enumerate": "Numbering from",
+  "rename_file_title": "Rename file",
+  "rename_files": "Files",
+  "rename_files_text": "Search and replace in the names, with a preview.",
+  "rename_files_title": "Rename files",
+  "rename_folder_title": "Rename folder",
+  "rename_folders": "Folders",
   "rename_hint": "Changes the name in the list only, not the files.",
+  "rename_match_all": "All occurrences",
+  "rename_name": "Rename {name}",
+  "rename_preview": [
+    {
+      "declarations": ["input n", "local p = n: plural"],
+      "selectors": ["p"],
+      "match": {
+        "p=one": "Preview: {n} change",
+        "p=other": "Preview: {n} changes"
+      }
+    }
+  ],
+  "rename_preview_none": "Nothing to change yet.",
+  "rename_problem_duplicate": "This name would then exist twice.",
+  "rename_problem_empty": "The name cannot be empty.",
+  "rename_problem_slash": "No / in the name.",
+  "rename_replace": "Replace with",
+  "rename_search": "Search for",
   "rename_title": "Rename torrent",
+  "rename_to": "becomes",
+  "rename_tokens": "In the replacement: $1, $2 … for groups, $d, $dd … for a running number.",
   "reset": "Reset",
+  "resume_session": "Resume",
   "rows_all": "All",
   "rows_per_page": "Rows per page",
   "rows_selected": [
@@ -303,6 +393,12 @@
   ],
   "save": "Save",
   "save_location": "Location",
+  "schedule": "Schedule",
+  "schedule_days": "On",
+  "schedule_enable": "Slow mode on a schedule",
+  "schedule_from": "From",
+  "schedule_hint": "Turns it on at the chosen time and off again afterwards.",
+  "schedule_to": "To",
   "select_all": "Select all",
   "select_row": "Select {name}",
   "settings_intro": "The essentials in plain words. qBittorrent's options follow.",
@@ -310,13 +406,27 @@
   "settings_sections": "Settings sections",
   "settings_ui": "Interface",
   "settings_ui_text": "Applies to this browser only.",
+  "share_action_default": "As in the settings",
+  "share_action_remove": "Remove from the list",
+  "share_action_remove_files": "Remove and delete the files",
+  "share_action_stop": "Stop",
+  "share_action_super_seeding": "Turn on super seeding",
   "sidebar_description": "Filters and areas",
   "sidebar_title": "Navigation",
   "size_of": "{done} of {total}",
+  "slow_mode": "Slow mode",
+  "slow_mode_hint": "Other limits, e.g. during the day",
+  "slow_mode_short": "Slow",
   "sort_by": "Sort by {column}",
   "speed": "Speed",
   "speed_chart_label": "Speed of the last minutes, now ↓ {dl} and ↑ {up}",
-  "speed_limits": "Limit: ↓ {dl} · ↑ {up}",
+  "speed_edit": "Edit limits …",
+  "speed_edit_text": "Apply to all torrents together. Empty means unlimited.",
+  "speed_edit_title": "Speed limits",
+  "speed_menu": "Speed and limits",
+  "speed_normal": "Normal",
+  "speed_slow": "Slow",
+  "start_all": "Start all",
   "stat_avg_dl": "Avg. download",
   "stat_avg_up": "Avg. upload",
   "stat_comment": "Comment",
@@ -344,6 +454,9 @@
   "state_stalled": "Stalled",
   "state_stopped": "Stopped",
   "status": "Status",
+  "stop_all": "Stop all",
+  "subcategory": "Subcategory",
+  "subcategory_hint": "Click a category first.",
   "summary_count": [
     {
       "declarations": ["input n", "local p = n: plural"],
@@ -399,6 +512,7 @@
   "tab_overview": "Overview",
   "tab_peers": "Peers",
   "tab_trackers": "Trackers",
+  "tag": "Tag",
   "tag_count": [
     {
       "declarations": ["input n", "local p = n: plural"],
@@ -410,6 +524,8 @@
     }
   ],
   "tags": "Tags",
+  "tags_new": "New tag",
+  "tags_new_placeholder": "New tag, several with commas",
   "tags_none": "No tags yet",
   "theme_dark": "Dark",
   "theme_light": "Light",
@@ -425,8 +541,24 @@
       }
     }
   ],
+  "toast_all_started": "All torrents started",
+  "toast_all_stopped": "All torrents stopped",
+  "toast_category_created": "Category {name} created",
+  "toast_category_removed": "Category {name} deleted",
+  "toast_category_saved": "Category saved",
   "toast_copied": "Copied",
   "toast_copy_failed": "Could not copy",
+  "toast_files_renamed": [
+    {
+      "declarations": ["input n", "local p = n: plural"],
+      "selectors": ["p"],
+      "match": {
+        "p=one": "{n} name changed",
+        "p=other": "{n} names changed"
+      }
+    }
+  ],
+  "toast_limits_saved": "Limits saved",
   "toast_moved": "Moving",
   "toast_peer_banned": "Peer banned",
   "toast_peers_added": "Peers added",
@@ -449,6 +581,17 @@
       "match": {
         "p=one": "Torrent and files deleted",
         "p=other": "{n} torrents and their files deleted"
+      }
+    }
+  ],
+  "toast_tag_removed": "Tag {name} deleted",
+  "toast_unused_removed": [
+    {
+      "declarations": ["input n", "local p = n: plural"],
+      "selectors": ["p"],
+      "match": {
+        "p=one": "{n} unused entry removed",
+        "p=other": "{n} unused entries removed"
       }
     }
   ],
@@ -475,6 +618,7 @@
   "trackers_other_sources": "Other sources",
   "trackers_reannounce_all": "Reannounce all",
   "uncategorized": "Uncategorised",
+  "unused": "unused",
   "upload": "Upload",
   "url": "URL",
   "view": "View",

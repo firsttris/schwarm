@@ -72,14 +72,18 @@ qBittorrent und merkt sich nur seine Anzeige-Einstellungen (Design, Sprache, Spa
   Zwangsstart, Kategorie, Tags, Speicherort ändern, umbenennen, Warteschlange, automatische
   Verwaltung, der Reihe nach laden, erste und letzte Teile zuerst, Super-Seeding, neu prüfen, neu
   ankündigen, kopieren (Name, Hashes, Magnet-Link, Pfad), .torrent exportieren, entfernen mit oder
-  ohne Dateien.
+  ohne Dateien, und Limits (Tempo, Ratio, Seed-Zeit).
+- **Warteschlange**: über das Menü nach oben und unten, oder Zeilen ziehen, wenn nach
+  Warteschlange sortiert ist.
 - **Tastatur**: Pfeile, Umschalt und Strg zum Auswählen, Leertaste startet oder stoppt, Entf
   entfernt, F2 benennt um, Enter öffnet die Details.
 
 ### 🔎 Details
 
 - **Übersicht**: Tempo der letzten Minuten, Kennzahlen, Stückchen, alles Weitere aufklappbar.
-- **Dateien**: Dateibaum mit Prioritäten (nicht laden, normal, hoch, maximal) und Filter.
+- **Dateien**: Dateibaum mit Prioritäten (nicht laden, normal, hoch, maximal) und Filter; eine Datei
+  oder viele auf einmal umbenennen, mit Suchen und Ersetzen, regulären Ausdrücken, Nummerierung und
+  Vorschau.
 - **Peers**: Programm, Land, Flags, Fortschritt und Tempo; Peers hinzufügen, kopieren, sperren.
 - **Tracker**: Status, Stufe, Seeds und Peers, Meldungen; hinzufügen, bearbeiten, entfernen, neu
   ankündigen; DHT, PeX und LSD; HTTP-Quellen.
@@ -87,8 +91,18 @@ qBittorrent und merkt sich nur seine Anzeige-Einstellungen (Design, Sprache, Spa
 ### ➕ Torrents hinzufügen
 
 - **Magnet-Links, URLs und .torrent-Dateien**, auch mehrere, oder einfach auf die Seite ziehen.
+- **Sehen, was man hinzufügt**: Größe und Dateiliste, sobald qBittorrent die Infos hat, und
+  auswählen, welche Dateien geladen werden.
 - **Kategorie und Ordner** sofort; Tags, Name, Ordner für Unfertiges, Verwaltung, Ordnerstruktur,
   Anhalten-Bedingung, Warteschlange, Prüfung überspringen und Limits unter „Weitere Optionen“.
+
+### ⚙️ Ordnen und Tempo
+
+- **Kategorien und Tags** in einem Dialog: anlegen, Ordner festlegen, Unterkategorien, löschen,
+  Unbenutzte entfernen.
+- **Tempo-Menü** oben: langsamer Modus (alternative Limits) mit einem Klick, normale und langsame
+  Limits und ein Zeitplan für den langsamen Modus.
+- **Alle starten, alle stoppen, alles anhalten** im Menü hinter dem App-Namen.
 
 ### 📱 Überall
 

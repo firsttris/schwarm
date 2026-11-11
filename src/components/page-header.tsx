@@ -1,4 +1,4 @@
-import { ArrowDownIcon, ArrowUpIcon, PlusIcon } from "lucide-react";
+import { PlusIcon } from "lucide-react";
 import { Fragment, type ReactNode } from "react";
 import { useMaindata } from "@/api/queries";
 import {
@@ -11,41 +11,11 @@ import {
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { openAddDialog } from "@/lib/add-dialog";
-import { formatLimit, formatSpeed } from "@/lib/format";
+import { formatSpeed } from "@/lib/format";
 import { m } from "@/paraglide/messages.js";
 import { ConnectionBadge } from "./connection";
-
-/** Global speeds from server_state; a menu for the limits follows in milestone 2. */
-function Speeds() {
-  const { data } = useMaindata();
-  const s = data?.serverState ?? {};
-  return (
-    <Tooltip>
-      <TooltipTrigger asChild>
-        <Button
-          variant="ghost"
-          size="sm"
-          className="gap-3 text-muted-foreground tabular-nums"
-          data-testid="global-speeds"
-        >
-          <span className="inline-flex items-center gap-1">
-            <ArrowDownIcon className="size-3.5" aria-label={m.download()} />
-            {formatSpeed(s.dl_info_speed ?? 0)}
-          </span>
-          <span className="inline-flex items-center gap-1">
-            <ArrowUpIcon className="size-3.5" aria-label={m.upload()} />
-            {formatSpeed(s.up_info_speed ?? 0)}
-          </span>
-        </Button>
-      </TooltipTrigger>
-      <TooltipContent>
-        {m.speed_limits({ dl: formatLimit(s.dl_rate_limit ?? 0), up: formatLimit(s.up_rate_limit ?? 0) })}
-      </TooltipContent>
-    </Tooltip>
-  );
-}
+import { SpeedMenu } from "./speed-menu";
 
 export function PhoneSpeeds() {
   const { data } = useMaindata();
@@ -91,7 +61,7 @@ export function PageHeader({
           </BreadcrumbList>
         </Breadcrumb>
         <div className="ml-auto flex items-center gap-2">
-          <Speeds />
+          <SpeedMenu />
           <Button size="sm" onClick={() => openAddDialog()}>
             <PlusIcon />
             {m.add()}

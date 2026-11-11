@@ -33,3 +33,17 @@ export async function openTorrents(page: Page, hash = "") {
 }
 
 export const row = (page: Page, name: string) => page.getByTestId("torrent-row").filter({ hasText: name });
+
+/** The torrents as the mock qBittorrent has them now (a fresh full maindata). */
+export async function serverTorrents(page: Page): Promise<Record<string, Record<string, unknown>>> {
+  const res = await page.request.get("./api/v2/sync/maindata?rid=0");
+  const data = (await res.json()) as { torrents: Record<string, Record<string, unknown>> };
+  return data.torrents;
+}
+
+export async function serverTorrent(page: Page, name: string): Promise<Record<string, unknown>> {
+  const all = await serverTorrents(page);
+  const found = Object.entries(all).find(([, t]) => String(t.name).startsWith(name));
+  if (!found) throw new Error(`no torrent ${name}`);
+  return { hash: found[0], ...found[1] };
+}

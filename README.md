@@ -69,14 +69,16 @@ only its display settings (theme, language, columns) in your browser.
 - **Actions** in the context menu, the row menu and the toolbar: start, stop, force start, category,
   tags, set location, rename, queue, automatic management, sequential download, first and last
   pieces first, super seeding, recheck, reannounce, copy (name, hashes, magnet link, path),
-  export .torrent, remove with or without files.
+  export .torrent, remove with or without files, and limits (speed, ratio, seeding time).
+- **Queue**: move up and down from the menu, or drag rows while sorted by queue position.
 - **Keyboard**: arrows, Shift and Ctrl to select, Space to start or stop, Del to remove, F2 to
   rename, Enter for the details.
 
 ### 🔎 Details
 
 - **Overview**: speed chart of the last minutes, key figures, pieces bar, all other details folded.
-- **Files**: file tree with priorities (skip, normal, high, maximum) and a filter.
+- **Files**: file tree with priorities (skip, normal, high, maximum) and a filter; rename one file
+  or many at once with search and replace, regular expressions and numbering, with a preview.
 - **Peers**: client, country, flags, progress and speed; add, copy and ban peers.
 - **Trackers**: status, tier, seeds and peers, messages; add, edit, remove, reannounce; DHT, PeX and
   LSD; HTTP sources (web seeds).
@@ -84,8 +86,18 @@ only its display settings (theme, language, columns) in your browser.
 ### ➕ Adding torrents
 
 - **Magnet links, URLs and .torrent files**, several at once, or drop them anywhere on the page.
+- **See what you add**: size and file list once qBittorrent has the metadata, and choose which
+  files to load before the download starts.
 - **Category and folder** right away; tags, name, incomplete folder, management, content layout,
   stop condition, queue position, hash check skip and limits under "More options".
+
+### ⚙️ Organising and speed
+
+- **Categories and tags** in one dialog: create, set the folder, subcategories, delete, remove the
+  unused ones.
+- **Speed menu** in the header: slow mode (alternative limits) with one click, normal and slow
+  limits, and a schedule for the slow mode.
+- **Start all, stop all, pause everything** from the menu behind the app name.
 
 ### 📱 Everywhere
 

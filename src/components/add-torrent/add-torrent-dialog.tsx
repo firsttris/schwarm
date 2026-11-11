@@ -1,4 +1,13 @@
-import { ChevronRightIcon, CircleCheckIcon, FileIcon, LoaderCircleIcon, UploadIcon, XIcon } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import {
+  ChevronRightIcon,
+  CircleAlertIcon,
+  CircleCheckIcon,
+  FileIcon,
+  LoaderCircleIcon,
+  UploadIcon,
+  XIcon,
+} from "lucide-react";
 import { type FormEvent, useEffect, useId, useRef, useState } from "react";
 import { api, type ContentLayout, type StopCondition } from "@/api/client";
 import { useDefaultSavePath, useMaindata, useRunAction } from "@/api/queries";
@@ -21,6 +30,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { addDialogStore } from "@/lib/add-dialog";
 import { formatBytes } from "@/lib/format";
 import { m } from "@/paraglide/messages.js";
+import { FilePicker } from "./file-picker";
 
 const NONE = "\u0000none";
 const DEFAULT = "\u0000default";
@@ -126,6 +136,36 @@ export function AddTorrentDialog() {
     .map((l) => l.trim())
     .filter(Boolean);
   const preview = linkList.length === 1 ? parseMagnet(linkList[0]!) : undefined;
+
+  // Metadata for one magnet link or one file: size, file list and choosing files (torrents/
+  // fetchMetadata polls with 202 until qBittorrent has it; parseMetadata reads a .torrent file)
+  const linkSource = tab === "link" && preview?.hash ? linkList[0] : undefined;
+  const singleFile = tab === "file" && files.length === 1 ? files[0] : undefined;
+  const linkMeta = useQuery({
+    queryKey: ["metadata", linkSource],
+    queryFn: () => api.fetchMetadata(linkSource!),
+    enabled: state.open && !!linkSource,
+    refetchInterval: (q) => (q.state.data?.ready || q.state.error ? false : 1500),
+    retry: false,
+  });
+  const fileMeta = useQuery({
+    queryKey: ["metadata-file", singleFile?.name, singleFile?.size, singleFile?.lastModified],
+    queryFn: async () => (await api.parseMetadata([singleFile!]))[0],
+    enabled: state.open && !!singleFile,
+    retry: false,
+    staleTime: Number.POSITIVE_INFINITY,
+  });
+  const meta = tab === "link" ? linkMeta : fileMeta;
+  const info = tab === "link" ? (linkMeta.data?.ready ? linkMeta.data.info.info : undefined) : fileMeta.data?.info;
+  const metaKey = info ? `${info.name}:${info.length}:${info.files.length}` : "";
+  const [priorities, setPriorities] = useState<number[] | null>(null);
+  const [choosing, setChoosing] = useState(false);
+  // biome-ignore lint/correctness/useExhaustiveDependencies: new metadata, new choice
+  useEffect(() => {
+    setPriorities(null);
+    setChoosing(false);
+  }, [metaKey]);
+  const shownPriorities = priorities ?? info?.files.map((f) => f.priority ?? 1) ?? [];
   const canSubmit = tab === "link" ? linkList.length > 0 : files.length > 0;
 
   const close = () => addDialogStore.set((s) => ({ ...s, open: false }));
@@ -157,6 +197,7 @@ export function AddTorrentDialog() {
           addToTopOfQueue: topOfQueue || undefined,
           seedMode: skipCheck || undefined,
           firstLastPiecePrio: firstLast || undefined,
+          filePriorities: priorities && info ? priorities : undefined,
           dlLimit: mbps(dlLimit),
           upLimit: mbps(upLimit),
         }),
@@ -245,13 +286,44 @@ export function AddTorrentDialog() {
             </div>
           )}
 
-          {tab === "link" && preview?.hash && (
-            <div className="flex items-start gap-3 rounded-lg border px-4 py-3">
-              <CircleCheckIcon className="mt-0.5 size-4" aria-hidden />
-              <div className="flex min-w-0 flex-col gap-0.5">
-                <span className="truncate font-medium">{preview.name ?? m.add_magnet_unnamed()}</span>
-                <span className="truncate font-mono text-muted-foreground text-xs">{preview.hash}</span>
+          {(linkSource || singleFile) && (
+            <div className="flex flex-col gap-3 rounded-lg border px-4 py-3" data-testid="add-preview">
+              <div className="flex items-start gap-3">
+                {info ? (
+                  <CircleCheckIcon className="mt-0.5 size-4 shrink-0" aria-hidden />
+                ) : meta.isError ? (
+                  <CircleAlertIcon className="mt-0.5 size-4 shrink-0 text-muted-foreground" aria-hidden />
+                ) : (
+                  <LoaderCircleIcon className="mt-0.5 size-4 shrink-0 animate-spin text-muted-foreground" aria-hidden />
+                )}
+                <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+                  <span className="truncate font-medium">
+                    {info?.name ?? preview?.name ?? singleFile?.name ?? m.add_magnet_unnamed()}
+                  </span>
+                  <span className="truncate text-[13px] text-muted-foreground tabular-nums">
+                    {info
+                      ? m.add_meta_summary({ size: formatBytes(info.length), n: info.files.length })
+                      : meta.isError
+                        ? m.add_meta_failed()
+                        : m.add_meta_loading()}
+                  </span>
+                </div>
+                {info && (
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="-my-1"
+                    onClick={() => setChoosing((v) => !v)}
+                    aria-expanded={choosing}
+                  >
+                    {choosing ? m.add_files_hide() : m.add_files_choose_files()}
+                  </Button>
+                )}
               </div>
+              {info && choosing && (
+                <FilePicker files={info.files} priorities={shownPriorities} onChange={setPriorities} />
+              )}
             </div>
           )}
 

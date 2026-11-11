@@ -34,6 +34,10 @@ export function createMockApi(initial: MockOptions = {}) {
   let peerSnapshots: Map<string, Json>;
   let sessions: Set<string>;
   let addCounter: number;
+  let altSpeed: boolean;
+  let sessionPaused: boolean;
+  let prefs: Record<string, number | boolean>;
+  let metadataRequests: Map<string, number>;
 
   function reset(next: MockOptions = {}) {
     options = {
@@ -49,6 +53,21 @@ export function createMockApi(initial: MockOptions = {}) {
     peerSnapshots = new Map();
     sessions = new Set();
     addCounter = 0;
+    altSpeed = false;
+    sessionPaused = false;
+    prefs = {
+      dl_limit: 0,
+      up_limit: 5 * units.MB,
+      alt_dl_limit: 10 * units.MB,
+      alt_up_limit: 2 * units.MB,
+      scheduler_enabled: true,
+      schedule_from_hour: 8,
+      schedule_from_min: 0,
+      schedule_to_hour: 18,
+      schedule_to_min: 0,
+      scheduler_days: 1,
+    };
+    metadataRequests = new Map();
   }
   reset();
 
@@ -63,6 +82,30 @@ export function createMockApi(initial: MockOptions = {}) {
     if (hashes === "all") return torrents;
     const set = new Set(hashes.split("|"));
     return torrents.filter((t) => set.has(t.hash));
+  }
+
+  function queue(): MockTorrent[] {
+    return torrents.filter((t) => t.progress < 1);
+  }
+
+  /** Moves the given torrents in the queue, keeping finished torrents where they are. */
+  function moveInQueue(list: MockTorrent[], where: string) {
+    const order = queue();
+    const set = new Set(list);
+    let next = [...order];
+    if (where === "top") next = [...order.filter((t) => set.has(t)), ...order.filter((t) => !set.has(t))];
+    else if (where === "bottom") next = [...order.filter((t) => !set.has(t)), ...order.filter((t) => set.has(t))];
+    else if (where === "up") {
+      for (let i = 1; i < next.length; i++) {
+        if (set.has(next[i]!) && !set.has(next[i - 1]!)) [next[i - 1], next[i]] = [next[i]!, next[i - 1]!];
+      }
+    } else {
+      for (let i = next.length - 2; i >= 0; i--) {
+        if (set.has(next[i]!) && !set.has(next[i + 1]!)) [next[i + 1], next[i]] = [next[i]!, next[i + 1]!];
+      }
+    }
+    let k = 0;
+    torrents = torrents.map((t) => (t.progress < 1 ? next[k++]! : t));
   }
 
   function wanted(t: MockTorrent): number {
@@ -98,10 +141,8 @@ export function createMockApi(initial: MockOptions = {}) {
       pieces_have: Math.floor(pieces * t.progress),
       dlspeed: isStopped ? 0 : t.dlspeed,
       upspeed: isStopped ? 0 : t.upspeed,
-      priority:
-        isDl && !isStopped
-          ? torrents.filter((x) => x.state.includes("DL") || x.state === "downloading").indexOf(t) + 1
-          : 0,
+      // qBittorrent queues the unfinished torrents; finished ones have no position (0)
+      priority: queue().indexOf(t) + 1,
       num_seeds: t.num_seeds,
       num_complete: t.num_complete,
       num_leechs: t.num_leechs,
@@ -122,8 +163,8 @@ export function createMockApi(initial: MockOptions = {}) {
       completion_on: t.progress >= 1 ? addedOn + 3600 : -1,
       tracker: firstTracker?.url ?? "",
       trackers_count: t.trackers.length,
-      dl_limit: 0,
-      up_limit: 0,
+      dl_limit: t.dl_limit ?? 0,
+      up_limit: t.up_limit ?? 0,
       downloaded,
       uploaded: Math.round(downloaded * t.ratio),
       downloaded_session: downloaded,
@@ -136,12 +177,12 @@ export function createMockApi(initial: MockOptions = {}) {
       max_seeding_time: -1,
       max_inactive_seeding_time: -1,
       ratio: t.ratio,
-      ratio_limit: -2,
+      ratio_limit: t.share?.ratioLimit ?? -2,
       popularity: 0.1,
-      seeding_time_limit: -2,
-      inactive_seeding_time_limit: -2,
-      share_limits_mode: "Default",
-      share_limit_action: "Default",
+      seeding_time_limit: t.share?.seedingTimeLimit ?? -2,
+      inactive_seeding_time_limit: t.share?.inactiveSeedingTimeLimit ?? -2,
+      share_limits_mode: t.share?.shareLimitsMode ?? "Default",
+      share_limit_action: t.share?.shareLimitAction ?? "Default",
       seen_complete: options.now - 60,
       auto_tmm: t.auto_tmm ?? false,
       time_active: t.time_active,
@@ -177,16 +218,17 @@ export function createMockApi(initial: MockOptions = {}) {
         dht_nodes: 381,
         dl_info_data: 48.2 * units.GB,
         dl_info_speed: dl,
-        dl_rate_limit: 0,
+        dl_rate_limit: Number(altSpeed ? prefs.alt_dl_limit : prefs.dl_limit),
         up_info_data: 12.7 * units.GB,
         up_info_speed: up,
-        up_rate_limit: 5 * units.MB,
+        up_rate_limit: Number(altSpeed ? prefs.alt_up_limit : prefs.up_limit),
         last_external_address_v4: "193.29.106.24",
         last_external_address_v6: "",
         free_space_on_disk: 412 * units.GB,
         queueing: true,
         refresh_interval: 1500,
-        use_alt_speed_limits: false,
+        use_alt_speed_limits: altSpeed,
+        session_state: sessionPaused,
         alltime_dl: 2.81e12,
         alltime_ul: 3.96e12,
         global_ratio: "1.41",
@@ -339,6 +381,30 @@ export function createMockApi(initial: MockOptions = {}) {
     return states;
   }
 
+  /** A made-up multi-file torrent for the metadata preview of the add dialog. */
+  function metadataInfo(seed: string, name: string): Json {
+    const files = [
+      { path: `${name}/${name}.mkv`, length: 4.2 * units.GB },
+      { path: `${name}/Untertitel/${name}.de.srt`, length: 61 * units.KB },
+      { path: `${name}/Untertitel/${name}.en.srt`, length: 58 * units.KB },
+      { path: `${name}/Extras/Making-of.mkv`, length: 640 * units.MB },
+    ];
+    return {
+      infohash_v1: seed,
+      infohash_v2: "",
+      hash: seed,
+      info: {
+        name,
+        length: files.reduce((s, f) => s + f.length, 0),
+        piece_length: 4 * 1024 * 1024,
+        pieces_num: 1200,
+        private: false,
+        files,
+      },
+      trackers: [{ url: "udp://tracker.opentrackr.org:1337/announce", tier: 0 }],
+    };
+  }
+
   function json(data: unknown, status = 200): Response {
     return new Response(JSON.stringify(data), { status, headers: { "content-type": "application/json" } });
   }
@@ -407,7 +473,15 @@ export function createMockApi(initial: MockOptions = {}) {
         seq_dl: p.get("sequentialDownload") === "true",
         f_l_piece_prio: p.get("firstLastPiecePrio") === "true",
         auto_tmm: p.get("autoTMM") === "true",
-        files: [],
+        files: (p.get("filePriorities") ?? "")
+          .split(",")
+          .filter(Boolean)
+          .map((prio, i) => ({
+            name: `${name}/file-${i + 1}`,
+            size: 100 * units.MB,
+            progress: 0,
+            priority: Number(prio),
+          })),
         trackers: [],
         webseeds: [],
         peers: [],
@@ -617,8 +691,102 @@ export function createMockApi(initial: MockOptions = {}) {
       case "torrents/topPrio":
       case "torrents/bottomPrio":
       case "torrents/increasePrio":
-      case "torrents/decreasePrio":
+      case "torrents/decreasePrio": {
+        const where = { topPrio: "top", bottomPrio: "bottom", increasePrio: "up", decreasePrio: "down" }[
+          endpoint.slice("torrents/".length) as "topPrio"
+        ];
+        moveInQueue(list(), where);
         return ok();
+      }
+      case "torrents/setDownloadLimit":
+        for (const t of list()) t.dl_limit = Number(p.get("limit"));
+        return ok();
+      case "torrents/setUploadLimit":
+        for (const t of list()) t.up_limit = Number(p.get("limit"));
+        return ok();
+      case "torrents/setShareLimits":
+        for (const t of list()) {
+          t.share = {
+            ratioLimit: Number(p.get("ratioLimit")),
+            seedingTimeLimit: Number(p.get("seedingTimeLimit")),
+            inactiveSeedingTimeLimit: Number(p.get("inactiveSeedingTimeLimit")),
+            shareLimitAction: p.get("shareLimitAction") ?? "Default",
+            shareLimitsMode: p.get("shareLimitsMode") ?? "Default",
+          };
+        }
+        return ok();
+      case "torrents/createCategory": {
+        const name = p.get("category") ?? "";
+        if (!name || categories[name]) return text("Conflict", 409);
+        categories[name] = { name, savePath: p.get("savePath") ?? "" };
+        return ok();
+      }
+      case "torrents/editCategory": {
+        const name = p.get("category") ?? "";
+        const category = categories[name];
+        if (!category) return text("Conflict", 409);
+        category.savePath = p.get("savePath") ?? category.savePath;
+        return ok();
+      }
+      case "torrents/removeCategories":
+        for (const name of (p.get("categories") ?? "").split("\n")) {
+          delete categories[name];
+          for (const t of torrents) if (t.category === name) t.category = "";
+        }
+        return ok();
+      case "torrents/createTags":
+        for (const tag of (p.get("tags") ?? "").split(",").filter(Boolean)) if (!tags.includes(tag)) tags.push(tag);
+        return ok();
+      case "torrents/deleteTags": {
+        const rm = (p.get("tags") ?? "").split(",");
+        tags = tags.filter((t) => !rm.includes(t));
+        for (const t of torrents) t.tags = t.tags.filter((tag) => !rm.includes(tag));
+        return ok();
+      }
+      case "torrents/renameFile":
+      case "torrents/renameFolder": {
+        const t = find(p.get("hash"));
+        const oldPath = p.get("oldPath") ?? "";
+        const newPath = p.get("newPath") ?? "";
+        if (!t) return text("Not Found", 404);
+        const folder = endpoint.endsWith("Folder");
+        let hit = false;
+        for (const f of t.files) {
+          if (folder ? f.name.startsWith(`${oldPath}/`) : f.name === oldPath) {
+            f.name = folder ? newPath + f.name.slice(oldPath.length) : newPath;
+            hit = true;
+          }
+        }
+        return hit ? ok() : text("Conflict", 409);
+      }
+      case "torrents/fetchMetadata": {
+        // Like qBittorrent: 202 while fetching, then 200 with the file list
+        const source = p.get("source") ?? "";
+        const hash = /btih:([0-9a-f]{40})/i.exec(source)?.[1]?.toLowerCase() ?? source.toLowerCase();
+        const calls = (metadataRequests.get(hash) ?? 0) + 1;
+        metadataRequests.set(hash, calls);
+        const name = /[?&]dn=([^&]+)/.exec(source)?.[1];
+        if (calls < 2) return json({ infohash_v1: hash, infohash_v2: "", hash }, 202);
+        return json(metadataInfo(hash, name ? decodeURIComponent(name.replaceAll("+", " ")) : hash));
+      }
+      case "torrents/parseMetadata":
+        return json((p.files ?? []).map((f) => metadataInfo(f.name, f.name.replace(/\.torrent$/, ""))));
+      case "transfer/toggleSpeedLimitsMode":
+        altSpeed = !altSpeed;
+        return ok();
+      case "transfer/pauseSession":
+        sessionPaused = true;
+        return ok();
+      case "transfer/resumeSession":
+        sessionPaused = false;
+        return ok();
+      case "app/preferences":
+        return json(prefs);
+      case "app/setPreferences": {
+        const changes = JSON.parse(p.get("json") ?? "{}") as Record<string, number | boolean>;
+        for (const [key, value] of Object.entries(changes)) if (key in prefs) prefs[key] = value;
+        return ok();
+      }
       case "torrents/filePrio": {
         const t = find(p.get("hash"));
         if (!t) return text("Not Found", 404);
