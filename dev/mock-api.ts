@@ -1,5 +1,6 @@
 import { matchRule } from "../src/lib/rss-match";
 import { fixtureCategories, fixtureTags, type MockTorrent, makeFixtures, units } from "./fixtures";
+import { makePreferences } from "./preferences-fixture";
 import { type MockFeed, type MockFolder, makeRssRules, makeRssTree } from "./rss-fixtures";
 import { type MockPlugin, type MockResult, makePlugins, searchCorpus } from "./search-fixtures";
 
@@ -41,7 +42,9 @@ export function createMockApi(initial: MockOptions = {}) {
   let addCounter: number;
   let altSpeed: boolean;
   let sessionPaused: boolean;
-  let prefs: Record<string, number | boolean>;
+  let prefs: ReturnType<typeof makePreferences>;
+  /** Fields qBittorrent does not let the API change (appcontroller.cpp, setPreferencesAction). */
+  const readOnlyPrefs = new Set(["add_trackers_url_list", "current_interface_name", "web_ui_api_key"]);
   let metadataRequests: Map<string, number>;
   let plugins: MockPlugin[];
   let searches: Map<number, { pattern: string; results: MockResult[]; polls: number; stopped: boolean }>;
@@ -66,18 +69,7 @@ export function createMockApi(initial: MockOptions = {}) {
     addCounter = 0;
     altSpeed = false;
     sessionPaused = false;
-    prefs = {
-      dl_limit: 0,
-      up_limit: 5 * units.MB,
-      alt_dl_limit: 10 * units.MB,
-      alt_up_limit: 2 * units.MB,
-      scheduler_enabled: true,
-      schedule_from_hour: 8,
-      schedule_from_min: 0,
-      schedule_to_hour: 18,
-      schedule_to_min: 0,
-      scheduler_days: 1,
-    };
+    prefs = makePreferences();
     metadataRequests = new Map();
     plugins = makePlugins();
     searches = new Map();
@@ -1050,9 +1042,29 @@ export function createMockApi(initial: MockOptions = {}) {
       case "app/preferences":
         return json(prefs);
       case "app/setPreferences": {
-        const changes = JSON.parse(p.get("json") ?? "{}") as Record<string, number | boolean>;
-        for (const [key, value] of Object.entries(changes)) if (key in prefs) prefs[key] = value;
+        const changes = JSON.parse(p.get("json") ?? "{}") as Record<string, string | number | boolean>;
+        for (const [key, value] of Object.entries(changes)) {
+          if (key === "web_ui_password" || readOnlyPrefs.has(key)) continue;
+          if (key in prefs) prefs[key] = value;
+          if (key === "current_network_interface") prefs.current_interface_name = String(value);
+        }
         return ok();
+      }
+      case "app/networkInterfaceList":
+        return json([
+          { name: "tun0", value: "tun0" },
+          { name: "eth0", value: "eth0" },
+          { name: "lo", value: "lo" },
+        ]);
+      case "app/networkInterfaceAddressList": {
+        const iface = p.get("iface") ?? "";
+        const list: Record<string, string[]> = {
+          tun0: ["10.2.0.2"],
+          eth0: ["192.168.1.20", "fe80::1"],
+          lo: ["127.0.0.1", "::1"],
+          "": ["10.2.0.2", "192.168.1.20", "127.0.0.1"],
+        };
+        return json(list[iface] ?? []);
       }
       case "torrents/filePrio": {
         const t = find(p.get("hash"));

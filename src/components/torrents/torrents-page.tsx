@@ -18,7 +18,6 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { kindLabel, statusLabel } from "@/lib/labels";
 import { lazyNamed, WhenUsed } from "@/lib/lazy";
-import { preferencesStore, usePreferences } from "@/lib/preferences";
 import {
   countBy,
   filterTorrents,
@@ -32,6 +31,7 @@ import {
   textMatcher,
   UNCATEGORIZED,
 } from "@/lib/torrents";
+import { preferencesStore, usePreferences } from "@/lib/ui-preferences";
 import { m } from "@/paraglide/messages.js";
 import { Route, type TorrentsSearch } from "@/routes/torrents";
 import { PageHeader } from "../page-header";

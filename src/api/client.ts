@@ -259,7 +259,14 @@ export const api = {
 
   // app (appcontroller.cpp): preferences are sent as one JSON object
   speedPreferences: () => get("app/preferences", speedPreferencesSchema),
-  setPreferences: (prefs: SpeedPreferences) => post("app/setPreferences", { json: JSON.stringify(prefs) }),
+  /** Only the given fields change; the others stay as they are (setPreferencesAction). */
+  setPreferences: (prefs: SpeedPreferences | Record<string, unknown>) =>
+    post("app/setPreferences", { json: JSON.stringify(prefs) }),
+  /** Every field of app/preferences, untyped: src/lib/preferences describes them. */
+  preferences: () => get("app/preferences", z.record(z.string(), z.unknown())),
+  networkInterfaces: () =>
+    get("app/networkInterfaceList", z.array(z.looseObject({ name: z.string(), value: z.string() }))),
+  networkAddresses: (iface: string) => get("app/networkInterfaceAddressList", z.array(z.string()), { iface }),
 
   add: (options: AddTorrentOptions) => {
     const form = new FormData();

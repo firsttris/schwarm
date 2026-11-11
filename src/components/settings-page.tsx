@@ -1,19 +1,26 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { useId } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { type Density, defaultColumns, preferencesStore, usePreferences } from "@/lib/preferences";
 import { type Theme, useTheme } from "@/lib/theme";
+import { type Density, defaultColumns, preferencesStore, usePreferences } from "@/lib/ui-preferences";
 import { cn } from "@/lib/utils";
 import { m } from "@/paraglide/messages.js";
 import { getLocale, locales, setLocale } from "@/paraglide/runtime.js";
 import { Route } from "@/routes/settings";
 import { PageHeader } from "./page-header";
-import { SearchPluginsSection } from "./search/search-plugins";
+import {
+  AllOptionsSection,
+  ConnectionSection,
+  DownloadsSection,
+  SaveBar,
+  SearchRssSection,
+  SeedingSection,
+  SpeedSection,
+} from "./settings/pref-sections";
 
 const optionalColumns: [string, () => string][] = [
   ["status", m.col_status],
@@ -56,17 +63,37 @@ function Choice({ value, label, hint }: { value: string; label: string; hint?: s
   );
 }
 
+const sections = ["downloads", "speed", "seeding", "connection", "search", "ui", "all"] as const;
+
+function sectionTitle(id: (typeof sections)[number]): string {
+  switch (id) {
+    case "downloads":
+      return m.prefs_section_downloads();
+    case "speed":
+      return m.prefs_section_speed();
+    case "seeding":
+      return m.prefs_seeding();
+    case "connection":
+      return m.prefs_section_connection();
+    case "search":
+      return m.settings_search();
+    case "ui":
+      return m.settings_ui();
+    case "all":
+      return m.prefs_all();
+  }
+}
+
 /**
- * Settings → "Oberfläche": Schwarm's own options, stored in the browser (features.md).
- * The qBittorrent preferences follow in milestone 5.
+ * Settings (docs/mockup/Einstellungen.dc.html): simple sections with plain words for the
+ * common qBittorrent options, Schwarm's own "Oberfläche", and "Alle Optionen" with every field
+ * of app/preferences. Changes are collected and saved together (src/lib/preferences/draft.ts).
  */
 export function SettingsPage() {
-  const { section = "ui" } = Route.useSearch();
-  const sections = [
-    ["ui", m.settings_ui()],
-    ["search", m.settings_search()],
-  ] as const;
-  const title = sections.find(([id]) => id === section)?.[1] ?? m.settings_ui();
+  const { section = "downloads" } = Route.useSearch();
+  const navigate = useNavigate({ from: Route.fullPath });
+  const title = sectionTitle(section);
+  const go = (id: (typeof sections)[number]) => ({ section: id === "downloads" ? undefined : id });
 
   return (
     <>
@@ -74,17 +101,18 @@ export function SettingsPage() {
         crumbs={[m.nav_settings(), title]}
         title={m.nav_settings()}
         phoneExtra={
-          <Tabs value={section}>
-            <TabsList className="h-11 w-full">
-              {sections.map(([id, label]) => (
-                <TabsTrigger key={id} value={id} asChild>
-                  <Link to="/settings" search={{ section: id === "ui" ? undefined : id }}>
-                    {label}
-                  </Link>
-                </TabsTrigger>
+          <Select value={section} onValueChange={(v) => navigate({ search: go(v as (typeof sections)[number]) })}>
+            <SelectTrigger className="h-11 w-full" aria-label={m.settings_sections()}>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {sections.map((id) => (
+                <SelectItem key={id} value={id}>
+                  {sectionTitle(id)}
+                </SelectItem>
               ))}
-            </TabsList>
-          </Tabs>
+            </SelectContent>
+          </Select>
         }
       />
       <main className="flex flex-col gap-6 px-4 py-5 md:px-10 md:py-8">
@@ -94,26 +122,33 @@ export function SettingsPage() {
         </div>
         <Separator className="hidden md:block" />
         <div className="flex flex-wrap items-start gap-12">
-          <nav aria-label={m.settings_sections()} className="hidden w-[200px] flex-col gap-1 md:flex">
-            {sections.map(([id, label]) => (
+          <nav aria-label={m.settings_sections()} className="sticky top-[76px] hidden w-[200px] flex-col gap-1 md:flex">
+            {sections.map((id) => (
               <Link
                 key={id}
                 to="/settings"
-                search={{ section: id === "ui" ? undefined : id }}
+                search={go(id)}
                 aria-current={section === id ? "page" : undefined}
                 className={cn(
                   "flex h-9 items-center rounded-md px-3 text-sm hover:bg-muted",
                   section === id && "bg-muted font-medium",
+                  id === "all" && section !== id && "text-muted-foreground",
                 )}
               >
-                {label}
+                {sectionTitle(id)}
               </Link>
             ))}
-            <span className="px-3 py-2 text-muted-foreground text-sm">{m.settings_more_later()}</span>
           </nav>
-          {section === "search" ? <SearchPluginsSection /> : <UiSection />}
+          {section === "downloads" && <DownloadsSection />}
+          {section === "speed" && <SpeedSection />}
+          {section === "seeding" && <SeedingSection />}
+          {section === "connection" && <ConnectionSection />}
+          {section === "search" && <SearchRssSection />}
+          {section === "ui" && <UiSection />}
+          {section === "all" && <AllOptionsSection />}
         </div>
       </main>
+      <SaveBar />
     </>
   );
 }
