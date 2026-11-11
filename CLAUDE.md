@@ -58,3 +58,18 @@ bun run e2e
 - Load nothing from other origins at runtime (fonts and icons are bundled).
 - Texts in German and English through Paraglide; German is the main language, plain words instead of
   qBittorrent jargon.
+
+## Project notes
+
+- Layout: `src/api/` (typed client, Zod schemas, maindata merge, queries), `src/lib/` (filters,
+  formatting, file tree, stores), `src/components/ui/` (shadcn components, copied from
+  `shadcn-ui/ui` → `apps/v4/registry/new-york-v4/ui`; the registry host is not reachable from the
+  cloud sessions, so `shadcn add` does not work there), `src/routes/` (file-based, hash history),
+  `dev/` (mock qBittorrent: `mock-api.ts`, sample data from the mockup in `fixtures.ts`).
+- `bun run dev` starts Vite and the mock API; E2E tests build and serve `dist/public` from the mock
+  like qBittorrent does (no SPA fallback). `MOCK_AUTH=1` asks for a login (admin / adminadmin).
+- Paraglide loads its message-format plugin from `node_modules` (`project.inlang/settings.json`),
+  not from a CDN, so builds need no network. Messages with numbers use plural variants.
+- Versions kept back on purpose: `@tanstack/react-table` 8 (9 changed the API and is three months
+  old), `@inlang/paraglide-js` 2, `@playwright/test` pinned to the version of the Playwright image
+  and browser at hand.

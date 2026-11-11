@@ -3,18 +3,21 @@
 Everything the stock WebUI of qBittorrent 5.3.0 can do (from `src/webui/www/private` and
 `src/webui/api`), and where it goes in Schwarm. "Milestone" refers to [`spec.md`](spec.md).
 
+Done: milestone 1. Areas of later milestones (Suche, RSS, Statistik) keep their place in the
+navigation with a "Kommt bald" page.
+
 ## Torrent list
 
 | qBittorrent | Place in Schwarm | Milestone |
 |---|---|---|
 | Start, stop, force start | Bulk actions in the toolbar, context menu, row menu, `Space` | 1 |
 | Remove, with or without files | Context menu and toolbar; confirmation dialog with "Dateien auch löschen" | 1 |
-| Set location, rename, rename files (several, with pattern) | Context menu; multi-rename as its own dialog | 1 (menu), 2 (dialogs) |
+| Set location, rename, rename files (several, with pattern) | Context menu; set location and the torrent name in a simple dialog, file renaming as its own dialog | 1 (menu, location, name), 2 (files) |
 | Category and tags | Context menu with submenus, bulk actions | 1 |
 | Automatic torrent management, super seeding, sequential download, first/last piece first | Context menu → "Erweitert" as checkbox items | 1 |
 | Per-torrent limits: download, upload, ratio and seeding time | Context menu → "Limits …" (one dialog for all) | 2 |
 | Force recheck, force reannounce | Context menu | 1 |
-| Queue: top, up, down, bottom | Context menu → "Warteschlange"; drag when sorted by queue | 2 |
+| Queue: top, up, down, bottom | Context menu → "Warteschlange" (shown when queueing is on); drag when sorted by queue | 1 (menu), 2 (drag) |
 | Copy: name, info hash v1/v2, magnet, torrent ID, comment, content path | Context menu → "Kopieren" | 1 |
 | Export .torrent | Context menu | 1 |
 | Start all / stop all, pause/resume session | Menu behind the app name in the sidebar | 2 |
@@ -55,7 +58,7 @@ Everything the stock WebUI of qBittorrent 5.3.0 can do (from `src/webui/www/priv
 | RSS auto-downloader: rules, episode filter, smart filter, preview of matching articles, clone, import/export | Page "RSS" → "Auto-Downloader" | 4 |
 | Create, edit, delete categories and tags, remove unused | Dialog from the sidebar | 2 |
 | Global speed limits and alternative limits (turtle), schedule | Header: speed button with a menu ("Langsamer Modus") | 2 |
-| Connection status, DHT nodes, free disk space | Sidebar card | 1 |
+| Connection status, external IP, DHT nodes, free disk space | Sidebar card; badge on the phone | 1 |
 | Log (execution log, banned peers) | Settings → "System" → "Log" | 6 |
 | Statistics | Page "Statistik" | 6 |
 | Torrent creator | Menu behind the app name → "Torrent erstellen" | 6 |

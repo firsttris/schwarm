@@ -1,0 +1,12 @@
+node_modules/
+dist/
+release/
+src/paraglide/
+project.inlang/cache/
+project.inlang/.gitignore
+project.inlang/README.md
+test-results/
+playwright-report/
+blob-report/
+*.tsbuildinfo
+.DS_Store

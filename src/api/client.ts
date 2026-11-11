@@ -1,0 +1,173 @@
+import type { z } from "zod";
+import {
+  filesSchema,
+  maindataResponseSchema,
+  pieceStatesSchema,
+  propertiesSchema,
+  torrentPeersResponseSchema,
+  trackersSchema,
+  webseedsSchema,
+} from "./schemas";
+
+/**
+ * Typed client for the qBittorrent WebUI API v2 on the same origin. The page is served
+ * by qBittorrent under any path, so requests go to the relative "api/v2/…".
+ * Endpoints and parameters: src/webui/api/*controller.cpp at release-5.3.0.
+ */
+
+export class ApiError extends Error {
+  constructor(
+    readonly status: number,
+    message: string,
+  ) {
+    super(message);
+    this.name = "ApiError";
+  }
+}
+
+/** True when qBittorrent wants a login: API calls without a session answer 403. */
+export function isAuthError(error: unknown): boolean {
+  return error instanceof ApiError && error.status === 403;
+}
+
+const base = "api/v2/";
+
+type Params = Record<string, string | number | boolean | undefined>;
+
+function toSearch(params: Params): URLSearchParams {
+  const search = new URLSearchParams();
+  for (const [key, value] of Object.entries(params)) {
+    if (value !== undefined) search.set(key, String(value));
+  }
+  return search;
+}
+
+async function request(path: string, init?: RequestInit): Promise<Response> {
+  const res = await fetch(base + path, { credentials: "same-origin", ...init });
+  if (!res.ok) {
+    const text = await res.text().catch(() => "");
+    throw new ApiError(res.status, text || res.statusText);
+  }
+  return res;
+}
+
+async function get<T>(path: string, schema: z.ZodType<T>, params: Params = {}): Promise<T> {
+  const search = toSearch(params).toString();
+  const res = await request(search ? `${path}?${search}` : path);
+  return schema.parse(await res.json());
+}
+
+async function getText(path: string, params: Params = {}): Promise<string> {
+  const search = toSearch(params).toString();
+  const res = await request(search ? `${path}?${search}` : path);
+  return res.text();
+}
+
+async function post(path: string, params: Params | FormData = {}): Promise<string> {
+  const body = params instanceof FormData ? params : toSearch(params);
+  const res = await request(path, { method: "POST", body });
+  return res.text();
+}
+
+const hashes = (list: string[]) => list.join("|");
+
+export type ContentLayout = "Original" | "Subfolder" | "NoSubfolder";
+export type StopCondition = "None" | "MetadataReceived" | "FilesChecked";
+
+export interface AddTorrentOptions {
+  urls?: string[];
+  files?: File[];
+  savepath?: string;
+  downloadPath?: string;
+  useDownloadPath?: boolean;
+  category?: string;
+  tags?: string[];
+  rename?: string;
+  stopped?: boolean;
+  sequentialDownload?: boolean;
+  firstLastPiecePrio?: boolean;
+  autoTMM?: boolean;
+  contentLayout?: ContentLayout;
+  stopCondition?: StopCondition;
+  addToTopOfQueue?: boolean;
+  /** "Skip hash check", called seedMode in addAction (torrentscontroller.cpp). */
+  seedMode?: boolean;
+  /** Bytes per second; 0 is unlimited. */
+  dlLimit?: number;
+  upLimit?: number;
+}
+
+export const api = {
+  // auth (src/webui/api/authcontroller.cpp): 200 on success, 401 on wrong credentials
+  login: (username: string, password: string) => post("auth/login", { username, password }),
+  logout: () => post("auth/logout"),
+
+  // app (appcontroller.cpp)
+  version: () => getText("app/version"),
+  webapiVersion: () => getText("app/webapiVersion"),
+  defaultSavePath: () => getText("app/defaultSavePath"),
+
+  // sync (synccontroller.cpp)
+  maindata: (rid: number) => get("sync/maindata", maindataResponseSchema, { rid }),
+  torrentPeers: (hash: string, rid: number) => get("sync/torrentPeers", torrentPeersResponseSchema, { hash, rid }),
+
+  // torrents (torrentscontroller.cpp)
+  properties: (hash: string) => get("torrents/properties", propertiesSchema, { hash }),
+  files: (hash: string) => get("torrents/files", filesSchema, { hash }),
+  trackers: (hash: string) => get("torrents/trackers", trackersSchema, { hash }),
+  webseeds: (hash: string) => get("torrents/webseeds", webseedsSchema, { hash }),
+  pieceStates: (hash: string) => get("torrents/pieceStates", pieceStatesSchema, { hash }),
+
+  start: (list: string[]) => post("torrents/start", { hashes: hashes(list) }),
+  stop: (list: string[]) => post("torrents/stop", { hashes: hashes(list) }),
+  setForceStart: (list: string[], value: boolean) => post("torrents/setForceStart", { hashes: hashes(list), value }),
+  remove: (list: string[], deleteFiles: boolean) => post("torrents/delete", { hashes: hashes(list), deleteFiles }),
+  recheck: (list: string[]) => post("torrents/recheck", { hashes: hashes(list) }),
+  reannounce: (list: string[]) => post("torrents/reannounce", { hashes: hashes(list) }),
+  setCategory: (list: string[], category: string) => post("torrents/setCategory", { hashes: hashes(list), category }),
+  addTags: (list: string[], tags: string[]) => post("torrents/addTags", { hashes: hashes(list), tags: tags.join(",") }),
+  removeTags: (list: string[], tags: string[]) =>
+    post("torrents/removeTags", { hashes: hashes(list), tags: tags.join(",") }),
+  setAutoManagement: (list: string[], enable: boolean) =>
+    post("torrents/setAutoManagement", { hashes: hashes(list), enable }),
+  toggleSequentialDownload: (list: string[]) => post("torrents/toggleSequentialDownload", { hashes: hashes(list) }),
+  toggleFirstLastPiecePrio: (list: string[]) => post("torrents/toggleFirstLastPiecePrio", { hashes: hashes(list) }),
+  setSuperSeeding: (list: string[], value: boolean) =>
+    post("torrents/setSuperSeeding", { hashes: hashes(list), value }),
+  setLocation: (list: string[], location: string) => post("torrents/setLocation", { hashes: hashes(list), location }),
+  rename: (hash: string, name: string) => post("torrents/rename", { hash, name }),
+  topPrio: (list: string[]) => post("torrents/topPrio", { hashes: hashes(list) }),
+  increasePrio: (list: string[]) => post("torrents/increasePrio", { hashes: hashes(list) }),
+  decreasePrio: (list: string[]) => post("torrents/decreasePrio", { hashes: hashes(list) }),
+  bottomPrio: (list: string[]) => post("torrents/bottomPrio", { hashes: hashes(list) }),
+  exportUrl: (hash: string) => `${base}torrents/export?${toSearch({ hash })}`,
+
+  /** Several file ids are joined with "|" (filePrioAction). */
+  setFilePriority: (hash: string, ids: number[], priority: number) =>
+    post("torrents/filePrio", { hash, id: ids.join("|"), priority }),
+
+  addTrackers: (hash: string, urls: string[]) => post("torrents/addTrackers", { hash, urls: urls.join("\n") }),
+  editTracker: (hash: string, url: string, newUrl: string) => post("torrents/editTracker", { hash, url, newUrl }),
+  removeTrackers: (hash: string, urls: string[]) => post("torrents/removeTrackers", { hash, urls: urls.join("|") }),
+  addWebSeeds: (hash: string, urls: string[]) => post("torrents/addWebSeeds", { hash, urls: urls.join("|") }),
+  editWebSeed: (hash: string, origUrl: string, newUrl: string) =>
+    post("torrents/editWebSeed", { hash, origUrl, newUrl }),
+  removeWebSeeds: (hash: string, urls: string[]) => post("torrents/removeWebSeeds", { hash, urls: urls.join("|") }),
+  addPeers: (list: string[], peers: string[]) =>
+    post("torrents/addPeers", { hashes: hashes(list), peers: peers.join("|") }),
+
+  // transfer (transfercontroller.cpp)
+  banPeers: (peers: string[]) => post("transfer/banPeers", { peers: peers.join("|") }),
+
+  add: (options: AddTorrentOptions) => {
+    const form = new FormData();
+    const { urls, files, tags, ...rest } = options;
+    if (urls?.length) form.set("urls", urls.join("\n"));
+    for (const file of files ?? []) form.append("torrents", file, file.name);
+    if (tags?.length) form.set("tags", tags.join(","));
+    for (const [key, value] of Object.entries(rest)) {
+      if (value !== undefined && value !== "") form.set(key, String(value));
+    }
+    return post("torrents/add", form);
+  },
+};
