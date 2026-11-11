@@ -3,7 +3,7 @@
 Everything the stock WebUI of qBittorrent 5.3.0 can do (from `src/webui/www/private` and
 `src/webui/api`), and where it goes in Schwarm. "Milestone" refers to [`spec.md`](spec.md).
 
-Done: milestones 1 and 2. Areas of later milestones (Suche, RSS, Statistik) keep their place in the
+Done: milestones 1–3. Areas of later milestones (RSS, Statistik) keep their place in the
 navigation with a "Kommt bald" page.
 
 ## Torrent list
@@ -52,8 +52,8 @@ navigation with a "Kommt bald" page.
 
 | qBittorrent | Place in Schwarm | Milestone |
 |---|---|---|
-| Search: start/stop, filter results (size, seeds), download, open description | Page "Suche" | 3 |
-| Search plugins: install, update, enable, uninstall | Settings → "Suche & RSS" | 3 |
+| Search: start/stop, filter results (size, seeds), download, open description | Page "Suche": category, sources, min. seeds, max. size, sorting; "Laden" opens the add dialog with the plugin as downloader | 3 |
+| Search plugins: install (URL or path), update, enable, uninstall | Settings → "Suche & RSS" | 3 |
 | RSS: feeds and folders, articles, mark read, refresh, edit feed URL | Page "RSS" → "Feeds" | 4 |
 | RSS auto-downloader: rules, episode filter, smart filter, preview of matching articles, clone, import/export | Page "RSS" → "Auto-Downloader" | 4 |
 | Create, edit, delete categories and tags, remove unused | Dialog "Kategorien und Tags" from the sidebar group buttons and the app menu | 2 |

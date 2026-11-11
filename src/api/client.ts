@@ -7,6 +7,8 @@ import {
   type ShareLimitAction,
   type ShareLimitsMode,
   type SpeedPreferences,
+  searchPluginsSchema,
+  searchResultsSchema,
   speedPreferencesSchema,
   torrentInfoSchema,
   torrentPeersResponseSchema,
@@ -100,6 +102,8 @@ export interface AddTorrentOptions {
   /** Bytes per second; 0 is unlimited. */
   dlLimit?: number;
   upLimit?: number;
+  /** A search plugin that downloads the link itself (search results; addAction "downloader"). */
+  downloader?: string;
   /** One priority per file index, after choosing files (addAction: "filePriorities"). */
   filePriorities?: number[];
 }
@@ -196,8 +200,8 @@ export const api = {
    * Metadata of a magnet link or hash before adding. qBittorrent answers 202 with the hashes
    * while it is still fetching, then 200 with the file list (fetchMetadataAction).
    */
-  fetchMetadata: async (source: string) => {
-    const res = await request("torrents/fetchMetadata", { method: "POST", body: toSearch({ source }) });
+  fetchMetadata: async (source: string, downloader?: string) => {
+    const res = await request("torrents/fetchMetadata", { method: "POST", body: toSearch({ source, downloader }) });
     return { ready: res.status === 200, info: torrentInfoSchema.parse(await res.json()) };
   },
   /** Metadata of .torrent files, one result per file (parseMetadataAction). */
@@ -207,6 +211,24 @@ export const api = {
     const res = await request("torrents/parseMetadata", { method: "POST", body: form });
     return z.array(torrentInfoSchema).parse(await res.json());
   },
+
+  // search (searchcontroller.cpp); qBittorrent answers 409 when Python is missing
+  searchStart: async (pattern: string, category: string, plugins: string[] | "enabled" | "all") => {
+    const body = toSearch({ pattern, category, plugins: Array.isArray(plugins) ? plugins.join("|") : plugins });
+    const res = await request("search/start", { method: "POST", body });
+    return z.looseObject({ id: z.number() }).parse(await res.json()).id;
+  },
+  searchStop: (id: number) => post("search/stop", { id }),
+  searchDelete: (id: number) => post("search/delete", { id }),
+  /** Results from `offset` on, so polling only fetches the new ones. */
+  searchResults: (id: number, offset: number) => get("search/results", searchResultsSchema, { id, offset }),
+  searchPlugins: () => get("search/plugins", searchPluginsSchema),
+  /** URLs or local paths of plugin files, joined with "|". */
+  installSearchPlugins: (sources: string[]) => post("search/installPlugin", { sources: sources.join("|") }),
+  uninstallSearchPlugins: (names: string[]) => post("search/uninstallPlugin", { names: names.join("|") }),
+  enableSearchPlugins: (names: string[], enable: boolean) =>
+    post("search/enablePlugin", { names: names.join("|"), enable }),
+  updateSearchPlugins: () => post("search/updatePlugins"),
 
   // transfer (transfercontroller.cpp)
   banPeers: (peers: string[]) => post("transfer/banPeers", { peers: peers.join("|") }),

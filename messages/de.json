@@ -303,6 +303,13 @@
   "peers_sorted": "Sortiert nach Tempo",
   "pieces_label": "{have} von {total} Stückchen geladen",
   "pieces_value": "{n} × {size}",
+  "plugin_enable": "{name} verwenden",
+  "plugins_install": "Plugin hinzufügen",
+  "plugins_install_button": "Hinzufügen",
+  "plugins_install_hint": "Adresse einer .py-Datei oder ein Pfad auf dem Rechner von qBittorrent; mehrere mit Leerzeichen.",
+  "plugins_text": "Such-Plugins von qBittorrent: einschalten, aktualisieren, hinzufügen.",
+  "plugins_title": "Such-Plugins",
+  "plugins_update": "Alle aktualisieren",
   "prio_high": "Hoch",
   "prio_ignored": "Nicht laden",
   "prio_maximum": "Maximal",
@@ -399,10 +406,73 @@
   "schedule_from": "Von",
   "schedule_hint": "Schaltet ihn zur gewählten Zeit ein und danach wieder aus.",
   "schedule_to": "Bis",
+  "search_all_categories": "Alle Kategorien",
+  "search_download": "Laden",
+  "search_download_name": "{name} laden",
+  "search_failed": "Die Suche ließ sich nicht starten.",
+  "search_filter_any": "Egal",
+  "search_in_list": "In der Liste",
+  "search_intro": "Durchsucht die Quellen, die in qBittorrent als Such-Plugins installiert sind.",
+  "search_manage_plugins": "Plugins verwalten",
+  "search_max_size": "Größe",
+  "search_min_seeds": "Mind. Seeds",
+  "search_no_plugins": "Noch keine Such-Plugins",
+  "search_no_plugins_text": "qBittorrent sucht über Plugins, die du selbst installierst. Eine Liste gibt es im Wiki von qBittorrent.",
+  "search_open_description": "Beschreibung auf der Seite der Quelle öffnen",
+  "search_placeholder": "Wonach suchst du?",
+  "search_python": "Für die Suche braucht qBittorrent Python. Bitte dort installieren.",
+  "search_seeds_peers": "{seeds} Seeds, {peers} Peers",
+  "search_source": "Quelle",
+  "search_sources": "Quellen",
+  "search_sources_hint": [
+    {
+      "declarations": ["input n", "local p = n: plural"],
+      "selectors": ["p"],
+      "match": {
+        "p=one": "Sucht mit {n} eingeschalteten Quelle.",
+        "p=other": "Sucht mit {n} eingeschalteten Quellen."
+      }
+    }
+  ],
+  "search_status_done": [
+    {
+      "declarations": ["input n", "local p = n: plural"],
+      "selectors": ["p"],
+      "match": {
+        "p=one": "{n} Ergebnis",
+        "p=other": "{n} Ergebnisse"
+      }
+    }
+  ],
+  "search_status_running": [
+    {
+      "declarations": ["input n", "local p = n: plural"],
+      "selectors": ["p"],
+      "match": {
+        "p=one": "{n} Ergebnis · sucht noch",
+        "p=other": "{n} Ergebnisse · sucht noch"
+      }
+    }
+  ],
+  "search_status_shown": [
+    {
+      "declarations": ["input n", "local p = n: plural"],
+      "selectors": ["p"],
+      "match": {
+        "p=one": "{n} angezeigt",
+        "p=other": "{n} angezeigt"
+      }
+    }
+  ],
+  "search_stop": "Stoppen",
+  "search_submit": "Suchen",
+  "search_term": "Suchbegriff",
+  "search_waiting": "Warte auf die ersten Ergebnisse …",
   "select_all": "Alle auswählen",
   "select_row": "{name} auswählen",
   "settings_intro": "Das Wichtigste verständlich. Die Optionen von qBittorrent folgen.",
   "settings_more_later": "Downloads, Tempo, Verbindung und „Alle Optionen“ folgen.",
+  "settings_search": "Suche & RSS",
   "settings_sections": "Einstellungsbereiche",
   "settings_ui": "Oberfläche",
   "settings_ui_text": "Gilt nur für diesen Browser.",
@@ -562,6 +632,9 @@
   "toast_moved": "Wird verschoben",
   "toast_peer_banned": "Peer gesperrt",
   "toast_peers_added": "Peers hinzugefügt",
+  "toast_plugin_installing": "Plugin wird installiert",
+  "toast_plugin_removed": "{name} entfernt",
+  "toast_plugins_updating": "Plugins werden aktualisiert",
   "toast_reannounce": "Bei den Trackern neu angekündigt",
   "toast_recheck": "Wird neu geprüft",
   "toast_removed": [

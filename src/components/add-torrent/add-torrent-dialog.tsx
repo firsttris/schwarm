@@ -143,7 +143,7 @@ export function AddTorrentDialog() {
   const singleFile = tab === "file" && files.length === 1 ? files[0] : undefined;
   const linkMeta = useQuery({
     queryKey: ["metadata", linkSource],
-    queryFn: () => api.fetchMetadata(linkSource!),
+    queryFn: () => api.fetchMetadata(linkSource!, state.downloader),
     enabled: state.open && !!linkSource,
     refetchInterval: (q) => (q.state.data?.ready || q.state.error ? false : 1500),
     retry: false,
@@ -179,6 +179,7 @@ export function AddTorrentDialog() {
       () =>
         api.add({
           urls: tab === "link" ? linkList : undefined,
+          downloader: tab === "link" && linkList[0] === state.links.trim() ? state.downloader : undefined,
           files: tab === "file" ? files : undefined,
           category: category === NONE ? undefined : category,
           savepath: pathTouched && savePath.trim() ? savePath.trim() : undefined,

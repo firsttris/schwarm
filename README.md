@@ -105,7 +105,13 @@ only its display settings (theme, language, columns) in your browser.
 - **Light, dark or system**, German and English (follows the browser).
 - **Login** only when qBittorrent asks for it (not on whitelisted networks).
 
-Search, RSS, statistics and qBittorrent's settings follow in the next versions.
+### 🔍 Search
+
+- **Search through qBittorrent's search plugins**: one field, category, results sorted by seeds,
+  filters for source, seeds and size, and "Download" opens the add dialog.
+- **Plugins** in the settings: enable, update, add by URL, remove.
+
+RSS, statistics and qBittorrent's settings follow in the next versions.
 
 ## 📸 Screenshots
 

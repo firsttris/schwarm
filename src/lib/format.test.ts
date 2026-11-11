@@ -57,3 +57,13 @@ describe("format", () => {
     expect(trackerHost("not a url")).toBe("not a url");
   });
 });
+
+describe("formatRelative", () => {
+  it("speaks in plain units", async () => {
+    const { formatRelative } = await import("./format");
+    const now = Date.UTC(2026, 10, 11);
+    expect(formatRelative(now / 1000 - 21 * 86400, now, "de")).toBe("vor 3 Wochen");
+    expect(formatRelative(now / 1000 - 3600 * 5, now, "en")).toBe("5 hours ago");
+    expect(formatRelative(0, now, "de")).toBe("–");
+  });
+});

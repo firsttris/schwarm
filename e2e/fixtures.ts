@@ -4,6 +4,7 @@ export interface MockOptions {
   auth?: boolean;
   frozen?: boolean;
   now?: number;
+  noPython?: boolean;
 }
 
 /** "Now" of the mock: torrents were added relative to it (dates are not asserted). */

@@ -108,6 +108,24 @@ for (const scheme of ["light", "dark"] as const) {
     });
   });
 
+  test.describe(`desktop ${scheme} milestone 3`, () => {
+    test.use({ ...desktop, colorScheme: scheme });
+
+    test(`search ${scheme}`, async ({ page }) => {
+      await page.goto("./#/search");
+      await page.getByLabel("Suchbegriff").fill("ubuntu");
+      await page.getByRole("button", { name: "Suchen" }).click();
+      await expect(page.getByTestId("search-status")).toHaveText("8 Ergebnisse");
+      await shot(page, `desktop-search-${scheme}`);
+    });
+
+    test(`search plugins ${scheme}`, async ({ page }) => {
+      await page.goto("./#/settings?section=search");
+      await expect(page.getByTestId("plugin-list")).toContainText("Linuxtracker");
+      await shot(page, `desktop-plugins-${scheme}`);
+    });
+  });
+
   test.describe(`phone ${scheme}`, () => {
     test.use({ ...phone, colorScheme: scheme });
 
@@ -115,6 +133,15 @@ for (const scheme of ["light", "dark"] as const) {
       await page.goto("./#/torrents");
       await expect(page.getByTestId("phone-row").first()).toBeVisible();
       await shot(page, `phone-list-${scheme}`);
+    });
+
+    test(`phone search ${scheme}`, async ({ page }) => {
+      await page.goto("./#/search");
+      await page.getByLabel("Suchbegriff").fill("ubuntu");
+      await page.getByRole("button", { name: "Suchen" }).click();
+      await expect(page.getByTestId("search-status")).toHaveText("8 Ergebnisse");
+      await page.locator("input").first().blur();
+      await shot(page, `phone-search-${scheme}`);
     });
 
     test(`phone details ${scheme}`, async ({ page }) => {

@@ -347,3 +347,36 @@ export type ShareLimitsMode = (typeof shareLimitsModes)[number];
 /** -2 follows the global setting, -1 means no limit (DEFAULT_RATIO_LIMIT, NO_RATIO_LIMIT). */
 export const USE_GLOBAL_LIMIT = -2;
 export const NO_LIMIT = -1;
+
+/** search/plugins (searchcontroller.cpp, getPluginsInfo). */
+export const searchPluginSchema = z.looseObject({
+  name: str,
+  version: str,
+  fullName: str,
+  url: str,
+  enabled: z.boolean(),
+  supportedCategories: z.array(z.looseObject({ id: str, name: str })),
+});
+export type SearchPlugin = z.infer<typeof searchPluginSchema>;
+export const searchPluginsSchema = z.array(searchPluginSchema);
+
+/** search/results; fileSize -1 and nbSeeders -1 mean unknown, pubDate is unix seconds or 0. */
+export const searchResultSchema = z.looseObject({
+  fileName: str,
+  fileUrl: str,
+  fileSize: num,
+  nbSeeders: num,
+  nbLeechers: num,
+  engineName: z._default(z.optional(str), ""),
+  siteUrl: str,
+  descrLink: z._default(z.optional(str), ""),
+  pubDate: z._default(z.optional(num), 0),
+});
+export type SearchResult = z.infer<typeof searchResultSchema>;
+
+export const searchResultsSchema = z.looseObject({
+  /** "Running" or "Stopped" */
+  status: str,
+  results: z.array(searchResultSchema),
+  total: num,
+});
