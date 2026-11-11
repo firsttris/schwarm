@@ -1,8 +1,21 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { RssIcon } from "lucide-react";
-import { ComingSoon } from "@/components/coming-soon";
-import { m } from "@/paraglide/messages.js";
+import { RssPage } from "@/components/rss/rss-page";
+
+export interface RssSearch {
+  view?: "rules";
+  /** Rule open in the editor. */
+  rule?: string;
+  /** Article title to suggest a new rule from ("Regel daraus machen"). */
+  suggest?: string;
+}
+
+const str = (v: unknown) => (typeof v === "string" && v ? v : undefined);
 
 export const Route = createFileRoute("/rss")({
-  component: () => <ComingSoon icon={RssIcon} title={m.nav_rss()} />,
+  validateSearch: (search: Record<string, unknown>): RssSearch => ({
+    view: search.view === "rules" ? "rules" : undefined,
+    rule: str(search.rule),
+    suggest: str(search.suggest),
+  }),
+  component: RssPage,
 });

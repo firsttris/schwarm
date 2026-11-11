@@ -2,8 +2,12 @@ import * as z from "zod/mini";
 import {
   filesSchema,
   maindataResponseSchema,
+  matchingArticlesSchema,
   pieceStatesSchema,
   propertiesSchema,
+  type RssRule,
+  rssRulesSchema,
+  rssTreeSchema,
   type ShareLimitAction,
   type ShareLimitsMode,
   type SpeedPreferences,
@@ -229,6 +233,23 @@ export const api = {
   enableSearchPlugins: (names: string[], enable: boolean) =>
     post("search/enablePlugin", { names: names.join("|"), enable }),
   updateSearchPlugins: () => post("search/updatePlugins"),
+
+  // rss (rsscontroller.cpp); items are addressed by their path, folders joined with "\\"
+  rssItems: () => get("rss/items", rssTreeSchema, { withData: true }),
+  rssAddFeed: (url: string, path: string) => post("rss/addFeed", { url, path }),
+  rssAddFolder: (path: string) => post("rss/addFolder", { path }),
+  rssSetFeedUrl: (path: string, url: string) => post("rss/setFeedURL", { path, url }),
+  rssRemoveItem: (path: string) => post("rss/removeItem", { path }),
+  rssMoveItem: (itemPath: string, destPath: string) => post("rss/moveItem", { itemPath, destPath }),
+  rssRefreshItem: (itemPath: string) => post("rss/refreshItem", { itemPath }),
+  /** Without articleId the whole feed or folder is marked as read. */
+  rssMarkAsRead: (itemPath: string, articleId?: string) => post("rss/markAsRead", { itemPath, articleId }),
+  rssRules: () => get("rss/rules", rssRulesSchema),
+  rssSetRule: (ruleName: string, rule: Partial<RssRule>) =>
+    post("rss/setRule", { ruleName, ruleDef: JSON.stringify(rule) }),
+  rssRenameRule: (ruleName: string, newRuleName: string) => post("rss/renameRule", { ruleName, newRuleName }),
+  rssRemoveRule: (ruleName: string) => post("rss/removeRule", { ruleName }),
+  rssMatchingArticles: (ruleName: string) => get("rss/matchingArticles", matchingArticlesSchema, { ruleName }),
 
   // transfer (transfercontroller.cpp)
   banPeers: (peers: string[]) => post("transfer/banPeers", { peers: peers.join("|") }),

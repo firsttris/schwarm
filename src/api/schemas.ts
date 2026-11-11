@@ -380,3 +380,65 @@ export const searchResultsSchema = z.looseObject({
   results: z.array(searchResultSchema),
   total: num,
 });
+
+/** RSS articles (src/base/rss/rss_article.cpp: id, date, title, author, description, torrentURL, link, isRead). */
+export const rssArticleSchema = z.looseObject({
+  id: str,
+  date: z._default(z.optional(str), ""),
+  title: z._default(z.optional(str), ""),
+  author: z.optional(str),
+  description: z.optional(str),
+  torrentURL: z.optional(str),
+  link: z.optional(str),
+  isRead: z._default(z.optional(z.boolean()), false),
+});
+export type RssArticle = z.infer<typeof rssArticleSchema>;
+
+/** A feed in rss/items (rss_feed.cpp: uid, url, title, lastBuildDate, isLoading, hasError, articles). */
+export const rssFeedSchema = z.looseObject({
+  uid: str,
+  url: str,
+  title: z._default(z.optional(str), ""),
+  lastBuildDate: z.optional(str),
+  isLoading: z._default(z.optional(z.boolean()), false),
+  hasError: z._default(z.optional(z.boolean()), false),
+  refreshInterval: z.optional(num),
+  articles: z._default(z.optional(z.array(rssArticleSchema)), []),
+});
+export type RssFeed = z.infer<typeof rssFeedSchema>;
+
+/** rss/items: folders are objects without "uid", nested by name. */
+export type RssTree = { [name: string]: RssFeed | RssTree };
+export const rssTreeSchema: z.ZodMiniType<RssTree> = z.record(
+  str,
+  z.union([rssFeedSchema, z.lazy(() => rssTreeSchema)]),
+) as unknown as z.ZodMiniType<RssTree>;
+
+/** Auto-download rule as JSON (rss_autodownloadrule.cpp, toJsonObject; addtorrentparams.cpp). */
+export const rssRuleSchema = z.looseObject({
+  enabled: z._default(z.optional(z.boolean()), true),
+  priority: z._default(z.optional(num), 0),
+  useRegex: z._default(z.optional(z.boolean()), false),
+  mustContain: z._default(z.optional(str), ""),
+  mustNotContain: z._default(z.optional(str), ""),
+  episodeFilter: z._default(z.optional(str), ""),
+  affectedFeeds: z._default(z.optional(z.array(str)), []),
+  lastMatch: z._default(z.optional(str), ""),
+  ignoreDays: z._default(z.optional(num), 0),
+  smartFilter: z._default(z.optional(z.boolean()), false),
+  previouslyMatchedEpisodes: z._default(z.optional(z.array(str)), []),
+  torrentParams: z._default(
+    z.optional(
+      z.looseObject({
+        category: z.optional(str),
+        tags: z.optional(z.array(str)),
+        save_path: z.optional(str),
+        stopped: z.optional(z.boolean()),
+      }),
+    ),
+    {},
+  ),
+});
+export type RssRule = z.infer<typeof rssRuleSchema>;
+export const rssRulesSchema = z.record(str, rssRuleSchema);
+export const matchingArticlesSchema = z.record(str, z.array(str));

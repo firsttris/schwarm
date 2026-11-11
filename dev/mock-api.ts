@@ -1,4 +1,6 @@
+import { matchRule } from "../src/lib/rss-match";
 import { fixtureCategories, fixtureTags, type MockTorrent, makeFixtures, units } from "./fixtures";
+import { type MockFeed, type MockFolder, makeRssRules, makeRssTree } from "./rss-fixtures";
 import { type MockPlugin, type MockResult, makePlugins, searchCorpus } from "./search-fixtures";
 
 /**
@@ -44,6 +46,8 @@ export function createMockApi(initial: MockOptions = {}) {
   let plugins: MockPlugin[];
   let searches: Map<number, { pattern: string; results: MockResult[]; polls: number; stopped: boolean }>;
   let searchCounter: number;
+  let rssTree: MockFolder;
+  let rssRules: Record<string, Record<string, unknown>>;
 
   function reset(next: MockOptions = {}) {
     options = {
@@ -78,6 +82,8 @@ export function createMockApi(initial: MockOptions = {}) {
     plugins = makePlugins();
     searches = new Map();
     searchCounter = 0;
+    rssTree = makeRssTree();
+    rssRules = makeRssRules(options.now);
   }
   reset();
 
@@ -389,6 +395,60 @@ export function createMockApi(initial: MockOptions = {}) {
       else states.push(0);
     }
     return states;
+  }
+
+  let rssUid = 0;
+
+  /** Paths in rss/* are names joined with "\\" (Item::PathSeparator in rss_item.cpp). */
+  function rssFind(path: string): MockFeed | MockFolder | undefined {
+    if (!path) return rssTree;
+    let node: MockFeed | MockFolder | undefined = rssTree;
+    for (const part of path.split("\\")) node = node?.kind === "folder" ? node.children[part] : undefined;
+    return node;
+  }
+
+  function rssParent(path: string): { parent?: MockFolder; name: string } {
+    const parts = path.split("\\");
+    const name = parts.pop() ?? "";
+    const parent = rssFind(parts.join("\\"));
+    return { parent: parent?.kind === "folder" ? parent : undefined, name };
+  }
+
+  function rssFeeds(node: MockFeed | MockFolder): MockFeed[] {
+    return node.kind === "feed" ? [node] : Object.values(node.children).flatMap(rssFeeds);
+  }
+
+  function rssJson(folder: MockFolder, withData: boolean): Json {
+    const out: Json = {};
+    for (const [name, item] of Object.entries(folder.children)) {
+      if (item.kind === "folder") {
+        out[name] = rssJson(item, withData);
+        continue;
+      }
+      out[name] = {
+        uid: item.uid,
+        url: item.url,
+        ...(withData
+          ? {
+              title: item.title,
+              lastBuildDate: new Date((options.now - 600) * 1000).toUTCString(),
+              isLoading: false,
+              hasError: item.hasError ?? false,
+              articles: item.articles.map((a) => ({
+                id: a.id,
+                date: new Date((options.now - a.ageMinutes * 60) * 1000).toISOString(),
+                title: a.title,
+                author: "",
+                description: a.description,
+                torrentURL: a.torrentURL,
+                link: a.link,
+                isRead: a.isRead,
+              })),
+            }
+          : {}),
+      };
+    }
+    return out;
   }
 
   /** A made-up multi-file torrent for the metadata preview of the add dialog. */
@@ -884,6 +944,100 @@ export function createMockApi(initial: MockOptions = {}) {
       }
       case "search/updatePlugins":
         return ok();
+      case "rss/items":
+        return json(rssJson(rssTree, p.get("withData") === "true"));
+      case "rss/addFolder": {
+        const { parent, name } = rssParent(p.get("path") ?? "");
+        if (!parent || !name || parent.children[name]) return text("Conflict", 409);
+        parent.children[name] = { kind: "folder", children: {} };
+        return ok();
+      }
+      case "rss/addFeed": {
+        const url = p.get("url") ?? "";
+        const { parent, name } = rssParent(p.get("path") || url);
+        if (!parent || !name || parent.children[name]) return text("Conflict", 409);
+        rssUid++;
+        parent.children[name] = {
+          kind: "feed",
+          uid: `{22222222-0000-0000-0000-${String(rssUid).padStart(12, "0")}}`,
+          url,
+          title: name,
+          articles: [],
+        };
+        return ok();
+      }
+      case "rss/setFeedURL": {
+        const item = rssFind(p.get("path") ?? "");
+        if (item?.kind !== "feed") return text("Conflict", 409);
+        item.url = p.get("url") ?? item.url;
+        return ok();
+      }
+      case "rss/removeItem": {
+        const { parent, name } = rssParent(p.get("path") ?? "");
+        if (!parent || !name || !parent.children[name]) return text("Conflict", 409);
+        delete parent.children[name];
+        return ok();
+      }
+      case "rss/moveItem": {
+        const from = rssParent(p.get("itemPath") ?? "");
+        const to = rssParent(p.get("destPath") ?? "");
+        const item = from.parent && from.name ? from.parent.children[from.name] : undefined;
+        if (!item || !to.parent || !to.name || to.parent.children[to.name]) return text("Conflict", 409);
+        delete from.parent!.children[from.name];
+        to.parent.children[to.name] = item;
+        if (item.kind === "feed") item.title = to.name;
+        return ok();
+      }
+      case "rss/refreshItem":
+        return ok();
+      case "rss/markAsRead": {
+        const item = rssFind(p.get("itemPath") ?? "");
+        if (!item) return text("Conflict", 409);
+        const id = p.get("articleId");
+        for (const feed of rssFeeds(item)) {
+          for (const a of feed.articles) if (!id || a.id === id) a.isRead = true;
+        }
+        return ok();
+      }
+      case "rss/rules":
+        return json(rssRules);
+      case "rss/setRule": {
+        const name = p.get("ruleName") ?? "";
+        if (!name) return text("Bad Request", 400);
+        rssRules[name] = JSON.parse(p.get("ruleDef") ?? "{}");
+        return ok();
+      }
+      case "rss/renameRule": {
+        const rule = rssRules[p.get("ruleName") ?? ""];
+        if (!rule) return text("Conflict", 409);
+        delete rssRules[p.get("ruleName") ?? ""];
+        rssRules[p.get("newRuleName") ?? ""] = rule;
+        return ok();
+      }
+      case "rss/removeRule":
+        delete rssRules[p.get("ruleName") ?? ""];
+        return ok();
+      case "rss/matchingArticles": {
+        const rule = rssRules[p.get("ruleName") ?? ""];
+        if (!rule) return text("Not Found", 404);
+        const out: Record<string, string[]> = {};
+        for (const feed of rssFeeds(rssTree)) {
+          if (!(rule.affectedFeeds as string[] | undefined)?.includes(feed.url)) continue;
+          const titles = feed.articles
+            .filter(
+              (a) =>
+                matchRule(a.title, {
+                  mustContain: String(rule.mustContain ?? ""),
+                  mustNotContain: String(rule.mustNotContain ?? ""),
+                  useRegex: rule.useRegex === true,
+                  episodeFilter: String(rule.episodeFilter ?? ""),
+                }).ok,
+            )
+            .map((a) => a.title);
+          if (titles.length) out[feed.title] = titles;
+        }
+        return json(out);
+      }
       case "transfer/toggleSpeedLimitsMode":
         altSpeed = !altSpeed;
         return ok();
