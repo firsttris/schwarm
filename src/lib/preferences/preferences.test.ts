@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import keys from "../../../dev/qbt-preference-keys.json";
-import { fieldByKey, looksLikeVpnInterface, matchesQuery, preferenceFields } from ".";
+import { fieldByKey, looksLikeVpnInterface, maskApiKey, matchesQuery, preferenceFields } from ".";
 
 describe("preference table", () => {
   it("covers every field of app/preferences in qBittorrent 5.3.0", () => {
@@ -37,5 +37,15 @@ describe("preference table", () => {
     expect(looksLikeVpnInterface("wg0")).toBe(true);
     expect(looksLikeVpnInterface("eth0")).toBe(false);
     expect(looksLikeVpnInterface("")).toBe(false);
+  });
+});
+
+describe("API key", () => {
+  it("is shown masked like in the stock WebUI", () => {
+    const key = "qbt_ABCDEFGHJKLMNPQRSTUVWXYZabcd";
+    expect(maskApiKey(key)).toHaveLength(key.length);
+    expect(maskApiKey(key).startsWith("qbt_")).toBe(true);
+    expect(maskApiKey(key).endsWith("YZabcd")).toBe(true);
+    expect(maskApiKey("short")).toBe("•••••");
   });
 });
