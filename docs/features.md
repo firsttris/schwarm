@@ -63,6 +63,7 @@ Done: milestones 1–6. "7" marks what a comparison of the 5.3 API with the stoc
 | Create, edit, delete categories and tags, remove unused | Dialog "Kategorien und Tags" from the sidebar group buttons and the app menu | 2 |
 | Global speed limits and alternative limits (turtle), schedule | Header: speed button with a menu ("Langsamer Modus"), "Limits bearbeiten …" dialog with the schedule | 2 |
 | Connection status, external IP, DHT nodes, free disk space | Sidebar card; badge on the phone | 1 |
+| Schwarm's own: installable app (docs/spec.md: PWA) | `manifest.json` with relative start and scope, icons (`bun run icons`), `sw.js` from `sw/service-worker.js`: the page network first, hashed assets from the cache, never the API; only in a secure context | 7 |
 | Log (execution log, banned peers) | Settings → "Protokoll": messages (`log/main`, only what is new per poll) filtered by kind and text, newest first; tab "Gesperrte Peers" (`log/peers`) | 6 |
 | Statistics | Page "Statistik": overall speed of the last minutes, all-time and session figures, disk cache and queue, tracker announces (`server_state` of `sync/maindata`), running time (`app/processInfo`) | 6 |
 | Torrent creator | Dialog "Torrent erstellen" from the app menu and Settings → "System": source path, trackers with tiers, private, start seeding; piece size, format (libtorrent 2) or alignment (1.2), web seeds, comment, source, save path; task list with progress, download of the .torrent, delete (`torrentcreator/*`) | 6 |

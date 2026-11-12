@@ -702,7 +702,7 @@
   "pref_webtorrent_stun_server": "STUN-Server für WebTorrent",
   "prefs_all": "Alle Optionen",
   "prefs_all_search": "Einstellung suchen (deutsch, englisch oder Schlüssel)",
-  "prefs_all_text": "Alle {n} Einstellungen von qBittorrent, wie sie die API kennt. Der Name von qBittorrent steht im Tooltip.",
+  "prefs_all_text": "Alle {n} Einstellungen von qBittorrent, auch die seltenen. Den Namen aus qBittorrent zeigt der Tooltip.",
   "prefs_auto_delete_hint": "Gilt für Dateien, die du hochlädst.",
   "prefs_category_paths": "Ordner je Kategorie",
   "prefs_category_paths_hint": "Wird sofort gespeichert, wenn du das Feld verlässt.",
