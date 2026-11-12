@@ -1218,6 +1218,24 @@ export function createMockApi(initial: MockOptions = {}) {
       }
       case "torrents/add":
         return addTorrent(p) ? text("Ok.") : text("Fails.", 415);
+      case "app/rotateAPIKey": {
+        // qbt_ and 28 signs (src/base/utils/apikey.cpp)
+        const signs = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789";
+        const key = `qbt_${Array.from({ length: 28 }, () => signs[Math.floor(Math.random() * signs.length)]).join("")}`;
+        prefs.web_ui_api_key = key;
+        return json({ apiKey: key });
+      }
+      case "app/deleteAPIKey":
+        prefs.web_ui_api_key = "";
+        return ok();
+      case "app/sendTestEmail":
+        logMessages.push({
+          id: logMessages.length,
+          timestamp: now(),
+          type: 1,
+          message: `Sending test email to ${prefs.mail_notification_email}`,
+        });
+        return ok();
       case "app/buildInfo":
         return json({
           qt: "6.9.2",

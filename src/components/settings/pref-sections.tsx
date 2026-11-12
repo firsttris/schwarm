@@ -18,6 +18,7 @@ import {
 import { usePreferencesDraft } from "@/lib/preferences/draft";
 import { m } from "@/paraglide/messages.js";
 import { SearchPluginsSection } from "../search/search-plugins";
+import { ApiKeyControl, TestMailButton } from "./api-key";
 import { PrefField } from "./pref-field";
 
 type Draft = ReturnType<typeof usePreferencesDraft>;
@@ -345,6 +346,8 @@ export function AllOptionsSection() {
                   <PrefField
                     name={f.key}
                     layout="row"
+                    control={f.key === "web_ui_api_key" ? <ApiKeyControl /> : undefined}
+                    description={f.key === "mail_notification_enabled" ? <TestMailButton /> : undefined}
                     value={draft.value(f.key)}
                     readValue={draft.value}
                     onChange={(v) => draft.set(f.key, v)}

@@ -303,6 +303,14 @@ export const api = {
     get("app/getDirectoryContent", z.array(z.string()), { dirPath, mode }),
   /** Free bytes at a path; negative when qBittorrent can't tell. */
   freeSpaceAt: async (path: string) => Number(await getText("app/getFreeSpaceAtPath", { path })),
+  /** A new key for programs; the old one stops working (rotateAPIKeyAction). */
+  rotateApiKey: async () => {
+    const res = await request("app/rotateAPIKey", { method: "POST" });
+    return z.looseObject({ apiKey: z.string() }).parse(await res.json()).apiKey;
+  },
+  deleteApiKey: () => post("app/deleteAPIKey"),
+  /** qBittorrent sends it with the saved mail settings; errors go to its log. */
+  sendTestEmail: () => post("app/sendTestEmail"),
   buildInfo: () => get("app/buildInfo", buildInfoSchema),
   processInfo: () => get("app/processInfo", z.looseObject({ launch_time: z.number() })),
   /** qBittorrent answers, then quits 100 ms later (shutdownAction). */

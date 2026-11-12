@@ -9,6 +9,7 @@ import { formatDuration } from "@/lib/format";
 import { logout, openCreator, openShutdown } from "@/lib/system";
 import { m } from "@/paraglide/messages.js";
 import { version as schwarmVersion } from "../../../package.json";
+import { ApiKeyControl } from "./api-key";
 import { SectionShell } from "./pref-sections";
 
 function Row({ label, value }: { label: string; value: string | undefined }) {
@@ -80,6 +81,14 @@ export function SystemSection() {
           {m.about_source()}
           <ExternalLinkIcon className="size-3.5" aria-hidden />
         </a>
+      </section>
+
+      <section className="flex flex-col gap-2" aria-labelledby="api-key-title">
+        <h3 id="api-key-title" className="font-medium text-sm">
+          {m.api_key_title()}
+        </h3>
+        <p className="text-muted-foreground text-sm">{m.api_key_text()}</p>
+        <ApiKeyControl />
       </section>
 
       <section className="flex flex-col divide-y" aria-label={m.system_actions()}>

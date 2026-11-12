@@ -49,3 +49,9 @@ export function matchesQuery(f: PreferenceField, query: string): boolean {
 export function looksLikeVpnInterface(name: string | undefined): boolean {
   return !!name && /^(tun|tap|wg|ppp|proton|nordlynx|mullvad|utun)/i.test(name);
 }
+
+/** The API key as the stock WebUI shows it: the first four, dots, the last six (preferences.html, maskAPIKey). */
+export function maskApiKey(key: string): string {
+  if (key.length <= 10) return "•".repeat(key.length);
+  return key.slice(0, 4) + "•".repeat(key.length - 10) + key.slice(-6);
+}

@@ -148,6 +148,8 @@ qBittorrent und merkt sich nur seine Anzeige-Einstellungen (Design, Sprache, Spa
   zweiten Limits und ihrem Zeitplan, Seeding-Grenzen und Warteschlange, Verbindung, RSS.
 - **Alle 240 Optionen** von qBittorrent in einer durchsuchbaren Liste, nach deutschem oder
   englischem Namen oder Schlüssel.
+- **API-Schlüssel** für Programme wie Sonarr: erzeugen, kopieren, ersetzen oder löschen; eine
+  Test-E-Mail für die Benachrichtigung.
 - **Änderungen werden gesammelt** und zusammen gespeichert oder verworfen.
 - **Denkt an das VPN**: Läuft qBittorrent über ein VPN-Netzwerk (z. B. `tun0` in einem
   VPN-Container), sind Netzwerk und Port gesperrt, damit man sie nicht aus Versehen ändert.

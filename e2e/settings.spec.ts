@@ -90,3 +90,46 @@ test("phone: section picker and save bar above the navigation @phone", async ({ 
   const navBox = await page.getByRole("navigation", { name: "Hauptmenü" }).boundingBox();
   expect((barBox?.y ?? 0) + (barBox?.height ?? 0)).toBeLessThanOrEqual(navBox?.y ?? 0);
 });
+
+test("API key: generate, copy, rotate and delete, each after asking", async ({ page }) => {
+  await page.goto("./#/settings?section=system");
+  const box = page.getByTestId("api-key");
+  await expect(box).toContainText("Noch kein Schlüssel");
+
+  await box.getByRole("button", { name: "Schlüssel erzeugen" }).click();
+  await page.getByRole("alertdialog").getByRole("button", { name: "Schlüssel erzeugen" }).click();
+  const first = String((await serverPrefs(page)).web_ui_api_key);
+  expect(first).toMatch(/^qbt_[A-Za-z0-9]{28}$/);
+  // shown masked: the start and the last six signs
+  await expect(box.locator("code")).toHaveText(`qbt_${"•".repeat(22)}${first.slice(-6)}`);
+  await expect(box).not.toContainText(first.slice(4, 20));
+
+  await box.getByRole("button", { name: "Neuen Schlüssel erzeugen" }).click();
+  const confirm = page.getByRole("alertdialog");
+  await expect(confirm).toContainText("funktioniert sofort nicht mehr");
+  await confirm.getByRole("button", { name: "Neuen Schlüssel erzeugen" }).click();
+  await expect.poll(async () => (await serverPrefs(page)).web_ui_api_key).not.toBe(first);
+
+  await box.getByRole("button", { name: "API-Schlüssel löschen" }).click();
+  await page.getByRole("alertdialog").getByRole("button", { name: "Löschen" }).click();
+  await expect(box).toContainText("Noch kein Schlüssel");
+  expect((await serverPrefs(page)).web_ui_api_key).toBe("");
+});
+
+test("test email: only with saved mail settings, result in the log", async ({ page }) => {
+  await page.goto("./#/settings?section=all");
+  await page.getByTestId("prefs-search").fill("mail");
+  const send = page.getByRole("button", { name: "Test-E-Mail senden" });
+  await expect(send).toBeEnabled();
+
+  await pref(page, "mail_notification_email").getByRole("textbox").fill("ich@example.org");
+  await expect(send).toBeDisabled();
+  await expect(page.getByText("Erst speichern")).toBeVisible();
+  await page.getByTestId("save-bar").getByRole("button", { name: "Speichern" }).click();
+  await expect(send).toBeEnabled();
+  await send.click();
+  await expect(page.getByText("qBittorrent verschickt eine Test-E-Mail")).toBeVisible();
+
+  await page.goto("./#/settings?section=log");
+  await expect(page.getByTestId("log-list")).toContainText("Sending test email to ich@example.org");
+});

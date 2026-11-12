@@ -235,6 +235,8 @@ export interface FieldProps {
   readValue?: (key: string) => unknown;
   disabled?: boolean;
   description?: ReactNode;
+  /** Replaces the control drawn from the field's type (API key). */
+  control?: ReactNode;
   /** "row": label left, control right (Alle Optionen); "stack": label above (sections). */
   layout?: "row" | "stack";
 }
@@ -245,7 +247,16 @@ function FieldInput({ path, ...props }: ComponentProps<typeof Input> & { path: b
 }
 
 /** One setting of qBittorrent, drawn by its type from the table in src/lib/preferences. */
-export function PrefField({ name, value, onChange, readValue, disabled, description, layout = "stack" }: FieldProps) {
+export function PrefField({
+  name,
+  value,
+  onChange,
+  readValue,
+  disabled,
+  description,
+  control: own,
+  layout = "stack",
+}: FieldProps) {
   const f = field(name);
   const id = useId();
   const locked = disabled || f.readOnly;
@@ -349,6 +360,8 @@ export function PrefField({ name, value, onChange, readValue, disabled, descript
         />
       );
   }
+
+  if (own) control = own;
 
   if (layout === "row") {
     return (

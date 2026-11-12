@@ -142,6 +142,8 @@ only its display settings (theme, language, columns) in your browser.
 - **The common options in plain words**: folders (also per category), speed limits in MB/s with the
   alternative limits and their schedule, seeding limits and queue, connection, RSS.
 - **All 240 options** of qBittorrent in one searchable list, by German or English name or key.
+- **API key** for programs such as Sonarr: generate, copy, replace or delete it; a test email for
+  the mail notification.
 - **Changes are collected** and saved together, or discarded.
 - **VPN aware**: if qBittorrent runs behind a VPN interface (e.g. `tun0` in a VPN container), the
   network and port are locked so they are not changed by accident.
