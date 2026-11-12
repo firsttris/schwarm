@@ -2,6 +2,7 @@ import { ShieldCheckIcon } from "lucide-react";
 import { type ReactNode, useMemo, useState } from "react";
 import { api } from "@/api/client";
 import { useMaindata, useRunAction } from "@/api/queries";
+import { PathInput } from "@/components/path-input";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -85,7 +86,7 @@ function CategoryPaths() {
             <Label htmlFor={`cat-${c.name}`} className="w-28 shrink-0 truncate">
               {c.name}
             </Label>
-            <Input
+            <PathInput
               id={`cat-${c.name}`}
               defaultValue={c.savePath}
               placeholder={m.category_default_path()}

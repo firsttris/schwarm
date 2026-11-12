@@ -3,7 +3,8 @@
 Everything the stock WebUI of qBittorrent 5.3.0 can do (from `src/webui/www/private` and
 `src/webui/api`), and where it goes in Schwarm. "Milestone" refers to [`spec.md`](spec.md).
 
-Done: milestones 1–6, every feature of the stock WebUI has its place.
+Done: milestones 1–6. "7" marks what a comparison of the 5.3 API with the stock WebUI
+(`src/webui/www/private`) found missing afterwards.
 
 ## Torrent list
 
@@ -34,6 +35,7 @@ Done: milestones 1–6, every feature of the stock WebUI has its place.
 | General: ~30 fields (sizes, time active, wasted, connections, created by/on, hashes, comment …) | Tab "Übersicht": key figures, the rest collapsible | 1 |
 | Pieces bar and availability | Tab "Übersicht" below the progress | 1 |
 | Content: file tree, priority (do not download, normal, high, maximum), rename, filter | Tab "Dateien" | 1 |
+| Download a finished file (`torrents/downloadFile`, 5.3) | Tab "Dateien": download icon at finished files | 7 |
 | Peers: country, client, flags, progress, speed, relevance; add, ban, copy IP:port | Tab "Peers" | 1 |
 | Trackers: status, tier, seeds/peers, message; add, edit, remove, copy, reannounce | Tab "Tracker" | 1 |
 | HTTP sources (web seeds): add, edit, remove, copy | Tab "Tracker", own section | 1 |
@@ -44,6 +46,9 @@ Done: milestones 1–6, every feature of the stock WebUI has its place.
 |---|---|---|
 | .torrent files, links (several; magnet, HTTP, info hash) | Dialog, drag & drop anywhere | 1 |
 | Category, save path, start | Dialog, visible | 1 |
+| Free space at the save path (`app/getFreeSpaceAtPath`) | Below "Speichern in", a warning when the torrent does not fit | 7 |
+| Save the .torrent of a magnet link (`torrents/saveMetadata`) | Download icon in the preview once the metadata is in | 7 |
+| Path suggestions (`app/getDirectoryContent`, pathAutofill.js) | Every path field (add dialog, location, categories, RSS rules, settings, torrent creator): folders of the typed folder | 7 |
 | Tags, rename, incomplete path, management mode, content layout, stop condition, add to top of queue, skip hash check, limits, first/last piece | Dialog → "Weitere Optionen" | 1 |
 | Choose files before start (after metadata) | Dialog, second step with the file tree of the "Dateien" tab | 2 |
 

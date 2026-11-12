@@ -868,6 +868,51 @@ export function createMockApi(initial: MockOptions = {}) {
         if (calls < 2) return json({ infohash_v1: hash, infohash_v2: "", hash }, 202);
         return json(metadataInfo(hash, name ? decodeURIComponent(name.replaceAll("+", " ")) : hash));
       }
+      case "torrents/saveMetadata": {
+        // the .torrent of a magnet link once fetchMetadata has it (saveMetadataAction)
+        const source = p.get("source") ?? "";
+        const hash = /btih:([0-9a-f]{40})/i.exec(source)?.[1]?.toLowerCase();
+        if (!hash) return text("Not Found", 404);
+        if ((metadataRequests.get(hash) ?? 0) < 2) return text("Metadata is not yet available", 409);
+        return new Response(`d4:infod4:name40:${hash}ee`, {
+          headers: {
+            "content-type": "application/x-bittorrent",
+            "content-disposition": `attachment; filename="${hash}.torrent"`,
+          },
+        });
+      }
+      case "torrents/downloadFile": {
+        // a finished file of the torrent by index (downloadFileAction)
+        const t = find(p.get("hash"));
+        if (!t) return text("Torrent not found", 404);
+        const file = t.files[Number(p.get("file"))];
+        if (!file) return text("File index is out of bounds", 409);
+        if (file.progress < 1) return text("File not fully downloaded", 409);
+        const name = file.name.split("/").pop() ?? file.name;
+        return new Response(`content of ${file.name}`, {
+          headers: {
+            "content-type": "application/octet-stream",
+            "content-disposition": `attachment; filename="${name}"`,
+          },
+        });
+      }
+      case "app/getDirectoryContent": {
+        // folders of a small made-up disk: /downloads with the category folders, and /data
+        const dir = (p.get("dirPath") ?? "").replace(/\/+$/, "") || "/";
+        const tree: Record<string, string[]> = {
+          "/": ["/config", "/data", "/downloads"],
+          "/downloads": [
+            ...new Set([...Object.values(categories).map((c) => c.savePath || ""), "/downloads/incomplete"]),
+          ].filter((x) => x.startsWith("/downloads/")),
+          "/data": ["/data/filme", "/data/serien"],
+          "/config": ["/config/qBittorrent"],
+        };
+        if (!(dir in tree)) return text("Directory does not exist", 404);
+        const files = p.get("mode") === "all" && dir === "/data" ? ["/data/notizen.txt"] : [];
+        return json([...tree[dir]!, ...files]);
+      }
+      case "app/getFreeSpaceAtPath":
+        return text(String(412 * units.GB));
       case "torrents/parseMetadata":
         return json((p.files ?? []).map((f) => metadataInfo(f.name, f.name.replace(/\.torrent$/, ""))));
       case "search/plugins":

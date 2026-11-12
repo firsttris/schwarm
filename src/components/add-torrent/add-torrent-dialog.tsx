@@ -3,6 +3,7 @@ import {
   ChevronRightIcon,
   CircleAlertIcon,
   CircleCheckIcon,
+  DownloadIcon,
   FileIcon,
   LoaderCircleIcon,
   UploadIcon,
@@ -11,6 +12,7 @@ import {
 import { type FormEvent, useEffect, useId, useRef, useState } from "react";
 import { api, type ContentLayout, type StopCondition } from "@/api/client";
 import { useDefaultSavePath, useMaindata, useRunAction } from "@/api/queries";
+import { PathInput } from "@/components/path-input";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
@@ -29,6 +31,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { addDialogStore } from "@/lib/add-dialog";
 import { formatBytes } from "@/lib/format";
+import { cn } from "@/lib/utils";
 import { m } from "@/paraglide/messages.js";
 import { FilePicker } from "./file-picker";
 
@@ -63,6 +66,36 @@ function CheckField({
       <Label htmlFor={id}>{label}</Label>
       {hint && <span className="text-[13px] text-muted-foreground">{hint}</span>}
     </div>
+  );
+}
+
+/** Free space where the torrent goes (app/getFreeSpaceAtPath, like addtorrent.js). */
+function FreeSpace({ path, need }: { path: string; need?: number }) {
+  const [settled, setSettled] = useState(path);
+  useEffect(() => {
+    const timer = setTimeout(() => setSettled(path), 400);
+    return () => clearTimeout(timer);
+  }, [path]);
+  const free = useQuery({
+    queryKey: ["freeSpace", settled],
+    queryFn: () => api.freeSpaceAt(settled),
+    enabled: settled.trim() !== "",
+    staleTime: 10_000,
+    retry: false,
+  });
+  const bytes = free.data;
+  if (bytes === undefined || !(bytes >= 0)) return <span id="add-free" />;
+  const tooLittle = need !== undefined && need > bytes;
+  return (
+    <span
+      id="add-free"
+      className={cn("text-[13px] tabular-nums", tooLittle ? "text-destructive" : "text-muted-foreground")}
+      data-testid="add-free"
+    >
+      {tooLittle
+        ? m.add_free_too_little({ free: formatBytes(bytes), need: formatBytes(need) })
+        : m.add_free({ free: formatBytes(bytes) })}
+    </span>
   );
 }
 
@@ -309,6 +342,18 @@ export function AddTorrentDialog() {
                         : m.add_meta_loading()}
                   </span>
                 </div>
+                {info && linkSource && (
+                  <Button variant="ghost" size="icon-sm" className="-my-1" asChild>
+                    <a
+                      href={api.saveMetadataUrl(linkSource)}
+                      download={`${info.name}.torrent`}
+                      aria-label={m.add_save_torrent()}
+                      title={m.add_save_torrent()}
+                    >
+                      <DownloadIcon />
+                    </a>
+                  </Button>
+                )}
                 {info && (
                   <Button
                     type="button"
@@ -347,7 +392,7 @@ export function AddTorrentDialog() {
             </div>
             <div className="flex flex-col gap-2">
               <Label htmlFor="add-path">{m.add_save_in()}</Label>
-              <Input
+              <PathInput
                 id="add-path"
                 className="font-mono text-[13px]"
                 value={shownPath}
@@ -355,7 +400,9 @@ export function AddTorrentDialog() {
                   setPathTouched(true);
                   setSavePath(e.target.value);
                 }}
+                aria-describedby="add-free"
               />
+              <FreeSpace path={shownPath} need={info?.length} />
             </div>
           </div>
 
@@ -467,7 +514,7 @@ export function AddTorrentDialog() {
               <div className="flex flex-col gap-3">
                 <CheckField checked={useDownloadPath} onChange={setUseDownloadPath} label={m.add_incomplete_path()} />
                 {useDownloadPath && (
-                  <Input
+                  <PathInput
                     aria-label={m.add_incomplete_path()}
                     className="font-mono text-[13px]"
                     value={downloadPath}

@@ -15,6 +15,7 @@ import { toast } from "sonner";
 import { api } from "@/api/client";
 import { useMaindata, useRunAction } from "@/api/queries";
 import { type RssRule, rssRuleSchema } from "@/api/schemas";
+import { PathInput } from "@/components/path-input";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
@@ -516,7 +517,7 @@ export function RulesView() {
                 </Select>
               </Field>
               <Field label={m.add_save_in()} htmlFor="rule-path">
-                <Input
+                <PathInput
                   id="rule-path"
                   className="font-mono text-[13px]"
                   value={draft.savePath}

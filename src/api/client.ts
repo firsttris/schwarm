@@ -191,6 +191,10 @@ export const api = {
   increasePrio: (list: string[]) => post("torrents/increasePrio", { hashes: hashes(list) }),
   decreasePrio: (list: string[]) => post("torrents/decreasePrio", { hashes: hashes(list) }),
   bottomPrio: (list: string[]) => post("torrents/bottomPrio", { hashes: hashes(list) }),
+  /** A finished file of the torrent, by index (downloadFileAction; 409 while not complete). */
+  fileDownloadUrl: (hash: string, index: number) => `${base}torrents/downloadFile?${toSearch({ hash, file: index })}`,
+  /** The .torrent of a magnet link once its metadata is in (saveMetadataAction). */
+  saveMetadataUrl: (source: string) => `${base}torrents/saveMetadata?${toSearch({ source })}`,
   exportUrl: (hash: string) => `${base}torrents/export?${toSearch({ hash })}`,
 
   /** Several file ids are joined with "|" (filePrioAction). */
@@ -294,6 +298,11 @@ export const api = {
     get("app/networkInterfaceList", z.array(z.looseObject({ name: z.string(), value: z.string() }))),
   networkAddresses: (iface: string) => get("app/networkInterfaceAddressList", z.array(z.string()), { iface }),
 
+  /** Folders (and files) in a folder on qBittorrent's machine, as full paths. */
+  directoryContent: (dirPath: string, mode: "dirs" | "all" = "dirs") =>
+    get("app/getDirectoryContent", z.array(z.string()), { dirPath, mode }),
+  /** Free bytes at a path; negative when qBittorrent can't tell. */
+  freeSpaceAt: async (path: string) => Number(await getText("app/getFreeSpaceAtPath", { path })),
   buildInfo: () => get("app/buildInfo", buildInfoSchema),
   processInfo: () => get("app/processInfo", z.looseObject({ launch_time: z.number() })),
   /** qBittorrent answers, then quits 100 ms later (shutdownAction). */
