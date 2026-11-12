@@ -18,6 +18,7 @@
     "format": "biome check --write .",
     "test": "paraglide-js compile --project ./project.inlang --outdir ./src/paraglide && vitest run",
     "e2e": "bun --bun playwright test",
+    "icons": "bun scripts/icons.ts",
     "screenshots": "SCREENSHOTS=1 bun --bun playwright test --project=screenshots",
     "release:patch": "npm version patch",
     "release:minor": "npm version minor",

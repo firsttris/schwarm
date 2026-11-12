@@ -125,7 +125,8 @@ qBittorrent und merkt sich nur seine Anzeige-Einstellungen (Design, Sprache, Spa
 
 - **Handy-Ansicht** mit Liste, Details im Vollbild, langem Druck für Aktionen und Leiste unten.
 - **Hell, dunkel oder wie das System**, Deutsch und Englisch (folgt dem Browser).
-- **Anmeldung** nur, wenn qBittorrent danach fragt (nicht in freigegebenen Netzen).
+- **Als App** auf Handy oder Rechner: „Zum Startbildschirm hinzufügen“ bzw. „Installieren“. Über
+  HTTPS (z. B. hinter einem Reverse-Proxy) startet sie auch, wenn qBittorrent nicht erreichbar ist.
 
 ### 🔍 Suche
 

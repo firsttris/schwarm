@@ -25,6 +25,11 @@ declare module "@tanstack/react-router" {
 
 document.documentElement.lang = getLocale();
 
+// The offline shell (sw/service-worker.js); browsers allow it only over HTTPS or on localhost
+if (import.meta.env.PROD && "serviceWorker" in navigator && window.isSecureContext) {
+  void navigator.serviceWorker.register("./sw.js").catch(() => undefined);
+}
+
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>

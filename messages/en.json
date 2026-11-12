@@ -702,7 +702,7 @@
   "pref_webtorrent_stun_server": "STUN server for WebTorrent NAT traversal",
   "prefs_all": "All options",
   "prefs_all_search": "Search settings (German, English or key)",
-  "prefs_all_text": "All {n} settings of qBittorrent as the API knows them. qBittorrent's own name is in the tooltip.",
+  "prefs_all_text": "All {n} settings of qBittorrent, the rare ones too. The tooltip shows qBittorrent's own name.",
   "prefs_auto_delete_hint": "Applies to files you upload.",
   "prefs_category_paths": "Folder per category",
   "prefs_category_paths_hint": "Saved as soon as you leave the field.",

@@ -121,6 +121,8 @@ only its display settings (theme, language, columns) in your browser.
 - **Phone layout** with list, full-screen details, long press for the actions and a bottom tab bar.
 - **Light, dark or system**, German and English (follows the browser).
 - **Login** only when qBittorrent asks for it (not on whitelisted networks).
+- **As an app** on the phone or desktop: "Add to home screen" or "Install". Over HTTPS (e.g. behind
+  a reverse proxy) it also starts when qBittorrent can't be reached.
 
 ### 🔍 Search
 

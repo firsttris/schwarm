@@ -82,6 +82,9 @@ bun run e2e
 - Docker mod (`docker/`, `docker/README.md` is the Docker Hub page): `FROM scratch` with Schwarm in
   `/schwarm` and an s6 init script for `linuxserver/qbittorrent`; `docker/test-mod.sh` starts it on
   the real image (CI job `docker-mod`). In this sandbox the build needs the proxy CA; CI does not.
+- PWA: `public/manifest.json`, icons rendered from `public/icons/*.svg` by `bun run icons` (PNGs are
+  committed), `sw.js` emitted at build by `scripts/vite-sw.ts` from `sw/service-worker.js`. It
+  registers only in a secure context (HTTPS, localhost), so the E2E tests run with it.
 - Paraglide loads its message-format plugin from `node_modules` (`project.inlang/settings.json`),
   not from a CDN, so builds need no network. Messages with numbers use plural variants.
 - Versions kept back on purpose: `@tanstack/react-table` 8 (9 changed the API and is three months

@@ -7,7 +7,8 @@ import { join, relative } from "node:path";
  * - no "QBT_TR(" in text files: qBittorrent runs HTML, JS and CSS through its translator,
  *   which would replace such strings;
  * - no symlinks: qBittorrent refuses to serve them;
- * - index.html with relative asset paths only (the folder is served under any path).
+ * - index.html with relative asset paths only (the folder is served under any path);
+ * - the web app manifest and the service worker (docs/spec.md: PWA).
  */
 export async function checkBuild(dir: string): Promise<string[]> {
   const problems: string[] = [];
@@ -23,7 +24,9 @@ export async function checkBuild(dir: string): Promise<string[]> {
     return out;
   };
   const files = await walk(dir);
-  if (!files.some((f) => relative(dir, f) === "index.html")) problems.push("index.html is missing");
+  for (const needed of ["index.html", "manifest.json", "sw.js"]) {
+    if (!files.some((f) => relative(dir, f) === needed)) problems.push(`${needed} is missing`);
+  }
   for (const file of files) {
     if (!/\.(html|js|css|json|svg|txt|webmanifest|map)$/.test(file)) continue;
     const text = await readFile(file, "utf8");
