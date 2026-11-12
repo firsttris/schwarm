@@ -99,7 +99,7 @@ qBittorrent und merkt sich nur seine Anzeige-Einstellungen (Design, Sprache, Spa
 - **Übersicht**: Tempo der letzten Minuten, Kennzahlen, Stückchen, alles Weitere aufklappbar.
 - **Dateien**: Dateibaum mit Prioritäten (nicht laden, normal, hoch, maximal) und Filter; eine Datei
   oder viele auf einmal umbenennen, mit Suchen und Ersetzen, regulären Ausdrücken, Nummerierung und
-  Vorschau.
+  Vorschau; fertige Dateien direkt im Browser herunterladen.
 - **Peers**: Programm, Land, Flags, Fortschritt und Tempo; Peers hinzufügen, kopieren, sperren.
 - **Tracker**: Status, Stufe, Seeds und Peers, Meldungen; hinzufügen, bearbeiten, entfernen, neu
   ankündigen; DHT, PeX und LSD; HTTP-Quellen.
@@ -108,7 +108,8 @@ qBittorrent und merkt sich nur seine Anzeige-Einstellungen (Design, Sprache, Spa
 
 - **Magnet-Links, URLs und .torrent-Dateien**, auch mehrere, oder einfach auf die Seite ziehen.
 - **Sehen, was man hinzufügt**: Größe und Dateiliste, sobald qBittorrent die Infos hat, und
-  auswählen, welche Dateien geladen werden.
+  auswählen, welche Dateien geladen werden; einen Magnet-Link als .torrent-Datei speichern.
+- **Ordner auf dem Server als Vorschläge** in jedem Pfadfeld, dazu der freie Platz am Ziel.
 - **Kategorie und Ordner** sofort; Tags, Name, Ordner für Unfertiges, Verwaltung, Ordnerstruktur,
   Anhalten-Bedingung, Warteschlange, Prüfung überspringen und Limits unter „Weitere Optionen“.
 

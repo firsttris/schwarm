@@ -1,6 +1,7 @@
 import { type FormEvent, useEffect, useState } from "react";
 import { api } from "@/api/client";
 import { useMaindata, useRunAction } from "@/api/queries";
+import { PathInput } from "@/components/path-input";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -99,7 +100,7 @@ export function TorrentDialogs({ onRemoved }: { onRemoved?: (hashes: string[]) =
               </DialogHeader>
               <div className="flex flex-col gap-2">
                 <Label htmlFor="location">{m.location_label()}</Label>
-                <Input
+                <PathInput
                   id="location"
                   className="font-mono"
                   value={value}

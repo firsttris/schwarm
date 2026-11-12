@@ -1,5 +1,5 @@
 import { useQueryClient } from "@tanstack/react-query";
-import { ChevronDownIcon, ChevronRightIcon, PencilIcon, SearchIcon } from "lucide-react";
+import { ChevronDownIcon, ChevronRightIcon, DownloadIcon, PencilIcon, SearchIcon } from "lucide-react";
 import { useMemo, useState } from "react";
 import { api } from "@/api/client";
 import { useFiles, useRunAction } from "@/api/queries";
@@ -218,6 +218,18 @@ export function FilesTab({ t }: { t: Torrent }) {
                     >
                       <PencilIcon className="size-3.5" />
                     </button>
+                    {!node.isDir && node.progress >= 1 && (
+                      // a finished file straight into the browser (torrents/downloadFile, qBittorrent 5.3)
+                      <a
+                        href={api.fileDownloadUrl(t.hash, node.indices[0]!)}
+                        download={node.name}
+                        className="ml-1.5 inline-flex align-middle text-muted-foreground hover:text-foreground"
+                        aria-label={m.file_download({ name: node.name })}
+                        title={m.file_download({ name: node.name })}
+                      >
+                        <DownloadIcon className="size-3.5" />
+                      </a>
+                    )}
                   </span>
                   {!node.isDir && on && (
                     <Progress value={percentValue(node.progress)} className="h-1.5" aria-label={m.col_progress()} />

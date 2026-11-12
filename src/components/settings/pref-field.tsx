@@ -1,7 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { PlusIcon, Trash2Icon } from "lucide-react";
-import { type ReactNode, useEffect, useId, useState } from "react";
+import { type ComponentProps, type ReactNode, useEffect, useId, useState } from "react";
 import { api } from "@/api/client";
+import { PathInput } from "@/components/path-input";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -238,6 +239,11 @@ export interface FieldProps {
   layout?: "row" | "stack";
 }
 
+/** Paths get suggestions of the folders on qBittorrent's machine. */
+function FieldInput({ path, ...props }: ComponentProps<typeof Input> & { path: boolean }) {
+  return path ? <PathInput {...props} /> : <Input {...props} />;
+}
+
 /** One setting of qBittorrent, drawn by its type from the table in src/lib/preferences. */
 export function PrefField({ name, value, onChange, readValue, disabled, description, layout = "stack" }: FieldProps) {
   const f = field(name);
@@ -332,12 +338,13 @@ export function PrefField({ name, value, onChange, readValue, disabled, descript
       break;
     default:
       control = (
-        <Input
+        <FieldInput
           id={id}
           value={String(value ?? "")}
           onChange={(e) => onChange(e.target.value)}
           disabled={locked}
           readOnly={f.readOnly}
+          path={f.unit === "path" && !f.readOnly}
           className={cn(mono(f) && "font-mono text-[13px]")}
         />
       );

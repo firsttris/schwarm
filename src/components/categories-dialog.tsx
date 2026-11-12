@@ -2,6 +2,7 @@ import { PencilIcon, PlusIcon, Trash2Icon } from "lucide-react";
 import { type FormEvent, useEffect, useState } from "react";
 import { api } from "@/api/client";
 import { useMaindata, useRunAction } from "@/api/queries";
+import { PathInput } from "@/components/path-input";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
@@ -54,7 +55,7 @@ function CategoryForm({
           <Label htmlFor="category-path" className="text-[13px]">
             {m.add_save_in()}
           </Label>
-          <Input
+          <PathInput
             id="category-path"
             value={path}
             onChange={(e) => setPath(e.target.value)}

@@ -4,6 +4,7 @@ import { type FormEvent, useId, useState } from "react";
 import { api, type CreateTorrentOptions } from "@/api/client";
 import { useRunAction } from "@/api/queries";
 import type { CreatorTask } from "@/api/schemas";
+import { PathInput } from "@/components/path-input";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -208,7 +209,8 @@ export function CreatorDialog() {
           <form onSubmit={submit} className="flex flex-col gap-4">
             <div className="flex flex-col gap-2">
               <Label htmlFor="creator-source">{m.creator_source()}</Label>
-              <Input
+              <PathInput
+                files
                 id="creator-source"
                 value={sourcePath}
                 onChange={(e) => setSourcePath(e.target.value)}
@@ -305,7 +307,7 @@ export function CreatorDialog() {
                 </div>
                 <div className="flex flex-col gap-2">
                   <Label htmlFor="creator-save">{m.creator_save_to()}</Label>
-                  <Input
+                  <PathInput
                     id="creator-save"
                     value={torrentFilePath}
                     onChange={(e) => setTorrentFilePath(e.target.value)}

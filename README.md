@@ -93,7 +93,8 @@ only its display settings (theme, language, columns) in your browser.
 
 - **Overview**: speed chart of the last minutes, key figures, pieces bar, all other details folded.
 - **Files**: file tree with priorities (skip, normal, high, maximum) and a filter; rename one file
-  or many at once with search and replace, regular expressions and numbering, with a preview.
+  or many at once with search and replace, regular expressions and numbering, with a preview;
+  download finished files straight into the browser.
 - **Peers**: client, country, flags, progress and speed; add, copy and ban peers.
 - **Trackers**: status, tier, seeds and peers, messages; add, edit, remove, reannounce; DHT, PeX and
   LSD; HTTP sources (web seeds).
@@ -102,7 +103,8 @@ only its display settings (theme, language, columns) in your browser.
 
 - **Magnet links, URLs and .torrent files**, several at once, or drop them anywhere on the page.
 - **See what you add**: size and file list once qBittorrent has the metadata, and choose which
-  files to load before the download starts.
+  files to load before the download starts; save a magnet link as a .torrent file.
+- **Folders on the server as suggestions** in every path field, and the free space where it goes.
 - **Category and folder** right away; tags, name, incomplete folder, management, content layout,
   stop condition, queue position, hash check skip and limits under "More options".
 
