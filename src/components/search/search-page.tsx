@@ -5,6 +5,7 @@ import {
   ArrowDownWideNarrowIcon,
   ArrowUpNarrowWideIcon,
   CheckIcon,
+  ChevronDownIcon,
   CircleAlertIcon,
   CirclePlusIcon,
   DownloadIcon,
@@ -19,6 +20,7 @@ import { authState, useMaindata } from "@/api/queries";
 import type { SearchPlugin, SearchResult } from "@/api/schemas";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Command, CommandGroup, CommandItem, CommandList, CommandSeparator } from "@/components/ui/command";
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -26,7 +28,8 @@ import { Separator } from "@/components/ui/separator";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { openAddDialog } from "@/lib/add-dialog";
 import { formatBytes, formatNumber, formatRelative } from "@/lib/format";
-import { createMemoryStore } from "@/lib/store";
+import { chosenSources, sourceCategories, toggleSource } from "@/lib/search-sources";
+import { createMemoryStore, createStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
 import { m } from "@/paraglide/messages.js";
 import { PageHeader } from "../page-header";
@@ -37,11 +40,12 @@ interface SearchState {
   id?: number;
   pattern: string;
   category: string;
-  /** Plugin names to search with; empty means the enabled ones. */
-  plugins: string[];
   error?: "python" | "failed";
 }
-const searchStore = createMemoryStore<SearchState>({ pattern: "", category: "all", plugins: [] });
+const searchStore = createMemoryStore<SearchState>({ pattern: "", category: "all" });
+
+/** The plugins to search with, kept in the browser; empty means every enabled one. */
+const sourcesStore = createStore<{ plugins: string[] }>("search-sources", { plugins: [] });
 
 interface Accumulated {
   status: string;
@@ -148,6 +152,93 @@ function NumberFilter({
 }
 
 /**
+ * Which plugins to search with: every enabled one, or a choice of them. The choice is
+ * kept in the browser; when the popover closes on a changed choice, the shown search runs
+ * again with it (as a changed category does).
+ */
+function SourcePicker({
+  enabled,
+  chosen,
+  onClose,
+}: {
+  enabled: SearchPlugin[];
+  chosen: string[];
+  onClose: (chosen: string[]) => void;
+}) {
+  const [opened, setOpened] = useState<string[] | null>(null);
+  const label =
+    chosen.length === 0
+      ? m.search_all_sources()
+      : chosen.length === 1
+        ? (enabled.find((p) => p.name === chosen[0])?.fullName ?? chosen[0])
+        : m.search_sources_n({ n: chosen.length });
+  const set = (plugins: string[]) => sourcesStore.set({ plugins });
+  return (
+    <Popover
+      open={opened !== null}
+      onOpenChange={(open) => {
+        if (open) setOpened(chosen);
+        else {
+          if (opened && opened.join("|") !== chosen.join("|")) onClose(chosen);
+          setOpened(null);
+        }
+      }}
+    >
+      <PopoverTrigger asChild>
+        <Button
+          type="button"
+          variant="outline"
+          className="min-w-0 flex-1 justify-between px-3 font-normal md:w-44 md:flex-none"
+          aria-label={m.search_sources_pick()}
+          disabled={enabled.length === 0}
+        >
+          <span className="truncate">{label}</span>
+          <ChevronDownIcon className="size-4 opacity-50" aria-hidden />
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-60 p-0" align="start">
+        <Command>
+          <CommandList>
+            <CommandGroup>
+              <CommandItem value="__all" onSelect={() => set([])}>
+                <CheckIcon className={cn("size-4", chosen.length > 0 && "invisible")} aria-hidden />
+                {m.search_all_sources()}
+              </CommandItem>
+            </CommandGroup>
+            <CommandSeparator />
+            <CommandGroup>
+              {enabled.map((p) => {
+                const isChosen = chosen.includes(p.name);
+                return (
+                  <CommandItem
+                    key={p.name}
+                    value={p.name}
+                    onSelect={() => set(toggleSource(chosen, p.name, enabled.length))}
+                    aria-checked={isChosen}
+                  >
+                    <div
+                      className={cn(
+                        "flex size-4 items-center justify-center rounded-[4px] border",
+                        isChosen
+                          ? "border-primary bg-primary text-primary-foreground"
+                          : "border-input [&_svg]:invisible",
+                      )}
+                    >
+                      <CheckIcon className="size-3.5 text-primary-foreground" />
+                    </div>
+                    <span className="truncate">{p.fullName}</span>
+                  </CommandItem>
+                );
+              })}
+            </CommandGroup>
+          </CommandList>
+        </Command>
+      </PopoverContent>
+    </Popover>
+  );
+}
+
+/**
  * The search page (docs/mockup/Suche.dc.html): search/start with the chosen plugins and
  * category, results polled with search/results, filtered by source, seeds and size, and
  * "Laden" opens the add dialog with the link and the plugin as downloader (as search.js).
@@ -155,6 +246,7 @@ function NumberFilter({
 export function SearchPage() {
   const state = searchStore.use();
   const plugins = useSearchPlugins();
+  const sources = sourcesStore.use();
   const results = useSearchResults(state.id);
   const { data: main } = useMaindata();
   const isMobile = useIsMobile();
@@ -169,15 +261,16 @@ export function SearchPage() {
   const allPlugins: SearchPlugin[] = plugins.data ?? [];
   const enabled = allPlugins.filter((p) => p.enabled);
   const running = results.data?.status === "Running" || (state.id !== undefined && results.isPending);
-  const categories = useMemo(() => {
-    const map = new Map<string, string>();
-    for (const p of enabled) for (const c of p.supportedCategories) if (c.id !== "all") map.set(c.id, c.name);
-    return [...map.entries()].sort((a, b) => a[1].localeCompare(b[1]));
-  }, [enabled]);
+  const chosen = chosenSources(sources.plugins, enabled);
+  const categories = sourceCategories(enabled, chosen);
 
-  const start = async (event?: FormEvent, override: Partial<SearchState> = {}) => {
+  const start = async (event?: FormEvent, override: { category?: string; plugins?: string[] } = {}) => {
     event?.preventDefault();
-    const next = { ...state, ...override, pattern: (override.pattern ?? pattern).trim() };
+    const plugins = override.plugins ?? chosen;
+    let category = override.category ?? state.category;
+    // a category the chosen sources do not know would find nothing
+    if (category !== "all" && !sourceCategories(enabled, plugins).some(([id]) => id === category)) category = "all";
+    const next = { ...state, category, pattern: pattern.trim() };
     if (!next.pattern) return;
     setBusy(true);
     try {
@@ -185,7 +278,7 @@ export function SearchPage() {
         await api.searchDelete(state.id).catch(() => undefined);
         queryClient.removeQueries({ queryKey: ["search", state.id] });
       }
-      const id = await api.searchStart(next.pattern, next.category, next.plugins.length ? next.plugins : "enabled");
+      const id = await api.searchStart(next.pattern, next.category, plugins.length ? plugins : "enabled");
       searchStore.set({ ...next, id, error: undefined });
     } catch (error) {
       if (error instanceof ApiError && error.status === 403) authState.set(true);
@@ -321,7 +414,7 @@ export function SearchPage() {
           <>
             <search>
               <form onSubmit={start} className="flex max-w-[720px] flex-wrap gap-2">
-                <div className="relative min-w-[220px] flex-1">
+                <div className="relative min-w-[220px] flex-1 basis-full md:basis-0">
                   <SearchIcon
                     className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground"
                     aria-hidden
@@ -342,7 +435,7 @@ export function SearchPage() {
                     if (state.pattern) void start(undefined, { category });
                   }}
                 >
-                  <SelectTrigger className="w-44" aria-label={m.category()}>
+                  <SelectTrigger className="min-w-0 flex-1 md:w-44 md:flex-none" aria-label={m.category()}>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -354,12 +447,19 @@ export function SearchPage() {
                     ))}
                   </SelectContent>
                 </Select>
+                <SourcePicker
+                  enabled={enabled}
+                  chosen={chosen}
+                  onClose={(next) => {
+                    if (state.id !== undefined && pattern.trim()) void start(undefined, { plugins: next });
+                  }}
+                />
                 {running ? (
-                  <Button type="button" variant="outline" onClick={stop}>
+                  <Button type="button" variant="outline" onClick={stop} className="w-full md:w-auto">
                     <SquareIcon /> {m.search_stop()}
                   </Button>
                 ) : (
-                  <Button type="submit" disabled={busy || !pattern.trim()}>
+                  <Button type="submit" disabled={busy || !pattern.trim()} className="w-full md:w-auto">
                     {m.search_submit()}
                   </Button>
                 )}
@@ -483,7 +583,9 @@ export function SearchPage() {
 
             {state.id === undefined && !state.error && (
               <p className="text-muted-foreground text-sm">
-                {m.search_sources_hint({ n: enabled.length })}{" "}
+                {chosen.length
+                  ? m.search_sources_hint_chosen({ n: chosen.length, total: enabled.length })
+                  : m.search_sources_hint({ n: enabled.length })}{" "}
                 <Link
                   to="/settings"
                   search={{ section: "search" }}

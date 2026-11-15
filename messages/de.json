@@ -901,6 +901,7 @@
   "schedule_hint": "Schaltet ihn zur gewählten Zeit ein und danach wieder aus.",
   "schedule_to": "Bis",
   "search_all_categories": "Alle Kategorien",
+  "search_all_sources": "Alle Quellen",
   "search_download": "Laden",
   "search_download_name": "{name} laden",
   "search_failed": "Die Suche ließ sich nicht starten.",
@@ -928,6 +929,27 @@
       }
     }
   ],
+  "search_sources_hint_chosen": [
+    {
+      "declarations": ["input n", "input total", "local p = total: plural"],
+      "selectors": ["p"],
+      "match": {
+        "p=one": "Sucht in {n} von {total} eingeschalteten Quelle.",
+        "p=other": "Sucht in {n} von {total} eingeschalteten Quellen."
+      }
+    }
+  ],
+  "search_sources_n": [
+    {
+      "declarations": ["input n", "local p = n: plural"],
+      "selectors": ["p"],
+      "match": {
+        "p=one": "{n} Quelle",
+        "p=other": "{n} Quellen"
+      }
+    }
+  ],
+  "search_sources_pick": "Quellen für die Suche",
   "search_status_done": [
     {
       "declarations": ["input n", "local p = n: plural"],

@@ -56,7 +56,7 @@ Done: milestones 1–6. "7" marks what a comparison of the 5.3 API with the stoc
 
 | qBittorrent | Place in Schwarm | Milestone |
 |---|---|---|
-| Search: start/stop, filter results (size, seeds), download, open description | Page "Suche": category, sources, min. seeds, max. size, sorting; "Laden" opens the add dialog with the plugin as downloader | 3 |
+| Search: start/stop, filter results (size, seeds), download, open description | Page "Suche": category, sources to search (all enabled plugins or a choice, kept in the browser), filter by source, min. seeds, max. size, sorting; "Laden" opens the add dialog with the plugin as downloader | 3 |
 | Search plugins: install (URL or path), update, enable, uninstall | Settings → "Suche & RSS" | 3 |
 | RSS: feeds and folders, articles, mark read, refresh, edit feed URL | Page "RSS" → "Feeds": three columns (phone: list), "Laden" opens the add dialog, "Regel daraus machen"; unread count in the navigation | 4 |
 | RSS auto-downloader: rules, episode filter, smart filter, preview of matching articles, clone, import/export | Page "RSS" → "Auto-Downloader": live preview with reasons (matching ported from qBittorrent), qBittorrent's own count from `rss/matchingArticles` after saving | 4 |

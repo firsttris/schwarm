@@ -901,6 +901,7 @@
   "schedule_hint": "Turns it on at the chosen time and off again afterwards.",
   "schedule_to": "To",
   "search_all_categories": "All categories",
+  "search_all_sources": "All sources",
   "search_download": "Download",
   "search_download_name": "Download {name}",
   "search_failed": "The search could not be started.",
@@ -928,6 +929,27 @@
       }
     }
   ],
+  "search_sources_hint_chosen": [
+    {
+      "declarations": ["input n", "input total", "local p = total: plural"],
+      "selectors": ["p"],
+      "match": {
+        "p=one": "Searches {n} of {total} enabled source.",
+        "p=other": "Searches {n} of {total} enabled sources."
+      }
+    }
+  ],
+  "search_sources_n": [
+    {
+      "declarations": ["input n", "local p = n: plural"],
+      "selectors": ["p"],
+      "match": {
+        "p=one": "{n} source",
+        "p=other": "{n} sources"
+      }
+    }
+  ],
+  "search_sources_pick": "Sources to search",
   "search_status_done": [
     {
       "declarations": ["input n", "local p = n: plural"],
