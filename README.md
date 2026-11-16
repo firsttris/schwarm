@@ -128,6 +128,8 @@ only its display settings (theme, language, columns) in your browser.
 
 - **Search through qBittorrent's search plugins**: one field, category, results sorted by seeds,
   filters for source, seeds and size, and "Download" opens the add dialog.
+- **Choose the sources**: search all enabled plugins or only some of them; the choice is kept in
+  the browser.
 - **Plugins** in the settings: enable, update, add by URL, remove.
 
 ### 📰 RSS

@@ -132,6 +132,8 @@ qBittorrent und merkt sich nur seine Anzeige-Einstellungen (Design, Sprache, Spa
 
 - **Suchen über die Such-Plugins von qBittorrent**: ein Feld, Kategorie, Ergebnisse nach Seeds
   sortiert, Filter für Quelle, Seeds und Größe, und „Laden“ öffnet den Hinzufügen-Dialog.
+- **Quellen wählen**: in allen eingeschalteten Plugins suchen oder nur in einigen; die Auswahl
+  bleibt im Browser gespeichert.
 - **Plugins** in den Einstellungen: einschalten, aktualisieren, per Adresse hinzufügen, entfernen.
 
 ### 📰 RSS
