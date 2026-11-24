@@ -11,3 +11,4 @@ blob-report/
 *.tsbuildinfo
 .DS_Store
 site/
+.cache/
