@@ -1,0 +1,2 @@
+# Documentation (zensical.toml, .github/workflows/docs.yml)
+zensical==0.1.3

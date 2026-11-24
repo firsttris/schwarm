@@ -18,6 +18,7 @@ Statische Dateien, die qBittorrent selbst ausliefert: kein Server, kein Containe
 [Bilder](#-bilder) •
 [Alternativen](#-schwarm-und-die-alternativen) •
 [Fragen](#-häufige-fragen) •
+[Doku](https://firsttris.github.io/schwarm/) •
 [English](README.md)
 
 </div>

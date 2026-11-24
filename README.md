@@ -18,6 +18,7 @@ Static files that qBittorrent serves itself: no server, no container, nothing el
 [Screenshots](#-screenshots) •
 [Alternatives](#-schwarm-and-the-alternatives) •
 [FAQ](#-faq) •
+[Docs](https://firsttris.github.io/schwarm/) •
 [Deutsch](README.de.md)
 
 </div>
